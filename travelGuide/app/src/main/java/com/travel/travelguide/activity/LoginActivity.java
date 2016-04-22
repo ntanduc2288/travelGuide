@@ -7,7 +7,7 @@ import com.travel.travelguide.manager.TransactionManager;
 /**
  * Created by user on 4/22/16.
  */
-public class LoginActivity2 extends BaseActivity {
+public class LoginActivity extends BaseActivity {
 
 
     @Override

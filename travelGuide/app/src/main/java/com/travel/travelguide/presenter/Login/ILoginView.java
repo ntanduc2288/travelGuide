@@ -12,4 +12,5 @@ public interface ILoginView {
     void showError(String errorMessage);
     void gotoMapScreen();
     void gotoRegisterScreen();
+    void gotoForgotPasswordScreen();
 }

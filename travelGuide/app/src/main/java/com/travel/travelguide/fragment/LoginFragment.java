@@ -2,6 +2,7 @@ package com.travel.travelguide.fragment;
 
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -26,7 +27,12 @@ public class LoginFragment extends BaseFragment implements ILoginView, View.OnCl
     ActionProcessButton btnActionSignIn;
     @Bind(R.id.btnRegister)
     ActionProcessButton btnActionRegister;
+    @Bind(R.id.forgot_password)
+    Button btnForgotPassword;
+
+
     private LoginPresenter loginPresenter;
+    private final String TAG = LoginFragment.class.getSimpleName();
 
     public static LoginFragment newInstance(){
         LoginFragment loginFragment = new LoginFragment();
@@ -44,6 +50,7 @@ public class LoginFragment extends BaseFragment implements ILoginView, View.OnCl
         btnActionSignIn.setOnClickListener(this);
         btnActionSignIn.setMode(ActionProcessButton.Mode.ENDLESS);
         btnActionRegister.setOnClickListener(this);
+        btnForgotPassword.setOnClickListener(this);
     }
 
     @Override
@@ -97,6 +104,11 @@ public class LoginFragment extends BaseFragment implements ILoginView, View.OnCl
     }
 
     @Override
+    public void gotoForgotPasswordScreen() {
+        TransactionManager.getInstance().addFragment(getFragmentManager(), ResetPasswordFragment.newInstance());
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnSignIn:
@@ -106,6 +118,9 @@ public class LoginFragment extends BaseFragment implements ILoginView, View.OnCl
             case R.id.btnRegister:
                 gotoRegisterScreen();
                 break;
+            case R.id.forgot_password:
+                gotoForgotPasswordScreen();
+                break;
         }
     }
 
@@ -114,4 +129,5 @@ public class LoginFragment extends BaseFragment implements ILoginView, View.OnCl
         loginPresenter.releaseResource();
         super.onDestroyView();
     }
+
 }

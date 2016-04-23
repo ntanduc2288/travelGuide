@@ -109,6 +109,24 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <com.andexert.library.RippleView
+                custom:rv_centered="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="50dp"
+                    android:gravity="center_vertical"
+                    android:hint="@string/location"
+                    android:imeActionId="@+id/login"
+                    android:imeActionLabel="@string/action_sign_in_short"
+                    android:imeOptions="actionUnspecified"
+                    />
+            </com.andexert.library.RippleView>
+
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

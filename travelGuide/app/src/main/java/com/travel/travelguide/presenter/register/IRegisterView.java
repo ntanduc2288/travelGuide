@@ -8,7 +8,9 @@ public interface IRegisterView {
     void hideLoading();
     void invalidEmail();
     void invalidPassword();
+    void invalidLocation();
     void showError(Integer errorCode);
     void showError(String errorMessage);
     void gotoMapScreen();
+    void displayLocation(String location);
 }

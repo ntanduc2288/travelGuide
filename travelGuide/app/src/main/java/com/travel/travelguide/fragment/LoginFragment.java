@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.dd.processbutton.iml.ActionProcessButton;
 import com.travel.travelguide.R;
+import com.travel.travelguide.activity.MapsActivity;
 import com.travel.travelguide.manager.TransactionManager;
 import com.travel.travelguide.presenter.Login.ILoginView;
 import com.travel.travelguide.presenter.Login.LoginPresenter;
@@ -96,6 +97,7 @@ public class LoginFragment extends BaseFragment implements ILoginView, View.OnCl
     public void gotoMapScreen() {
         btnActionSignIn.setProgress(100);
         btnActionSignIn.setEnabled(true);
+        TransactionManager.getInstance().gotoActivity(getActivity(), MapsActivity.class, null, false);
     }
 
     @Override

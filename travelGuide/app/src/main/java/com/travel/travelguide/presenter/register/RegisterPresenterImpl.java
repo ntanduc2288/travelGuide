@@ -1,5 +1,7 @@
 package com.travel.travelguide.presenter.register;
 
+import android.text.TextUtils;
+
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.BackendlessCallback;
@@ -30,6 +32,9 @@ public class RegisterPresenterImpl implements RegisterPresenter {
         }else if (!password.equals(confirmPassword) || password.length() < 3){
             registerView.hideLoading();
             registerView.invalidPassword();
+        }else if (TextUtils.isEmpty(user.getLocationName())){
+            registerView.hideLoading();
+            registerView.invalidLocation();
         }else {
             user.setPassword(password);
             register(user);

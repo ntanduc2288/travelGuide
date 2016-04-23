@@ -1,8 +1,11 @@
 package com.travel.travelguide.manager;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.os.Bundle;
 
 import com.travel.travelguide.R;
 
@@ -43,5 +46,19 @@ public class TransactionManager {
         fragmentTransaction.add(R.id.container, fragment);
         fragmentTransaction.addToBackStack(fragment.getClass().getSimpleName());
         fragmentTransaction.commit();
+    }
+
+    public void gotoActivity(Activity activity, Class activityClass, Bundle bundle, boolean isRootActivity){
+        Intent intent = new Intent(activity, activityClass);
+        if(bundle != null){
+            intent.putExtras(bundle);
+        }
+
+        if(isRootActivity){
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        }
+
+        activity.startActivity(intent);
+
     }
 }

@@ -1,12 +1,24 @@
 package com.travel.travelguide.fragment;
 
+import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dd.processbutton.iml.ActionProcessButton;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
+import com.travel.travelguide.Ulti.Constants;
 import com.travel.travelguide.presenter.register.IRegisterView;
 import com.travel.travelguide.presenter.register.RegisterPresenter;
 import com.travel.travelguide.presenter.register.RegisterPresenterImpl;
@@ -26,8 +38,13 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
     @Bind(R.id.name) EditText txtName;
     @Bind(R.id.facebook) EditText txtFacebook;
     @Bind(R.id.confirm_password) EditText txtConfirmPassword;
+    @Bind(R.id.location)
+    TextView lblLocation;
 
+    GoogleApiClient googleApiClient;
     RegisterPresenter registerPresenter;
+    private Place place;
+
     public static RegisterFragment newInstance(){
         return new RegisterFragment();
     }
@@ -42,6 +59,18 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
         registerPresenter = new RegisterPresenterImpl(this);
         btnActionRegister.setOnClickListener(this);
         btnActionRegister.setMode(ActionProcessButton.Mode.ENDLESS);
+        lblLocation.setOnClickListener(this);
+
+        googleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage((FragmentActivity) getActivity(), new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+                    }
+                })
+                .build();
     }
 
     @Override
@@ -70,6 +99,13 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
     }
 
     @Override
+    public void invalidLocation() {
+        btnActionRegister.setProgress(0);
+        btnActionRegister.setEnabled(true);
+        Toast.makeText(getActivity(), getString(R.string.please_set_you_location), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void showError(Integer errorCode) {
 
     }
@@ -88,6 +124,11 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
     }
 
     @Override
+    public void displayLocation(String location) {
+        lblLocation.setText(location);
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnRegister:
@@ -95,8 +136,37 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
                 user.setEmail(mEmailView.getText().toString().trim());
                 user.setName(txtName.getText().toString().trim());
                 user.setFacebookLink(txtFacebook.getText().toString().trim());
+                if(place != null){
+                    user.setLocationName(lblLocation.getText().toString().trim());
+                    user.setLatitude(place.getLatLng().latitude);
+                    user.setLongtitude(place.getLatLng().longitude);
+                }
                 registerPresenter.validateData(user, mPasswordView.getText().toString().trim(), txtConfirmPassword.getText().toString().trim());
                 break;
+            case R.id.location:
+                try {
+                    PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                    startActivityForResult(builder.build(getActivity()), Constants.PLACE_PICKER_REQUEST);
+                } catch (GooglePlayServicesRepairableException e) {
+                    e.printStackTrace();
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.PLACE_PICKER_REQUEST) {
+            if (resultCode == getActivity().RESULT_OK) {
+                place = PlacePicker.getPlace(data, getActivity());
+
+                String toastMsg = String.format("Place: %s", place.getName());
+                toastMsg += " " + place.getAddress();
+                displayLocation(toastMsg);
+            }
         }
     }
 }

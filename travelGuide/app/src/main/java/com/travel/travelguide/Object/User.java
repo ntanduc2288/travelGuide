@@ -12,6 +12,9 @@ public class User extends BackendlessUser {
     String facebookLink;
     String email;
     String password;
+    double latitude;
+    double longtitude;
+    String locationName;
 
     public User(){
 
@@ -22,6 +25,36 @@ public class User extends BackendlessUser {
         setName((String) backendlessUser.getProperty(Constants.KEY_NAME));
         setEmail(backendlessUser.getEmail());
         setFacebookLink((String) backendlessUser.getProperty(Constants.KEY_FACEBOK_LINK));
+        setLatitude((Double) backendlessUser.getProperty(Constants.KEY_LAT));
+        setLongtitude((Double) backendlessUser.getProperty(Constants.KEY_LON));
+        setLocationName((String) backendlessUser.getProperty(Constants.KEY_LOCATION_NAME));
+    }
+
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
+        setProperty(Constants.KEY_LOCATION_NAME, locationName);
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+        setProperty(Constants.KEY_LAT, latitude);
+    }
+
+    public double getLongtitude() {
+        return longtitude;
+    }
+
+    public void setLongtitude(double longtitude) {
+        this.longtitude = longtitude;
+        setProperty(Constants.KEY_LON, longtitude);
     }
 
     public String getId() {

@@ -11,7 +11,6 @@ public class Constants {
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_OBJECT_ID = "objectId";
     public static final int PLACE_PICKER_REQUEST = 1;
-    public static final String KEY_LAT = "lat";
-    public static final String KEY_LON = "lon";
     public static final String KEY_LOCATION_NAME = "locationName";
+    public static final String KEY_LOCATION = "locations";
 }

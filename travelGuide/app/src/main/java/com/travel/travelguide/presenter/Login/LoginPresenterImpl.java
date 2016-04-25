@@ -4,8 +4,10 @@ import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
+import com.travel.travelguide.Object.User;
 import com.travel.travelguide.Ulti.LogUtils;
 import com.travel.travelguide.Ulti.Ulti;
+import com.travel.travelguide.manager.UserManager;
 
 /**
  * Created by user on 4/22/16.
@@ -39,15 +41,20 @@ public class LoginPresenterImpl implements LoginPresenter {
             @Override
             public void handleResponse(BackendlessUser response) {
                 LogUtils.logD(TAG, "handle response login: " + response.toString());
-                loginView.hideLoading();
-                loginView.gotoMapScreen();
+                UserManager.getInstance().setUser(new User(response));
+                if(viewIsValid()){
+                    loginView.hideLoading();
+                    loginView.gotoMapScreen();
+                }
             }
 
             @Override
             public void handleFault(BackendlessFault fault) {
                 LogUtils.logD(TAG, "handleFault login: " + fault.getMessage());
-                loginView.hideLoading();
-                loginView.showError(fault.getMessage());
+                if(viewIsValid()){
+                    loginView.hideLoading();
+                    loginView.showError(fault.getMessage());
+                }
             }
         });
 
@@ -60,7 +67,13 @@ public class LoginPresenterImpl implements LoginPresenter {
     }
 
     @Override
-    public void releaseResource() {
+    public void releaseResources() {
         loginView = null;
+    }
+
+    @Override
+    public boolean viewIsValid() {
+        if(loginView != null) return true;
+        return false;
     }
 }

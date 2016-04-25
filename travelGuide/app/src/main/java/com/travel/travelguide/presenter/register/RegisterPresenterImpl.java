@@ -9,6 +9,7 @@ import com.backendless.exceptions.BackendlessFault;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.Ulti.LogUtils;
 import com.travel.travelguide.Ulti.Ulti;
+import com.travel.travelguide.manager.UserManager;
 
 /**
  * Created by user on 4/23/16.
@@ -25,19 +26,21 @@ public class RegisterPresenterImpl implements RegisterPresenter {
     @Override
     public void validateData(User user, String password, String confirmPassword) {
 
-        registerView.showLoading();
-        if(!Ulti.isEmailValid(user.getEmail())){
-            registerView.hideLoading();
-            registerView.invalidEmail();
-        }else if (!password.equals(confirmPassword) || password.length() < 3){
-            registerView.hideLoading();
-            registerView.invalidPassword();
-        }else if (TextUtils.isEmpty(user.getLocationName())){
-            registerView.hideLoading();
-            registerView.invalidLocation();
-        }else {
-            user.setPassword(password);
-            register(user);
+        if(viewIsValid()){
+            registerView.showLoading();
+            if(!Ulti.isEmailValid(user.getEmail())){
+                registerView.hideLoading();
+                registerView.invalidEmail();
+            }else if (!password.equals(confirmPassword) || password.length() < 3){
+                registerView.hideLoading();
+                registerView.invalidPassword();
+            }else if (TextUtils.isEmpty(user.getLocationName())){
+                registerView.hideLoading();
+                registerView.invalidLocation();
+            }else {
+                user.setPassword(password);
+                register(user);
+            }
         }
 
     }
@@ -49,15 +52,20 @@ public class RegisterPresenterImpl implements RegisterPresenter {
             public void handleResponse(BackendlessUser response) {
                     LogUtils.logD(TAG, response.toString());
                     User userTmp = new User(response);
-                    registerView.hideLoading();
-                    registerView.gotoMapScreen();
+                    UserManager.getInstance().setUser(userTmp);
+                    if(viewIsValid()){
+                        registerView.hideLoading();
+                        registerView.gotoMapScreen();
+                    }
 
             }
 
             @Override
             public void handleFault(BackendlessFault fault) {
-                registerView.hideLoading();
-                registerView.showError(fault.getMessage());
+                if(viewIsValid()){
+                    registerView.hideLoading();
+                    registerView.showError(fault.getMessage());
+                }
             }
         });
     }
@@ -65,6 +73,15 @@ public class RegisterPresenterImpl implements RegisterPresenter {
     @Override
     public void error(Integer errorCode) {
 
+    }
+
+    @Override
+    public boolean viewIsValid(){
+        if(registerView != null){
+            return true;
+        }else {
+            return false;
+        }
     }
 
     @Override

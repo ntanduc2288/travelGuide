@@ -31,30 +31,37 @@ public class TransactionManager {
     }
 
     public void replaceFragment(FragmentManager fragmentManager, Fragment fragment){
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.setCustomAnimations(R.animator.enter, R.animator.exit, R.animator.pop_enter, R.animator.pop_exit);
-        fragmentTransaction.replace(R.id.container, fragment);
-        fragmentTransaction.addToBackStack(fragment.getClass().getSimpleName());
+        replaceFragment(fragmentManager, fragment, R.id.container);
+    }
 
+    public void replaceFragment(FragmentManager fragmentManager, Fragment fragment, int resContainerId){
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(resContainerId, fragment);
+        fragmentTransaction.addToBackStack(fragment.getClass().getSimpleName());
 
         fragmentTransaction.commit();
     }
 
     public void addFragment(FragmentManager fragmentManager, Fragment fragment){
+        addFragment(fragmentManager, fragment, R.id.container);
+    }
+
+    public void addFragment(FragmentManager fragmentManager, Fragment fragment, int resContainerId){
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.setCustomAnimations(R.animator.enter, R.animator.exit, R.animator.pop_enter, R.animator.pop_exit);
-        fragmentTransaction.add(R.id.container, fragment);
+        fragmentTransaction.add(resContainerId, fragment);
         fragmentTransaction.addToBackStack(fragment.getClass().getSimpleName());
         fragmentTransaction.commit();
     }
 
-    public void gotoActivity(Activity activity, Class activityClass, Bundle bundle, boolean isRootActivity){
+
+
+    public void gotoActivity(Activity activity, Class activityClass, Bundle bundle, boolean shouldClearAllActivityInTask){
         Intent intent = new Intent(activity, activityClass);
         if(bundle != null){
             intent.putExtras(bundle);
         }
 
-        if(isRootActivity){
+        if(shouldClearAllActivityInTask){
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         }
 

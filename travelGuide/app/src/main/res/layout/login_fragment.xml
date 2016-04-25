@@ -42,7 +42,7 @@
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:text="user1@gmail.com" />
+                    android:text="duc@gmail.com" />
 
             </android.support.design.widget.TextInputLayout>
 

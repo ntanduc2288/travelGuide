@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.backendless.geo.GeoPoint;
 import com.dd.processbutton.iml.ActionProcessButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -23,6 +24,8 @@ import com.travel.travelguide.presenter.register.IRegisterView;
 import com.travel.travelguide.presenter.register.RegisterPresenter;
 import com.travel.travelguide.presenter.register.RegisterPresenterImpl;
 
+import java.util.Calendar;
+
 import butterknife.Bind;
 
 /**
@@ -30,9 +33,9 @@ import butterknife.Bind;
  */
 public class RegisterFragment extends BaseFragment implements IRegisterView, View.OnClickListener {
     @Bind(R.id.email)
-    EditText mEmailView;
+    EditText txtEmail;
     @Bind(R.id.password)
-    EditText mPasswordView;
+    EditText txtPassword;
     @Bind(R.id.btnRegister)
     ActionProcessButton btnActionRegister;
     @Bind(R.id.name) EditText txtName;
@@ -60,7 +63,7 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
         btnActionRegister.setOnClickListener(this);
         btnActionRegister.setMode(ActionProcessButton.Mode.ENDLESS);
         lblLocation.setOnClickListener(this);
-
+        txtEmail.setText("user"+ Calendar.getInstance().getTimeInMillis() + "@gmail.com");
         googleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)
@@ -86,14 +89,14 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
 
     @Override
     public void invalidEmail() {
-        mEmailView.setError(getString(R.string.invalid_email));
+        txtEmail.setError(getString(R.string.invalid_email));
         btnActionRegister.setProgress(0);
         btnActionRegister.setEnabled(true);
     }
 
     @Override
     public void invalidPassword() {
-        mPasswordView.setError(getString(R.string.invalid_password));
+        txtPassword.setError(getString(R.string.invalid_password));
         btnActionRegister.setProgress(0);
         btnActionRegister.setEnabled(true);
     }
@@ -133,15 +136,15 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
         switch (v.getId()){
             case R.id.btnRegister:
                 User user = new User();
-                user.setEmail(mEmailView.getText().toString().trim());
+                user.setEmail(txtEmail.getText().toString().trim());
                 user.setName(txtName.getText().toString().trim());
                 user.setFacebookLink(txtFacebook.getText().toString().trim());
                 if(place != null){
                     user.setLocationName(lblLocation.getText().toString().trim());
-                    user.setLatitude(place.getLatLng().latitude);
-                    user.setLongtitude(place.getLatLng().longitude);
+                    GeoPoint geoPoint = new GeoPoint(place.getLatLng().latitude, place.getLatLng().longitude);
+                    user.setlocation(geoPoint);
                 }
-                registerPresenter.validateData(user, mPasswordView.getText().toString().trim(), txtConfirmPassword.getText().toString().trim());
+                registerPresenter.validateData(user, txtPassword.getText().toString().trim(), txtConfirmPassword.getText().toString().trim());
                 break;
             case R.id.location:
                 try {
@@ -161,12 +164,22 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.PLACE_PICKER_REQUEST) {
             if (resultCode == getActivity().RESULT_OK) {
-                place = PlacePicker.getPlace(data, getActivity());
+                place = PlacePicker.getPlace(getActivity(), data);
 
-                String toastMsg = String.format("Place: %s", place.getName());
-                toastMsg += " " + place.getAddress();
+                String toastMsg = place.getName() + " " + place.getAddress();
                 displayLocation(toastMsg);
             }
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        if(googleApiClient != null && googleApiClient.isConnected()){
+            googleApiClient.stopAutoManage((FragmentActivity) getActivity());
+            googleApiClient.disconnect();
+            googleApiClient = null;
+        }
+        registerPresenter.releaseResources();
+        super.onDestroyView();
     }
 }

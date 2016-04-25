@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.dd.processbutton.iml.ActionProcessButton;
 import com.travel.travelguide.R;
-import com.travel.travelguide.activity.MapsActivity;
+import com.travel.travelguide.activity.MainActivity;
 import com.travel.travelguide.manager.TransactionManager;
 import com.travel.travelguide.presenter.Login.ILoginView;
 import com.travel.travelguide.presenter.Login.LoginPresenter;
@@ -21,9 +21,9 @@ import butterknife.Bind;
  */
 public class LoginFragment extends BaseFragment implements ILoginView, View.OnClickListener{
     @Bind(R.id.email)
-    AutoCompleteTextView mEmailView;
+    AutoCompleteTextView txtEmail;
     @Bind(R.id.password)
-    EditText mPasswordView;
+    EditText txtPassword;
     @Bind(R.id.btnSignIn)
     ActionProcessButton btnActionSignIn;
     @Bind(R.id.btnRegister)
@@ -67,14 +67,14 @@ public class LoginFragment extends BaseFragment implements ILoginView, View.OnCl
 
     @Override
     public void invalidEmail() {
-        mEmailView.setError(getString(R.string.invalid_email));
+        txtEmail.setError(getString(R.string.invalid_email));
         btnActionSignIn.setProgress(0);
         btnActionSignIn.setEnabled(true);
     }
 
     @Override
     public void invalidPassword() {
-        mPasswordView.setError(getString(R.string.invalid_password));
+        txtPassword.setError(getString(R.string.invalid_password));
         btnActionSignIn.setProgress(0);
         btnActionSignIn.setEnabled(true);
     }
@@ -97,7 +97,7 @@ public class LoginFragment extends BaseFragment implements ILoginView, View.OnCl
     public void gotoMapScreen() {
         btnActionSignIn.setProgress(100);
         btnActionSignIn.setEnabled(true);
-        TransactionManager.getInstance().gotoActivity(getActivity(), MapsActivity.class, null, false);
+        TransactionManager.getInstance().gotoActivity(getActivity(), MainActivity.class, null, false);
     }
 
     @Override
@@ -115,7 +115,7 @@ public class LoginFragment extends BaseFragment implements ILoginView, View.OnCl
         switch (v.getId()){
             case R.id.btnSignIn:
 
-                loginPresenter.validateData(mEmailView.getText().toString().trim(), mPasswordView.getText().toString().trim());
+                loginPresenter.validateData(txtEmail.getText().toString().trim(), txtPassword.getText().toString().trim());
                 break;
             case R.id.btnRegister:
                 gotoRegisterScreen();
@@ -128,7 +128,7 @@ public class LoginFragment extends BaseFragment implements ILoginView, View.OnCl
 
     @Override
     public void onDestroyView() {
-        loginPresenter.releaseResource();
+        loginPresenter.releaseResources();
         super.onDestroyView();
     }
 

@@ -1,7 +1,9 @@
 package com.travel.travelguide.Object;
 
 import com.backendless.BackendlessUser;
+import com.backendless.geo.GeoPoint;
 import com.travel.travelguide.Ulti.Constants;
+import com.travel.travelguide.Ulti.Ulti;
 
 /**
  * Created by user on 4/23/16.
@@ -12,9 +14,8 @@ public class User extends BackendlessUser {
     String facebookLink;
     String email;
     String password;
-    double latitude;
-    double longtitude;
     String locationName;
+    GeoPoint geoPoint;
 
     public User(){
 
@@ -25,9 +26,19 @@ public class User extends BackendlessUser {
         setName((String) backendlessUser.getProperty(Constants.KEY_NAME));
         setEmail(backendlessUser.getEmail());
         setFacebookLink((String) backendlessUser.getProperty(Constants.KEY_FACEBOK_LINK));
-        setLatitude((Double) backendlessUser.getProperty(Constants.KEY_LAT));
-        setLongtitude((Double) backendlessUser.getProperty(Constants.KEY_LON));
+        setlocation(Ulti.extractGeoPoint(backendlessUser));
         setLocationName((String) backendlessUser.getProperty(Constants.KEY_LOCATION_NAME));
+    }
+
+
+
+    public GeoPoint getLocation() {
+        return geoPoint;
+    }
+
+    public void setlocation(GeoPoint geoPoint) {
+        this.geoPoint = geoPoint;
+        setProperty(Constants.KEY_LOCATION, geoPoint);
     }
 
     public String getLocationName() {
@@ -37,24 +48,6 @@ public class User extends BackendlessUser {
     public void setLocationName(String locationName) {
         this.locationName = locationName;
         setProperty(Constants.KEY_LOCATION_NAME, locationName);
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-        setProperty(Constants.KEY_LAT, latitude);
-    }
-
-    public double getLongtitude() {
-        return longtitude;
-    }
-
-    public void setLongtitude(double longtitude) {
-        this.longtitude = longtitude;
-        setProperty(Constants.KEY_LON, longtitude);
     }
 
     public String getId() {
@@ -104,5 +97,11 @@ public class User extends BackendlessUser {
     public void setPassword(String password) {
         this.password = password;
         setProperty(Constants.KEY_PASSWORD, password);
+    }
+
+    public BackendlessUser getBackendlessUser(){
+        BackendlessUser backendlessUser = new BackendlessUser();
+        backendlessUser.setProperties(getProperties());
+        return backendlessUser;
     }
 }

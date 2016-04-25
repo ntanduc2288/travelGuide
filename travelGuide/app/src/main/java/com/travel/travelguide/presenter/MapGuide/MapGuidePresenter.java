@@ -1,7 +1,9 @@
 package com.travel.travelguide.presenter.MapGuide;
 
 import android.location.Location;
+import android.support.v4.app.Fragment;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.travel.travelguide.presenter.IBasePresenter;
 
 /**
@@ -33,6 +35,10 @@ public interface MapGuidePresenter extends IBasePresenter {
 
     void getUserList(Location location);
 
-    void getUserListWithRadius(float radius);
+    void getUserListWithRadius(double latitude, double longitude, float radius);
+
+    void searchPlace(Fragment fragment, String query);
+
+    void cameraChanged(GoogleMap googleMap);
 
 }

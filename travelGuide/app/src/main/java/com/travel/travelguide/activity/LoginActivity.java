@@ -23,7 +23,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void setupViews() {
-        TransactionManager.getInstance().replaceFragment(getFragmentManager(), LoginFragment.newInstance());
+        TransactionManager.getInstance().replaceFragment(getSupportFragmentManager(), LoginFragment.newInstance());
 
 
     }

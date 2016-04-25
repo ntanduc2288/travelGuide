@@ -15,6 +15,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void setupViews() {
-        TransactionManager.getInstance().replaceFragment(getFragmentManager(), MapGuideFragment.newInstance(), R.id.container);
+        TransactionManager.getInstance().replaceFragment(getSupportFragmentManager(), MapGuideFragment.newInstance(), R.id.container);
     }
 }

@@ -1,108 +1,113 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/common_action_bar_splitter"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
+    android:background="@color/color_white"
+    android:gravity="center_horizontal">
 
-    android:padding="10dp"
-
-    >
-
-    <!-- Login progress -->
-    <ProgressBar
-        android:id="@+id/login_progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone" />
-
-    <ScrollView
-        android:id="@+id/login_form"
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/header_login_image" />
 
-        <LinearLayout
-            android:id="@+id/email_login_form"
+
+    <LinearLayout
+        android:id="@+id/email_login_form"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/header"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <android.support.design.widget.TextInputLayout
+            style="@style/TextInputStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:backgroundTintMode="screen">
 
-            <android.support.design.widget.TextInputLayout
+            <AutoCompleteTextView
+                android:id="@+id/email"
+                style="@style/EdittextStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:hint="@string/prompt_email"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="duc@gmail.com" />
 
-                <AutoCompleteTextView
-                    android:id="@+id/email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_email"
-                    android:inputType="textEmailAddress"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:text="duc@gmail.com" />
+        </android.support.design.widget.TextInputLayout>
 
-            </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            style="@style/TextInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <android.support.design.widget.TextInputLayout
+            <EditText
+                android:id="@+id/password"
+                style="@style/EdittextStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:hint="@string/prompt_password"
+                android:imeActionId="@+id/login"
+                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeOptions="actionUnspecified"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="123" />
 
-                <EditText
-                    android:id="@+id/password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_password"
-                    android:imeActionId="@+id/login"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:text="123" />
+        </android.support.design.widget.TextInputLayout>
 
-            </android.support.design.widget.TextInputLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
 
             <com.andexert.library.RippleView
                 rv_centered="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginTop="20dp">
+                android:layout_marginRight="5dp"
+                android:layout_weight="1">
 
                 <com.dd.processbutton.iml.ActionProcessButton
                     android:id="@+id/btnSignIn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="SignIn"
+                    android:text="@string/log_in"
+                    android:textAllCaps="false"
                     android:textColor="@android:color/white"
                     android:textSize="18sp"
-                    custom:pb_colorComplete="@color/green_complete"
+
+                    custom:pb_colorComplete="@color/colorPrimary"
                     custom:pb_colorError="@color/red_error"
-                    custom:pb_colorNormal="@color/blue_normal"
-                    custom:pb_colorPressed="@color/blue_pressed"
+                    custom:pb_colorNormal="@color/colorPrimary"
+                    custom:pb_colorPressed="@color/colorPrimaryDark"
                     custom:pb_colorProgress="@color/purple_progress"
-                    custom:pb_textComplete="Success"
-                    custom:pb_textError="Error"
-                    custom:pb_textProgress="Loading" />
+                    custom:pb_textComplete="@string/success"
+                    custom:pb_textError="@string/error"
+                    custom:pb_textProgress="@string/loading_dot" />
             </com.andexert.library.RippleView>
 
             <com.andexert.library.RippleView
                 rv_centered="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginTop="20dp">
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1">
 
                 <com.dd.processbutton.iml.ActionProcessButton
                     android:id="@+id/btnRegister"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
-                    android:text="@string/register"
+                    android:text="@string/create_account"
+                    android:textAllCaps="false"
                     android:textColor="@android:color/white"
                     android:textSize="18sp"
                     custom:pb_colorComplete="@color/green_complete"
@@ -115,23 +120,31 @@
                     custom:pb_textProgress="Loading" />
             </com.andexert.library.RippleView>
 
-            <com.andexert.library.RippleView
-                rv_centered="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginTop="20dp">
-
-                <Button
-                    android:id="@+id/forgot_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/forgot_password_text" />
-
-            </com.andexert.library.RippleView>
-
-
         </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+
+
+    </LinearLayout>
+
+    <com.andexert.library.RippleView
+        rv_centered="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp">
+
+        <Button
+            android:id="@+id/forgot_password"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@color/transparent"
+            android:text="@string/forgot_password_with_question"
+            android:textAllCaps="false"
+            android:textColor="@color/gray" />
+
+    </com.andexert.library.RippleView>
+
+
+</RelativeLayout>

@@ -19,11 +19,17 @@
     <string name="register">Register</string>
     <string name="invalid_email">Invalid email</string>
     <string name="invalid_password">Invalid password</string>
-    <string name="forgot_password_text">Forgot Password</string>
+    <string name="forgot_password_with_question">Forgot Password?</string>
+    <string name="forgot_password">Forgot Password</string>
     <string name="reset_password">Reset password</string>
     <string name="location">Location</string>
 
 
     <string name="please_set_you_location">Please set your location</string>
     <string name="search_a_location">Search a Location</string>
+    <string name="create_account">Create Account</string>
+    <string name="log_in">Log in</string>
+    <string name="loading_dot">Loading...</string>
+    <string name="error">Error</string>
+    <string name="success">Success</string>
 </resources>

@@ -36,6 +36,8 @@ public class TransactionManager {
 
     public void replaceFragment(FragmentManager fragmentManager, Fragment fragment, int resContainerId){
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.slide_right_to_left,
+                0, 0, R.anim.slide_left_to_right);
         fragmentTransaction.replace(resContainerId, fragment);
         fragmentTransaction.addToBackStack(fragment.getClass().getSimpleName());
 
@@ -48,6 +50,9 @@ public class TransactionManager {
 
     public void addFragment(FragmentManager fragmentManager, Fragment fragment, int resContainerId){
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        fragmentTransaction.setCustomAnimations(R.anim.slide_right_to_left,
+                0, 0, R.anim.slide_left_to_right);
         fragmentTransaction.add(resContainerId, fragment);
         fragmentTransaction.addToBackStack(fragment.getClass().getSimpleName());
         fragmentTransaction.commit();
@@ -64,8 +69,9 @@ public class TransactionManager {
         if(shouldClearAllActivityInTask){
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         }
-
+        activity.overridePendingTransition(R.anim.slide_right_to_left, R.anim.slide_left_to_right);
         activity.startActivity(intent);
+
 
     }
 }

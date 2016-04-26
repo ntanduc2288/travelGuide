@@ -1,7 +1,9 @@
 package com.travel.travelguide.fragment;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dd.processbutton.iml.ActionProcessButton;
@@ -20,6 +22,10 @@ public class ResetPasswordFragment extends BaseFragment implements IResetPasswor
     EditText txtEmail;
     @Bind(R.id.btnResetPassword)
     ActionProcessButton btnResetPassword;
+    @Bind(R.id.title)
+    TextView lblTitle;
+    @Bind(R.id.back_button)
+    Button btnBack;
 
     ResetPasswordPresenter resetPasswordPresenter;
 
@@ -34,9 +40,11 @@ public class ResetPasswordFragment extends BaseFragment implements IResetPasswor
 
     @Override
     protected void setupViews() {
+        lblTitle.setText(getString(R.string.forgot_password));
         resetPasswordPresenter = new ResetPasswordPresenterImpl(this);
         btnResetPassword.setMode(ActionProcessButton.Mode.ENDLESS);
         btnResetPassword.setOnClickListener(this);
+        btnBack.setOnClickListener(this);
     }
 
     @Override
@@ -77,6 +85,9 @@ public class ResetPasswordFragment extends BaseFragment implements IResetPasswor
         switch (v.getId()){
             case R.id.btnResetPassword:
                 resetPasswordPresenter.validateData(txtEmail.getText().toString().trim());
+                break;
+            case R.id.back_button:
+                getActivity().onBackPressed();
                 break;
         }
     }

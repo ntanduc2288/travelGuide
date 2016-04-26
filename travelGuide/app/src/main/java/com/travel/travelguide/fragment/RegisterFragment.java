@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +43,11 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
     @Bind(R.id.facebook) EditText txtFacebook;
     @Bind(R.id.confirm_password) EditText txtConfirmPassword;
     @Bind(R.id.location)
-    TextView lblLocation;
+    Button lblLocation;
+    @Bind(R.id.title)
+    TextView lblTitle;
+    @Bind(R.id.back_button)
+    Button btnBack;
 
     GoogleApiClient googleApiClient;
     RegisterPresenter registerPresenter;
@@ -63,6 +68,7 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
         btnActionRegister.setOnClickListener(this);
         btnActionRegister.setMode(ActionProcessButton.Mode.ENDLESS);
         lblLocation.setOnClickListener(this);
+        lblTitle.setText(getString(R.string.create_account));
         txtEmail.setText("user"+ Calendar.getInstance().getTimeInMillis() + "@gmail.com");
         googleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addApi(Places.GEO_DATA_API)
@@ -74,6 +80,7 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
                     }
                 })
                 .build();
+        btnBack.setOnClickListener(this);
     }
 
     @Override
@@ -155,6 +162,9 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
                 } catch (GooglePlayServicesNotAvailableException e) {
                     e.printStackTrace();
                 }
+                break;
+            case R.id.back_button:
+                getActivity().onBackPressed();
                 break;
         }
     }

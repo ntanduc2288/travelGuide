@@ -16,6 +16,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -24,6 +25,7 @@ import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
 import com.travel.travelguide.Ulti.Constants;
 import com.travel.travelguide.Ulti.LogUtils;
+import com.travel.travelguide.adapter.CustomInfoWindowAdapter;
 import com.travel.travelguide.manager.TransactionManager;
 import com.travel.travelguide.presenter.MapGuide.IMapGuideView;
 import com.travel.travelguide.presenter.MapGuide.MapGuidePresenter;
@@ -39,6 +41,7 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
     int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     private GoogleMap mMap;
     private MapGuidePresenter mapGuidePresenter;
+    private CustomInfoWindowAdapter customInfoWindowAdapter;
 
 
     public static MapGuideFragment newInstance() {
@@ -74,17 +77,35 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+        customInfoWindowAdapter = new CustomInfoWindowAdapter(getActivity());
+        mMap.setInfoWindowAdapter(customInfoWindowAdapter);
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
 
-       mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-           @Override
-           public void onCameraChange(CameraPosition cameraPosition) {
+        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
                 mMap.getProjection().getVisibleRegion();
-               LogUtils.logD(TAG, "Zoom level: " + cameraPosition.zoom);
-               mapGuidePresenter.cameraChanged(mMap);
-           }
-       });
+                LogUtils.logD(TAG, "Zoom level: " + cameraPosition.zoom);
+                mapGuidePresenter.cameraChanged(mMap);
+            }
+        });
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                marker.showInfoWindow();
+                return true;
+            }
+        });
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Toast.makeText(getActivity(), marker.getTitle(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -94,6 +115,7 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
         mapGuidePresenter.releaseResources();
         super.onDestroyView();
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -120,18 +142,21 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
     public void displayLocation(Location lastLocation) {
         Toast.makeText(getActivity(), "Location: " + lastLocation.getLatitude() + " - " + lastLocation.getLongitude(), Toast.LENGTH_SHORT).show();
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
-        mMap.addMarker(new MarkerOptions().position(sydney).title(lastLocation.getProvider()));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng latLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+        mMap.addMarker(new MarkerOptions().position(latLng).title(lastLocation.getProvider()));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 
     @Override
     public ArrayList<Marker> displayMarkers(ArrayList<User> users) {
         mMap.clear();
+        customInfoWindowAdapter.setUsers(users);
         ArrayList<Marker> markers = new ArrayList<>();
         for (User user : users) {
             LatLng sydney = new LatLng(user.getLocation().getLatitude(), user.getLocation().getLongitude());
-            Marker marker = mMap.addMarker(new MarkerOptions().position(sydney).title(user.getLocationName()));
+            Marker marker = mMap.addMarker(new MarkerOptions().position(sydney).title(user.getLocationName())
+            .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_icon)));
+            marker.setSnippet(user.getId());
             markers.add(marker);
         }
         return markers;

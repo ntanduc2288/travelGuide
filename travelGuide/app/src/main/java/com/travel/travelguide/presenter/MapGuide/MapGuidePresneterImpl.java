@@ -59,12 +59,11 @@ public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient
     private boolean mRequestingLocationUpdates = false;
     private Activity activity;
     private Location mLastLocation;
+    private Location previousCenterLocation;
     private String TAG = MapGuidePresneterImpl.class.getSimpleName();
-    float previousRadius = 0;
-    Location previousCenterLocation = null;
-
     private String USERS_RADIUS_WHERE_CLAUSE = "distance(%s, %s, locations.latitude, locations.longitude)" + " <= km(%s)";
     private Handler handler;
+
     public MapGuidePresneterImpl(Activity activity, IMapGuideView mapGuideView) {
         this.mapGuideView = mapGuideView;
         this.activity = activity;
@@ -130,13 +129,6 @@ public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient
     public void startLocationUpdates() {
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && mRequestingLocationUpdates) {
             if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
                 return;
             }
             LocationServices.FusedLocationApi.requestLocationUpdates(
@@ -287,20 +279,10 @@ public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient
                     mapGuideView.showLoading();
                     float radius = MapUlti.getRadius(googleMap);
                     Location centerLocation = MapUlti.getCenterLocation(googleMap);
-                    getUserListWithRadius(centerLocation.getLatitude(), centerLocation.getLongitude(), radius);
-//                    boolean isLocationChanged = (previousCenterLocation == null ||
-//                            (centerLocation.distanceTo(previousCenterLocation) != 0.0) ||
-//                            radius != previousRadius) &&
-//                            (centerLocation.getLatitude() != 0 && centerLocation.getLongitude() != 0);
-//                    if (isLocationChanged) {
-//                        previousCenterLocation = centerLocation;
-//                        previousRadius = radius;
-//
-//                        getUserListWithRadius(centerLocation.getLatitude(), centerLocation.getLongitude(), radius);
-//                    } else {
-//                        mapGuideView.hideLoading();
-//                    }
-
+                    if(previousCenterLocation == null || centerLocation.distanceTo(previousCenterLocation) > 10){
+                        previousCenterLocation = centerLocation;
+                        getUserListWithRadius(centerLocation.getLatitude(), centerLocation.getLongitude(), radius);
+                    }
                 }
             }
         }, DELAY_TIME);

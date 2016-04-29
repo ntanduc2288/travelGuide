@@ -5,6 +5,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
@@ -25,13 +27,15 @@ import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
 import com.travel.travelguide.Ulti.Constants;
 import com.travel.travelguide.Ulti.LogUtils;
-import com.travel.travelguide.adapter.CustomInfoWindowAdapter;
+import com.travel.travelguide.adapter.UserInfoWindowAdapter;
 import com.travel.travelguide.manager.TransactionManager;
 import com.travel.travelguide.presenter.MapGuide.IMapGuideView;
 import com.travel.travelguide.presenter.MapGuide.MapGuidePresenter;
 import com.travel.travelguide.presenter.MapGuide.MapGuidePresneterImpl;
 
 import java.util.ArrayList;
+
+import butterknife.Bind;
 
 /**
  * Created by user on 4/23/16.
@@ -41,8 +45,9 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
     int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     private GoogleMap mMap;
     private MapGuidePresenter mapGuidePresenter;
-    private CustomInfoWindowAdapter customInfoWindowAdapter;
-
+    private UserInfoWindowAdapter customInfoWindowAdapter;
+    @Bind(R.id.loading_progress)
+    ProgressBar pbLoading;
 
     public static MapGuideFragment newInstance() {
         return new MapGuideFragment();
@@ -77,7 +82,7 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        customInfoWindowAdapter = new CustomInfoWindowAdapter(getActivity());
+        customInfoWindowAdapter = new UserInfoWindowAdapter(getActivity());
         mMap.setInfoWindowAdapter(customInfoWindowAdapter);
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
@@ -103,7 +108,7 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                Toast.makeText(getActivity(), marker.getTitle(), Toast.LENGTH_SHORT).show();
+                mapGuidePresenter.getProfileUserInfoFromUser(marker);
             }
         });
 
@@ -130,12 +135,12 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
 
     @Override
     public void showLoading() {
-
+        pbLoading.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
-
+        pbLoading.setVisibility(View.GONE);
     }
 
     @Override
@@ -188,5 +193,10 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
     public void onError(Status status) {
         // TODO: Handle the error.
         Toast.makeText(getActivity(), status.getStatusMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void gotoProfileScreen(User user) {
+        TransactionManager.getInstance().addFragment(getFragmentManager(), ProfileFragment.newInstance(user));
     }
 }

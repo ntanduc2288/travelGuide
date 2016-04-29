@@ -2,20 +2,40 @@ package com.travel.travelguide.Object;
 
 import com.backendless.BackendlessUser;
 import com.backendless.geo.GeoPoint;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 import com.travel.travelguide.Ulti.Constants;
 import com.travel.travelguide.Ulti.Ulti;
 
 /**
  * Created by user on 4/23/16.
  */
+@DatabaseTable(tableName = "User")
 public class User extends BackendlessUser {
+    @DatabaseField
     String id;
+    @DatabaseField
     String name;
+    @DatabaseField
     String facebookLink;
+    @DatabaseField
     String email;
     String password;
+    @DatabaseField
     String locationName;
+
     GeoPoint geoPoint;
+
+    @DatabaseField
+    double latitude = 0.0;
+
+    @DatabaseField
+    double longitude = 0.0;
+
+    @DatabaseField
+    String avatar;
+    @DatabaseField
+    String coverPicture;
 
     public User(){
 
@@ -28,17 +48,56 @@ public class User extends BackendlessUser {
         setFacebookLink((String) backendlessUser.getProperty(Constants.KEY_FACEBOK_LINK));
         setlocation(Ulti.extractGeoPoint(backendlessUser));
         setLocationName((String) backendlessUser.getProperty(Constants.KEY_LOCATION_NAME));
+        setAvatar((String) backendlessUser.getProperty(Constants.KEY_AVATAR));
+        setCoverPicture((String) backendlessUser.getProperty(Constants.KEY_COVER_PICTURE));
     }
 
+    public String getAvatar() {
+        return avatar;
+    }
 
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+        setProperty(Constants.KEY_AVATAR, avatar);
+    }
+
+    public String getCoverPicture() {
+        return coverPicture;
+    }
+
+    public void setCoverPicture(String coverPicture) {
+        this.coverPicture = coverPicture;
+        setProperty(Constants.KEY_COVER_PICTURE, coverPicture);
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 
     public GeoPoint getLocation() {
+        if(geoPoint == null){
+            geoPoint = new GeoPoint(latitude, longitude);
+        }
         return geoPoint;
     }
 
     public void setlocation(GeoPoint geoPoint) {
         this.geoPoint = geoPoint;
         setProperty(Constants.KEY_LOCATION, geoPoint);
+        this.latitude = geoPoint.getLatitude();
+        this.longitude = geoPoint.getLongitude();
     }
 
     public String getLocationName() {
@@ -104,4 +163,6 @@ public class User extends BackendlessUser {
         backendlessUser.setProperties(getProperties());
         return backendlessUser;
     }
+
+
 }

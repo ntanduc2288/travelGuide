@@ -52,7 +52,7 @@ public class RegisterPresenterImpl implements RegisterPresenter {
             public void handleResponse(BackendlessUser response) {
                     LogUtils.logD(TAG, response.toString());
                     User userTmp = new User(response);
-                    UserManager.getInstance().setUser(userTmp);
+                    UserManager.getInstance().setCurrentUser(userTmp);
                     if(viewIsValid()){
                         registerView.hideLoading();
                         registerView.gotoMapScreen();

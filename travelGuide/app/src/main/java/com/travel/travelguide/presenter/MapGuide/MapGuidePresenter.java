@@ -4,6 +4,7 @@ import android.location.Location;
 import android.support.v4.app.Fragment;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.Marker;
 import com.travel.travelguide.presenter.IBasePresenter;
 
 /**
@@ -40,5 +41,7 @@ public interface MapGuidePresenter extends IBasePresenter {
     void searchPlace(Fragment fragment, String query);
 
     void cameraChanged(GoogleMap googleMap);
+
+    void getProfileUserInfoFromUser(Marker marker);
 
 }

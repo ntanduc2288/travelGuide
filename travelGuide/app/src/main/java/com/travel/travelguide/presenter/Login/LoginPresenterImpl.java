@@ -1,5 +1,7 @@
 package com.travel.travelguide.presenter.Login;
 
+import android.content.Context;
+
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
@@ -8,17 +10,21 @@ import com.travel.travelguide.Object.User;
 import com.travel.travelguide.Ulti.LogUtils;
 import com.travel.travelguide.Ulti.Ulti;
 import com.travel.travelguide.manager.UserManager;
+import com.travel.travelguide.presenter.BasePresenter;
 
 /**
  * Created by user on 4/22/16.
  */
-public class LoginPresenterImpl implements LoginPresenter {
+public class LoginPresenterImpl extends BasePresenter implements LoginPresenter {
     final String TAG = LoginPresenterImpl.class.getSimpleName();
     ILoginView loginView;
+    Context context;
 
-    public LoginPresenterImpl(ILoginView loginView) {
+    public LoginPresenterImpl(Context context, ILoginView loginView) {
+        this.context = context;
         this.loginView = loginView;
     }
+
 
     @Override
     public void validateData(String email, String password) {
@@ -41,12 +47,14 @@ public class LoginPresenterImpl implements LoginPresenter {
             @Override
             public void handleResponse(BackendlessUser response) {
                 LogUtils.logD(TAG, "handle response login: " + response.toString());
-                UserManager.getInstance().setUser(new User(response));
+                UserManager.getInstance().setCurrentUser(new User(response));
+                UserManager.getInstance().saveUserToDatabase(context);
                 if(viewIsValid()){
                     loginView.hideLoading();
                     loginView.gotoMapScreen();
                 }
             }
+
 
             @Override
             public void handleFault(BackendlessFault fault) {
@@ -66,8 +74,10 @@ public class LoginPresenterImpl implements LoginPresenter {
         loginView.showError(errorCode);
     }
 
+
     @Override
     public void releaseResources() {
+        releaseDatabaseHelper();
         loginView = null;
     }
 

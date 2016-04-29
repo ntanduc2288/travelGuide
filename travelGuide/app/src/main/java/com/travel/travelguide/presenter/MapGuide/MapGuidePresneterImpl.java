@@ -63,11 +63,13 @@ public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient
     private String TAG = MapGuidePresneterImpl.class.getSimpleName();
     private String USERS_RADIUS_WHERE_CLAUSE = "distance(%s, %s, locations.latitude, locations.longitude)" + " <= km(%s)";
     private Handler handler;
+    ArrayList<User> users;
 
     public MapGuidePresneterImpl(Activity activity, IMapGuideView mapGuideView) {
         this.mapGuideView = mapGuideView;
         this.activity = activity;
         handler = new Handler();
+        users = new ArrayList<User>();
     }
 
     @Override
@@ -236,7 +238,7 @@ public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient
         LogUtils.logD(TAG, "get user data response: " + response.getData().toString());
 
 
-        ArrayList<User> users = new ArrayList<User>();
+        users.clear();
         ArrayList<Marker> markers = new ArrayList<Marker>();
         for (BackendlessUser backendlessUser : response.getData()) {
             User user = new User(backendlessUser);
@@ -295,5 +297,21 @@ public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient
         handler.removeCallbacksAndMessages(null);
         handler = null;
         mapGuideView = null;
+    }
+
+    @Override
+    public void getProfileUserInfoFromUser(Marker marker) {
+        if(mapGuideView != null){
+            mapGuideView.showLoading();
+            for(User user : users){
+                if(user.getId().endsWith(marker.getSnippet())){
+                    mapGuideView.hideLoading();
+                    mapGuideView.gotoProfileScreen(user);
+                    break;
+                }
+            }
+
+        }
+
     }
 }

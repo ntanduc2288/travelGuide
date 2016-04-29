@@ -13,6 +13,8 @@ public class Constants {
     public static final int PLACE_PICKER_REQUEST = 1;
     public static final String KEY_LOCATION_NAME = "locationName";
     public static final String KEY_LOCATION = "locations";
+    public static final String KEY_AVATAR = "avatar";
+    public static final String KEY_COVER_PICTURE = "coverPicture";
 
     public static final float DEFAULT_RADIUS = 20; //mile
     public static final float DEFAULT_ZOOM_LEVEL = 14;

@@ -19,4 +19,5 @@ public interface IMapGuideView {
     void showError(String errorMessage);
     void zoomToLevel(CameraUpdate cameraUpdate);
     void zoomToLevel(float level);
+    void gotoProfileScreen(User user);
 }

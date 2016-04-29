@@ -47,7 +47,7 @@ public class LoginFragment extends BaseFragment implements ILoginView, View.OnCl
 
     @Override
     protected void setupViews() {
-        loginPresenter = new LoginPresenterImpl(this);
+        loginPresenter = new LoginPresenterImpl(getActivity().getApplicationContext(),this);
         btnActionSignIn.setOnClickListener(this);
         btnActionSignIn.setMode(ActionProcessButton.Mode.ENDLESS);
         btnActionRegister.setOnClickListener(this);

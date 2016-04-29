@@ -1,6 +1,13 @@
 package com.travel.travelguide.manager;
 
+import android.content.Context;
+import android.widget.Toast;
+
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.travel.travelguide.Object.User;
+import com.travel.travelguide.Ulti.DatabaseHelper;
+
+import java.sql.SQLException;
 
 /**
  * Created by user on 4/23/16.
@@ -8,6 +15,8 @@ import com.travel.travelguide.Object.User;
 public class UserManager {
     private static UserManager instance;
     User user;
+    DatabaseHelper databaseHelper;
+
     public static UserManager getInstance(){
         if(instance == null){
             synchronized (UserManager.class){
@@ -20,13 +29,38 @@ public class UserManager {
         return instance;
     }
 
+    private DatabaseHelper getDatabaseHelper(Context context){
+        if(databaseHelper == null){
+            databaseHelper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
+        }
+        return databaseHelper;
+    }
+
     private UserManager(){}
 
-    public User getUser() {
+    public User getCurrentUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setCurrentUser(User user) {
         this.user = user;
     }
+
+    public void saveUserToDatabase(Context context){
+        try {
+//            getDatabaseHelper(context).getTestObject().createOrUpdate(new TestObject("1 id", "Name testing"));
+            getDatabaseHelper(context).getUser().create(user);
+
+            if(databaseHelper != null){
+                OpenHelperManager.releaseHelper();
+                databaseHelper = null;
+            }
+
+            Toast.makeText(context, "Save data successful. ", Toast.LENGTH_SHORT).show();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Toast.makeText(context, "Could not save user data. " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }

@@ -2,12 +2,13 @@ package com.travel.travelguide.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v7.widget.AppCompatImageView;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
+import com.mikhaellopez.circularimageview.CircularImageView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
 
@@ -20,7 +21,7 @@ public class UserInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     Context context;
     ArrayList<User> users;
     private TextView lblUsername, lblDescription;
-    private AppCompatImageView imgAvatar;
+    private CircularImageView imgAvatar;
 
     public UserInfoWindowAdapter(Context context) {
         this.context = context;
@@ -40,7 +41,7 @@ public class UserInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         View view = ((Activity)context).getLayoutInflater().inflate(R.layout.user_info_window, null);
         lblUsername = (TextView) view.findViewById(R.id.title);
         lblDescription = (TextView) view.findViewById(R.id.snippet);
-        imgAvatar = (AppCompatImageView) view.findViewById(R.id.badge);
+        imgAvatar = (CircularImageView) view.findViewById(R.id.badge);
 
         bindData(marker);
         return view;
@@ -52,6 +53,7 @@ public class UserInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
                 if(user.getId().equals(marker.getSnippet())){
                     lblUsername.setText(user.getName());
                     lblDescription.setText(user.getLocationName());
+                    ImageLoader.getInstance().displayImage(user.getAvatar(), imgAvatar);
                     break;
                 }
             }

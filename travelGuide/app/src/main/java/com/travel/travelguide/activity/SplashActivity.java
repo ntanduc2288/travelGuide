@@ -1,12 +1,12 @@
 package com.travel.travelguide.activity;
 
-import android.content.Intent;
 import android.os.Handler;
-import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 
+import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
+import com.travel.travelguide.manager.TransactionManager;
+import com.travel.travelguide.manager.UserManager;
 
 import butterknife.Bind;
 
@@ -32,26 +32,54 @@ public class SplashActivity extends BaseActivity {
         }
 
         handler = new Handler();
+
+
+
+
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+
+                User currentUser = UserManager.getInstance().getCurrentUser(getApplicationContext());
+                if(currentUser != null){
+                    TransactionManager.getInstance().gotoActivity(SplashActivity.this, MainActivity.class, null, true);
+                }else {
+                    TransactionManager.getInstance().gotoActivity(SplashActivity.this, LoginActivity.class, null, false, imageView, "TEST");
+                }
+
+
             }
-        }, 3 * 1000);
+        }, 2 * 1000);
 
 
-        imageView.post(new Runnable() {
-            @Override
-            public void run() {
-                ScaleAnimation scaleAnimation = new ScaleAnimation(1.0f, 20.0f, 1.0f, 20.0f, Animation.RELATIVE_TO_PARENT, 0.5f, Animation.RELATIVE_TO_PARENT, 0.5f);
-                scaleAnimation.setDuration(5 * 1000);
-                imageView.startAnimation(scaleAnimation);
-            }
-        });
+//        imageView.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                ScaleAnimation scaleAnimation = new ScaleAnimation(1.0f, 20.0f, 1.0f, 20.0f, Animation.RELATIVE_TO_PARENT, 0.5f, Animation.RELATIVE_TO_PARENT, 0.5f);
+//                scaleAnimation.setDuration(5 * 1000);
+//                imageView.startAnimation(scaleAnimation);
+//            }
+//        });
+
+//        imageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+//
+//                ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(SplashActivity.this, imageView, "TEST");
+//                ActivityCompat.startActivity(SplashActivity.this, intent,  activityOptionsCompat.toBundle());
+//            }
+//        });
 
 
 
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacksAndMessages(null);
+        handler = null;
     }
 }

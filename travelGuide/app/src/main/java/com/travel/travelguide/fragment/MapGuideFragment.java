@@ -23,12 +23,15 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.mikhaellopez.circularimageview.CircularImageView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
 import com.travel.travelguide.Ulti.Constants;
 import com.travel.travelguide.Ulti.LogUtils;
 import com.travel.travelguide.adapter.UserInfoWindowAdapter;
 import com.travel.travelguide.manager.TransactionManager;
+import com.travel.travelguide.manager.UserManager;
 import com.travel.travelguide.presenter.MapGuide.IMapGuideView;
 import com.travel.travelguide.presenter.MapGuide.MapGuidePresenter;
 import com.travel.travelguide.presenter.MapGuide.MapGuidePresneterImpl;
@@ -40,7 +43,7 @@ import butterknife.Bind;
 /**
  * Created by user on 4/23/16.
  */
-public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback, IMapGuideView, PlaceSelectionListener {
+public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback, IMapGuideView, PlaceSelectionListener, View.OnClickListener {
     private String TAG = MapGuideFragment.class.getSimpleName();
     int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     private GoogleMap mMap;
@@ -48,6 +51,8 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
     private UserInfoWindowAdapter customInfoWindowAdapter;
     @Bind(R.id.loading_progress)
     ProgressBar pbLoading;
+    @Bind(R.id.my_profile_avatar)
+    CircularImageView imgMyProfileAvatar;
 
     public static MapGuideFragment newInstance() {
         return new MapGuideFragment();
@@ -72,6 +77,9 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
         SupportPlaceAutocompleteFragment placeAutocompleteFragment = (SupportPlaceAutocompleteFragment) getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
         placeAutocompleteFragment.setHint(getString(R.string.search_a_location));
         placeAutocompleteFragment.setOnPlaceSelectedListener(this);
+
+        bindMyProfileData(UserManager.getInstance().getCurrentUser(getActivity().getApplicationContext()));
+        imgMyProfileAvatar.setOnClickListener(this);
 
         mapGuidePresenter.connect();
     }
@@ -196,7 +204,22 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
     }
 
     @Override
+    public void bindMyProfileData(User user) {
+        ImageLoader.getInstance().displayImage(user.getAvatar(), imgMyProfileAvatar);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.my_profile_avatar:
+                gotoProfileScreen(UserManager.getInstance().getCurrentUser(getActivity().getApplicationContext()));
+                break;
+        }
+    }
+
+    @Override
     public void gotoProfileScreen(User user) {
         TransactionManager.getInstance().addFragment(getFragmentManager(), ProfileFragment.newInstance(user));
+//        TransactionManager.getInstance().addFragment(getFragmentManager(), RegisterFragment.newInstance());
     }
 }

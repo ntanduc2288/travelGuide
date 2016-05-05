@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fontpath="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minWidth="1000dp"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/xml_bg_white_rounded_no_border"
+        android:orientation="vertical"
+        android:layout_margin="@dimen/padding_small" >
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_take_photo"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:background="@null"
+            android:gravity="center"
+            android:text="@string/take_photo"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/general_text_size"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/Gray" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_choose_photo"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:background="@null"
+            android:text="@string/choose_photo"
+            android:gravity="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/general_text_size"
+            />
+    </LinearLayout>
+
+</LinearLayout>

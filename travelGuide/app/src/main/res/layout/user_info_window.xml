@@ -9,14 +9,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <android.support.v7.widget.AppCompatImageView
+        <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/badge"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_marginRight="5dp"
-            android:background="@mipmap/ic_launcher"
-            android:adjustViewBounds="true" >
-        </android.support.v7.widget.AppCompatImageView>
+            android:src="@drawable/anonymous_icon"
+            >
+        </com.mikhaellopez.circularimageview.CircularImageView>
 
         <LinearLayout
             android:layout_width="wrap_content"

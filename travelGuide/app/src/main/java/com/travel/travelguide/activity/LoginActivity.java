@@ -15,7 +15,6 @@ import com.travel.travelguide.manager.TransactionManager;
  */
 public class LoginActivity extends BaseActivity {
 
-
     @Override
     protected int getLayoutId() {
         return R.layout.activity_container;
@@ -23,6 +22,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void setupViews() {
+
         TransactionManager.getInstance().replaceFragment(getSupportFragmentManager(), LoginFragment.newInstance());
 
 

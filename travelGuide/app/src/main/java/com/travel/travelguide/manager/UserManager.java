@@ -8,6 +8,7 @@ import com.travel.travelguide.Object.User;
 import com.travel.travelguide.Ulti.DatabaseHelper;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * Created by user on 4/23/16.
@@ -42,6 +43,20 @@ public class UserManager {
         return user;
     }
 
+    public User getCurrentUser(Context context) {
+        if(user == null){
+            try {
+                ArrayList<User> users = (ArrayList<User>) getDatabaseHelper(context).getUser().queryForAll();
+                if(users != null && users.size() > 1){
+                    user = users.get(0);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return user;
+    }
+
     public void setCurrentUser(User user) {
         this.user = user;
     }
@@ -61,6 +76,18 @@ public class UserManager {
             e.printStackTrace();
             Toast.makeText(context, "Could not save user data. " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public boolean clearCurrentUserInfo(Context context){
+        int result = 0;
+        try {
+            result = getDatabaseHelper(context).getUser().delete(user);
+            user = null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result > 0 ? true : false;
     }
 
 }

@@ -57,47 +57,49 @@ public class LoginFragment extends BaseFragment implements ILoginView, View.OnCl
     @Override
     public void showLoading() {
         btnActionSignIn.setProgress(50);
-        btnActionSignIn.setEnabled(false);
+        shouldEnableButtons(false);
     }
 
     @Override
     public void hideLoading() {
-
+        shouldEnableButtons(true);
     }
 
     @Override
     public void invalidEmail() {
         txtEmail.setError(getString(R.string.invalid_email));
         btnActionSignIn.setProgress(0);
-        btnActionSignIn.setEnabled(true);
+
     }
 
     @Override
     public void invalidPassword() {
         txtPassword.setError(getString(R.string.invalid_password));
         btnActionSignIn.setProgress(0);
-        btnActionSignIn.setEnabled(true);
     }
 
     @Override
     public void showError(Integer errorCode) {
         btnActionSignIn.setProgress(0);
-        btnActionSignIn.setEnabled(true);
         Toast.makeText(getActivity(), "Error code: " + errorCode, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void showError(String errorMessage) {
         btnActionSignIn.setProgress(0);
-        btnActionSignIn.setEnabled(true);
         Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
+    }
+
+    private void shouldEnableButtons(boolean should){
+        btnActionSignIn.setEnabled(should);
+        btnActionRegister.setEnabled(should);
+        btnForgotPassword.setEnabled(should);
     }
 
     @Override
     public void gotoMapScreen() {
         btnActionSignIn.setProgress(100);
-        btnActionSignIn.setEnabled(true);
-        TransactionManager.getInstance().gotoActivity(getActivity(), MainActivity.class, null, false);
+        TransactionManager.getInstance().gotoActivity(getActivity(), MainActivity.class, null, true);
     }
 
     @Override

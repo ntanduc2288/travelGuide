@@ -8,5 +8,7 @@ import com.travel.travelguide.presenter.IBasePresenter;
 public interface ProfilePresenter extends IBasePresenter{
     void getUserProfile();
     void updateUserProfile();
+    void switchMode();
+    void logout();
     void error(Integer errorCode);
 }

@@ -20,4 +20,5 @@ public interface IMapGuideView {
     void zoomToLevel(CameraUpdate cameraUpdate);
     void zoomToLevel(float level);
     void gotoProfileScreen(User user);
+    void bindMyProfileData(User user);
 }

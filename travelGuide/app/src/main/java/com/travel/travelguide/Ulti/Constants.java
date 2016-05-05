@@ -1,5 +1,7 @@
 package com.travel.travelguide.Ulti;
 
+import android.os.Environment;
+
 /**
  * Created by user on 4/23/16.
  */
@@ -18,4 +20,11 @@ public class Constants {
 
     public static final float DEFAULT_RADIUS = 20; //mile
     public static final float DEFAULT_ZOOM_LEVEL = 14;
+    public static final String EMPTY_STRING = "";
+    public static final String RETURN_DATA = "return-data";
+
+    public static final String imagePath = Environment.getExternalStorageDirectory().getPath() + "/tmpImage.jpg";
+    public static final int CAMERA_CODE = 2;
+    public static final int GALLERY_CODE = 3;
+    public static final int CROP_CODE = 4;
 }

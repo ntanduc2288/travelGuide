@@ -13,16 +13,16 @@ import com.travel.travelguide.Ulti.Ulti;
 @DatabaseTable(tableName = "User")
 public class User extends BackendlessUser {
     @DatabaseField
-    String id;
+    String id = Constants.EMPTY_STRING;
     @DatabaseField
-    String name;
+    String name = Constants.EMPTY_STRING;
     @DatabaseField
-    String facebookLink;
+    String facebookLink = Constants.EMPTY_STRING;
     @DatabaseField
-    String email;
-    String password;
+    String email = Constants.EMPTY_STRING;
+    String password = Constants.EMPTY_STRING;
     @DatabaseField
-    String locationName;
+    String locationName = Constants.EMPTY_STRING;
 
     GeoPoint geoPoint;
 
@@ -33,9 +33,9 @@ public class User extends BackendlessUser {
     double longitude = 0.0;
 
     @DatabaseField
-    String avatar;
+    String avatar = Constants.EMPTY_STRING;
     @DatabaseField
-    String coverPicture;
+    String coverPicture = Constants.EMPTY_STRING;
 
     public User(){
 

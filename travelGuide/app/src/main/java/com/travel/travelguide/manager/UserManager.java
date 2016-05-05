@@ -4,6 +4,8 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.Ulti.DatabaseHelper;
 
@@ -81,8 +83,13 @@ public class UserManager {
     public boolean clearCurrentUserInfo(Context context){
         int result = 0;
         try {
-            result = getDatabaseHelper(context).getUser().delete(user);
-            user = null;
+            Dao<User, Long> dao =  getDatabaseHelper(context).getUser();
+            DeleteBuilder<User, Long> deleteBuilder = dao.deleteBuilder();
+            deleteBuilder.where().eq("id", user.getId());
+            result = deleteBuilder.delete();
+            if(result > 0){
+                user = null;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

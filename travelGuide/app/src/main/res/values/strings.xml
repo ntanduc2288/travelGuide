@@ -134,4 +134,8 @@
     <string name="toast_unexpected_error">Unexpected error</string>
     <string name="take_photo">Take photo</string>
     <string name="choose_photo">Choose photo</string>
+    <string name="twitter_link">Twitter link</string>
+    <string name="phone_number">Phone number</string>
+    <string name="google_plus_link">Google plus link</string>
+    <string name="language">Language</string>
 </resources>

@@ -1,11 +1,14 @@
 package com.travel.travelguide.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatSpinner;
+import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +24,8 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
 import com.travel.travelguide.Ulti.Constants;
+import com.travel.travelguide.activity.MainActivity;
+import com.travel.travelguide.manager.TransactionManager;
 import com.travel.travelguide.presenter.register.IRegisterView;
 import com.travel.travelguide.presenter.register.RegisterPresenter;
 import com.travel.travelguide.presenter.register.RegisterPresenterImpl;
@@ -34,20 +39,24 @@ import butterknife.Bind;
  */
 public class RegisterFragment extends BaseFragment implements IRegisterView, View.OnClickListener {
     @Bind(R.id.email)
-    EditText txtEmail;
+    AppCompatEditText txtEmail;
     @Bind(R.id.password)
-    EditText txtPassword;
+    AppCompatEditText txtPassword;
     @Bind(R.id.btnRegister)
     ActionProcessButton btnActionRegister;
-    @Bind(R.id.name) EditText txtName;
-    @Bind(R.id.facebook) EditText txtFacebook;
-    @Bind(R.id.confirm_password) EditText txtConfirmPassword;
+    @Bind(R.id.name) AppCompatEditText txtName;
+    @Bind(R.id.facebook) AppCompatEditText txtFacebook;
+    @Bind(R.id.confirm_password) AppCompatEditText txtConfirmPassword;
     @Bind(R.id.location)
-    Button lblLocation;
+    AppCompatButton lblLocation;
     @Bind(R.id.title)
     TextView lblTitle;
     @Bind(R.id.back_button)
-    Button btnBack;
+    AppCompatButton btnBack;
+    @Bind(R.id.phone) AppCompatEditText txtPhone;
+    @Bind(R.id.language) AppCompatSpinner spnLanguage;
+    @Bind(R.id.twitter) AppCompatEditText txtTwitter;
+    @Bind(R.id.instagram) AppCompatEditText txtInstagram;
 
     GoogleApiClient googleApiClient;
     RegisterPresenter registerPresenter;
@@ -117,7 +126,11 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
 
     @Override
     public void showError(Integer errorCode) {
+    }
 
+    @Override
+    public Context getContext() {
+        return getActivity();
     }
 
     @Override
@@ -131,6 +144,7 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
     public void gotoMapScreen() {
         btnActionRegister.setProgress(100);
         btnActionRegister.setEnabled(true);
+        TransactionManager.getInstance().gotoActivity(getActivity(), MainActivity.class, null, true);
     }
 
     @Override
@@ -142,31 +156,48 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnRegister:
-                User user = new User();
-                user.setEmail(txtEmail.getText().toString().trim());
-                user.setName(txtName.getText().toString().trim());
-                user.setFacebookLink(txtFacebook.getText().toString().trim());
-                if(place != null){
-                    user.setLocationName(lblLocation.getText().toString().trim());
-                    GeoPoint geoPoint = new GeoPoint(place.getLatLng().latitude, place.getLatLng().longitude);
-                    user.setlocation(geoPoint);
-                }
-                registerPresenter.validateData(user, txtPassword.getText().toString().trim(), txtConfirmPassword.getText().toString().trim());
+                registerClicked();
                 break;
             case R.id.location:
-                try {
-                    PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-                    startActivityForResult(builder.build(getActivity()), Constants.PLACE_PICKER_REQUEST);
-                } catch (GooglePlayServicesRepairableException e) {
-                    e.printStackTrace();
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    e.printStackTrace();
-                }
+                locationClicked();
                 break;
             case R.id.back_button:
                 getActivity().onBackPressed();
                 break;
         }
+    }
+
+    private void locationClicked() {
+        try {
+            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+            startActivityForResult(builder.build(getActivity()), Constants.PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void registerClicked(){
+        User user = getDataFromViewsToUser();
+        registerPresenter.validateData(user, txtPassword.getText().toString().trim(), txtConfirmPassword.getText().toString().trim());
+    }
+
+    private User getDataFromViewsToUser(){
+        User user = new User();
+        user.setEmail(txtEmail.getText().toString().trim());
+        user.setName(txtName.getText().toString().trim());
+        user.setFacebookLink(txtFacebook.getText().toString().trim());
+        if(place != null){
+            user.setLocationName(lblLocation.getText().toString().trim());
+            GeoPoint geoPoint = new GeoPoint(place.getLatLng().latitude, place.getLatLng().longitude);
+            user.setlocation(geoPoint);
+        }
+        user.setTwitterLink(txtTwitter.getText().toString().trim());
+        user.setInstagramLink(txtInstagram.getText().toString().trim());
+        user.setPhoneNumber(txtPhone.getText().toString().trim());
+        user.setLanguage((String) spnLanguage.getSelectedItem());
+        return user;
     }
 
     @Override

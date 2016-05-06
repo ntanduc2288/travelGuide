@@ -53,6 +53,29 @@ public class LoginPresenterImpl extends BasePresenter implements LoginPresenter 
                     loginView.hideLoading();
                     loginView.gotoMapScreen();
                 }
+
+//                response.setProperty("avatar", "Link " + Calendar.getInstance().getTimeInMillis());
+//                UserManager.getInstance().setCurrentUser(new User(response));
+//                Backendless.UserService.update(UserManager.getInstance().getCurrentUser(), new AsyncCallback<BackendlessUser>() {
+//                    @Override
+//                    public void handleResponse(BackendlessUser response) {
+//                        UserManager.getInstance().setCurrentUser(new User(response));
+//                        UserManager.getInstance().saveUserToDatabase(context);
+//                        if (viewIsValid()) {
+//                            loginView.hideLoading();
+//                            loginView.gotoMapScreen();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void handleFault(BackendlessFault fault) {
+//                        LogUtils.logD(TAG, "handleFault login: " + fault.getMessage());
+//                        if(viewIsValid()){
+//                            loginView.hideLoading();
+//                            loginView.showError(fault.getMessage());
+//                        }
+//                    }
+//                });
             }
 
 

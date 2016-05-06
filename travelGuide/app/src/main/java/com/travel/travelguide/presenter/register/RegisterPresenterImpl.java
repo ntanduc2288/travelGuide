@@ -53,6 +53,7 @@ public class RegisterPresenterImpl implements RegisterPresenter {
                     LogUtils.logD(TAG, response.toString());
                     User userTmp = new User(response);
                     UserManager.getInstance().setCurrentUser(userTmp);
+                     UserManager.getInstance().saveUserToDatabase(registerView.getContext());
                     if(viewIsValid()){
                         registerView.hideLoading();
                         registerView.gotoMapScreen();

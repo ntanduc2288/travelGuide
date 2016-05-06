@@ -1,8 +1,8 @@
 package com.travel.travelguide.fragment;
 
+import android.support.v7.widget.AppCompatEditText;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,7 +19,7 @@ import butterknife.Bind;
  */
 public class ResetPasswordFragment extends BaseFragment implements IResetPasswordView, View.OnClickListener{
     @Bind(R.id.email)
-    EditText txtEmail;
+    AppCompatEditText txtEmail;
     @Bind(R.id.btnResetPassword)
     ActionProcessButton btnResetPassword;
     @Bind(R.id.title)

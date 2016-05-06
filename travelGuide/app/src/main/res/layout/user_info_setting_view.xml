@@ -1,135 +1,225 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
-
-    android:padding="20dp">
+    android:padding="20dp"
+    android:scrollbars="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-
-        <android.support.design.widget.TextInputLayout
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/name"
+            style="@style/EdittextStyle"
             android:layout_width="match_parent"
-            style="@style/TextInputStyle"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/name"
+            android:hint="@string/name"
+            android:singleLine="true"
+            android:text="Duc Nguyen" />
 
-            <EditText
-                android:id="@+id/name"
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/email"
+            style="@style/EdittextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/email"
+            android:hint="@string/prompt_email"
+            android:singleLine="true"
+            android:text="user@gmail.com" />
+
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/password"
+            style="@style/EdittextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/password"
+            android:hint="@string/prompt_password"
+            android:inputType="textPassword"
+            android:text="123" />
+
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/confirm_password"
+            style="@style/EdittextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/password"
+            android:hint="@string/prompt_confirm_password"
+            android:inputType="textPassword"
+            android:text="123" />
+
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/phone"
+            style="@style/EdittextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/phone"
+            android:hint="@string/phone_number"
+            android:inputType="phone"
+            android:text="0908790918" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="2dp"
+            android:id="@+id/relayoutlayout_language">
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/speak"
+                android:layout_marginLeft="5dp"
+                android:id="@+id/icon_speak"/>
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/language"
+                android:spinnerMode="dialog"
+                android:layout_toRightOf="@+id/icon_speak"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/name"
-                android:imeActionId="@+id/login"
-                android:imeActionLabel="@string/action_sign_in_short"
-                android:imeOptions="actionUnspecified"
-                android:maxLines="1"
-                style="@style/EdittextStyle"
-                android:singleLine="true"
-                android:text="Duc Nguyen" />
+                android:drawableLeft="@drawable/speak"
+                android:hint="@string/language"
+                android:text="Language" />
 
-        </android.support.design.widget.TextInputLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="2dp"
+                android:layout_below="@+id/icon_speak"
+                android:background="@color/colorPrimary"
+                />
 
-        <android.support.design.widget.TextInputLayout
+        </RelativeLayout>
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/facebook"
+            style="@style/EdittextStyle"
             android:layout_width="match_parent"
-            style="@style/TextInputStyle"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/facebook"
+            android:hint="@string/facebook_link"
+
+            android:text="Duc FB" />
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/twitter"
+            style="@style/EdittextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/twitter"
+            android:hint="@string/twitter_link"
+
+            android:text="Duc Twitter" />
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/instagram"
+            style="@style/EdittextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/instagram"
+            android:hint="@string/google_plus_link"
+
+            android:text="Duc Instagram" />
+
+
+        <RelativeLayout
+            android:id="@+id/relativelayout_travel_date"
+            android:layout_width="match_parent"
+            android:visibility="gone"
             android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/email"
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/travel_date_title"
+                style="@style/EdittextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/calendar"
+                android:hint="@string/google_plus_link"
+                android:text="Travel date" />
+
+            <LinearLayout
+                android:id="@+id/linearlayout_travel_from"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/prompt_email"
-                android:imeActionId="@+id/login"
-                android:imeActionLabel="@string/action_sign_in_short"
-                android:imeOptions="actionUnspecified"
-                android:maxLines="1"
-                style="@style/EdittextStyle"
-                android:singleLine="true"
-                android:text="user@gmail.com" />
+                android:layout_below="@+id/travel_date_title"
+                android:layout_marginLeft="40dp"
+                android:orientation="horizontal">
 
-        </android.support.design.widget.TextInputLayout>
+                <TextView
+                    android:id="@+id/travel_from_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="From: "
 
+                    android:textColor="@color/colorPrimary"
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            style="@style/TextInputStyle"
-            android:layout_height="wrap_content">
+                    android:textSize="@dimen/general_text_size" />
 
-            <EditText
-                android:id="@+id/password"
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/textview_from"
+                    style="@style/TextviewStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="May 10, 2016" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearlayout_travel_to"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/prompt_password"
-                style="@style/EdittextStyle"
-                android:imeActionId="@+id/login"
-                android:imeActionLabel="@string/action_sign_in_short"
-                android:imeOptions="actionUnspecified"
-                android:inputType="textPassword"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:text="123" />
+                android:layout_below="@+id/linearlayout_travel_from"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
 
-        </android.support.design.widget.TextInputLayout>
+                <TextView
+                    android:id="@+id/travel_to_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="To: "
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            style="@style/TextInputStyle"
-            android:layout_height="wrap_content">
+                    android:textColor="@color/colorPrimary"
 
-            <EditText
-                android:id="@+id/confirm_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/prompt_confirm_password"
-                android:imeActionId="@+id/login"
-                android:imeActionLabel="@string/action_sign_in_short"
-                android:imeOptions="actionUnspecified"
-                android:inputType="textPassword"
-                android:maxLines="1"
-                style="@style/EdittextStyle"
-                android:singleLine="true"
-                android:text="123" />
+                    android:textSize="@dimen/general_text_size" />
 
-        </android.support.design.widget.TextInputLayout>
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/textview_to"
+                    style="@style/TextviewStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="May 30, 2016" />
+            </LinearLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            style="@style/TextInputStyle"
-            android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/facebook"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/facebook_link"
-                android:imeActionId="@+id/login"
-                android:imeActionLabel="@string/action_sign_in_short"
-                android:imeOptions="actionUnspecified"
-                android:maxLines="1"
-                style="@style/EdittextStyle"
-                android:singleLine="true"
-                android:text="Duc FB" />
-
-        </android.support.design.widget.TextInputLayout>
-
+        </RelativeLayout>
 
 
         <com.andexert.library.RippleView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             custom:rv_centered="true">
-            <Button
+
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="50dp"
-                android:gravity="center_vertical"
+                android:layout_marginLeft="2dp"
                 android:background="@color/transparent"
-                android:textColor="@color/colorPrimary"
+                android:drawableLeft="@drawable/localtion"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:minHeight="50dp"
                 android:text="@string/location"
+                android:textColor="@color/colorPrimary"
 
 
                 />

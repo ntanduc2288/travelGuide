@@ -4,7 +4,7 @@
     xmlns:custom="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray"
+    android:background="@drawable/bg_blue3"
 
     >
 
@@ -34,8 +34,8 @@
                     android:id="@+id/cover_picture"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/blur_map" />
+                    android:background="@drawable/bg_blue"
+                    android:scaleType="centerCrop" />
 
                 <com.mikhaellopez.circularimageview.CircularImageView
                     android:id="@+id/avatar"
@@ -56,53 +56,62 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
+
     <!--<include layout="@layout/profile_content" />-->
-    <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+
+
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="-15dp"
-        app:cardCornerRadius="5dp"
-        app:cardElevation="5dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_height="match_parent"
+            app:cardElevation="5dp"
+            app:cardCornerRadius="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
 
 
-            >
+                >
 
-            <include layout="@layout/user_info_setting_view" />
+                <include layout="@layout/user_info_setting_view" />
 
 
-            <com.andexert.library.RippleView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                custom:rv_centered="true">
-
-                <Button
-                    android:id="@+id/logout"
-                    android:layout_width="match_parent"
+                <com.andexert.library.RippleView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/transparent"
-                    android:gravity="center_vertical"
-                    android:minHeight="50dp"
-                    android:text="@string/logout"
-                    android:textColor="@color/colorPrimary"
-                    android:visibility="gone"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    custom:rv_centered="true">
+
+                    <android.support.v7.widget.AppCompatButton
+                        android:id="@+id/logout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/transparent"
+                        android:gravity="center_vertical|right"
+                        android:minHeight="50dp"
+                        android:text="@string/logout"
+                        android:textColor="@color/colorPrimary"
+                        android:visibility="visible"
 
 
-                    />
+                        />
 
-            </com.andexert.library.RippleView>
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
+                </com.andexert.library.RippleView>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+    </android.support.v4.widget.NestedScrollView>
 
 
     <android.support.design.widget.FloatingActionButton

@@ -5,6 +5,7 @@ import com.backendless.geo.GeoPoint;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.travel.travelguide.Ulti.Constants;
+import com.travel.travelguide.Ulti.LogUtils;
 import com.travel.travelguide.Ulti.Ulti;
 
 /**
@@ -23,19 +24,29 @@ public class User extends BackendlessUser {
     String password = Constants.EMPTY_STRING;
     @DatabaseField
     String locationName = Constants.EMPTY_STRING;
-
     GeoPoint geoPoint;
-
     @DatabaseField
     double latitude = 0.0;
-
     @DatabaseField
     double longitude = 0.0;
-
     @DatabaseField
     String avatar = Constants.EMPTY_STRING;
     @DatabaseField
     String coverPicture = Constants.EMPTY_STRING;
+
+    @DatabaseField
+    String phoneNumber = Constants.EMPTY_STRING;
+    @DatabaseField
+    String twitterLink = Constants.EMPTY_STRING;
+    @DatabaseField
+    String instagramLink = Constants.EMPTY_STRING;
+    @DatabaseField
+    String language = Constants.EMPTY_STRING;
+    @DatabaseField
+    long travelDateFrom = 0;
+    @DatabaseField
+    long travelDateTo = 0;
+
 
     public User(){
 
@@ -50,6 +61,72 @@ public class User extends BackendlessUser {
         setLocationName((String) backendlessUser.getProperty(Constants.KEY_LOCATION_NAME));
         setAvatar((String) backendlessUser.getProperty(Constants.KEY_AVATAR));
         setCoverPicture((String) backendlessUser.getProperty(Constants.KEY_COVER_PICTURE));
+        setPhoneNumber((String) backendlessUser.getProperty(Constants.KEY_PHONE_NUMBER));
+        setTwitterLink((String) backendlessUser.getProperty(Constants.KEY_TWITTER_LINK));
+        setInstagramLink((String) backendlessUser.getProperty(Constants.KEY_INSTAGRAM_LINK));
+        setLanguage((String) backendlessUser.getProperty(Constants.KEY_LANGUAGE));
+        try {
+            setTravelDateFrom((long) backendlessUser.getProperty(Constants.KEY_TRAVEL_DATE_FROM));
+            setTravelDateTo((long) backendlessUser.getProperty(Constants.KEY_TRAVEL_DATE_TO));
+        }catch (Exception e){
+            e.printStackTrace();
+            LogUtils.logE(User.class.getSimpleName(), e.toString());
+        }
+
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+        setProperty(Constants.KEY_PHONE_NUMBER, phoneNumber);
+    }
+
+    public String getTwitterLink() {
+        return twitterLink;
+    }
+
+    public void setTwitterLink(String twitterLink) {
+        this.twitterLink = twitterLink;
+        setProperty(Constants.KEY_TWITTER_LINK, twitterLink );
+    }
+
+    public String getInstagramLink() {
+        return instagramLink;
+    }
+
+    public void setInstagramLink(String instagramLink) {
+        this.instagramLink = instagramLink;
+        setProperty(Constants.KEY_INSTAGRAM_LINK, instagramLink );
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+        setProperty(Constants.KEY_LANGUAGE, language );
+    }
+
+    public long getTravelDateFrom() {
+        return travelDateFrom;
+    }
+
+    public void setTravelDateFrom(long travelDateFrom) {
+        this.travelDateFrom = travelDateFrom;
+        setProperty(Constants.KEY_TRAVEL_DATE_FROM, travelDateFrom );
+    }
+
+    public long getTravelDateTo() {
+        return travelDateTo;
+    }
+
+    public void setTravelDateTo(long travelDateTo) {
+        this.travelDateTo = travelDateTo;
+        setProperty(Constants.KEY_TRAVEL_DATE_TO, travelDateTo);
     }
 
     public String getAvatar() {

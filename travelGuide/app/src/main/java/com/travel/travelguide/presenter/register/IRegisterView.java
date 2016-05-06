@@ -1,5 +1,7 @@
 package com.travel.travelguide.presenter.register;
 
+import android.content.Context;
+
 /**
  * Created by user on 4/22/16.
  */
@@ -13,4 +15,5 @@ public interface IRegisterView {
     void showError(String errorMessage);
     void gotoMapScreen();
     void displayLocation(String location);
+    Context getContext();
 }

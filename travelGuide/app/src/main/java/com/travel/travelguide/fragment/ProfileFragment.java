@@ -8,21 +8,27 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.travel.travelguide.Object.User;
@@ -52,30 +58,52 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
     @Bind(R.id.avatar)
     CircularImageView imgAvatar;
     @Bind(R.id.email)
-    EditText txtEmail;
+    AppCompatEditText txtEmail;
     @Bind(R.id.password)
-    EditText txtPassword;
+    AppCompatEditText txtPassword;
     @Bind(R.id.name)
-    EditText txtName;
+    AppCompatEditText txtName;
     @Bind(R.id.facebook)
-    EditText txtFacebook;
+    AppCompatEditText txtFacebook;
     @Bind(R.id.confirm_password)
-    EditText txtConfirmPassword;
+    AppCompatEditText txtConfirmPassword;
     @Bind(R.id.location)
-    Button btnLocation;
+    AppCompatButton btnLocation;
     @Bind(R.id.edit_button)
-    Button btnEdit;
+    AppCompatButton btnEdit;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
     @Bind(R.id.fab)
     FloatingActionButton btnChat;
     @Bind(R.id.logout)
-    Button btnLogout;
+    AppCompatButton btnLogout;
     @Bind(R.id.cover_picture)
     AppCompatImageView imgCoverPicture;
+    @Bind(R.id.phone)
+    AppCompatEditText txtPhone;
+    @Bind(R.id.language)
+    AppCompatSpinner spnLanguage;
+    @Bind(R.id.twitter)
+    AppCompatEditText txtTwitter;
+    @Bind(R.id.instagram)
+    AppCompatEditText txtInstagram;
+    @Bind(R.id.textview_from)
+    AppCompatTextView lblTravelDateFrom;
+    @Bind(R.id.textview_to)
+    AppCompatTextView lblTravelDateTo;
+    @Bind(R.id.relativelayout_travel_date)
+    RelativeLayout rlTravelDateContainer;
+    @Bind(R.id.linearlayout_travel_from)
+    LinearLayout lnTravelDateFrom;
+    @Bind(R.id.linearlayout_travel_to)
+    LinearLayout lnTravelDateTo;
 
+    MaterialDialog dialog;
+
+    String imageLocalPath = Constants.EMPTY_STRING;
     User user;
     ProfilePresenter profilePresenter;
+    private Place place;
 
 
     public static ProfileFragment newInstance(User user) {
@@ -95,42 +123,58 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
 
     @Override
     protected void setupViews() {
-        toolbar.setBackgroundColor(getResources().getColor(R.color.transparent));
+        toolbar.setBackgroundColor(getResources().getColor(R.color.black_transparent));
         profilePresenter = new ProfilePresenterImpl(this, user);
         profilePresenter.getUserProfile();
         btnBack.setOnClickListener(this);
         btnEdit.setOnClickListener(this);
         imgAvatar.setOnClickListener(this);
         btnLogout.setOnClickListener(this);
+        btnLocation.setOnClickListener(this);
+        lnTravelDateFrom.setOnClickListener(this);
+        lnTravelDateTo.setOnClickListener(this);
     }
 
     @Override
     public void showLoading() {
+        if (dialog == null) {
+            dialog = new MaterialDialog.Builder(getActivity())
+                    .title("Loading...")
+                    .positiveText(getString(R.string.label_ok))
+                    .build();
+        }
 
+        dialog.show();
     }
 
     @Override
     public void hideLoading() {
-
+        if (dialog != null)
+            dialog.dismiss();
     }
 
     @Override
     public void bindData(User user) {
-//        lblTitle.setText(user.getName());
+        lblTitle.setText(user.getName());
         txtEmail.setText(user.getName());
         ImageLoader.getInstance().displayImage(user.getAvatar(), imgAvatar);
         txtEmail.setText(user.getEmail());
         txtFacebook.setText(user.getFacebookLink());
         btnLocation.setText(user.getLocationName());
+        txtInstagram.setText(user.getInstagramLink());
+        txtTwitter.setText(user.getTwitterLink());
+        txtPhone.setText(user.getPhoneNumber());
+
     }
 
     @Override
     public void showMyProfileViews() {
-        txtPassword.setVisibility(View.VISIBLE);
-        txtConfirmPassword.setVisibility(View.VISIBLE);
+        txtPassword.setVisibility(View.GONE);
+        txtConfirmPassword.setVisibility(View.GONE);
         btnEdit.setVisibility(View.VISIBLE);
         btnLogout.setVisibility(View.VISIBLE);
         btnChat.setVisibility(View.GONE);
+        rlTravelDateContainer.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -140,6 +184,7 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
         btnEdit.setVisibility(View.GONE);
         btnLogout.setVisibility(View.GONE);
         btnChat.setVisibility(View.VISIBLE);
+        rlTravelDateContainer.setVisibility(View.GONE);
     }
 
     @Override
@@ -153,6 +198,10 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
         imgAvatar.setEnabled(true);
         imgAvatar.setBorderColor(getResources().getColor(R.color.colorPrimary));
         btnEdit.setBackgroundResource(R.drawable.save_icon);
+        txtPhone.setEnabled(true);
+        txtInstagram.setEnabled(true);
+        txtTwitter.setEnabled(true);
+        spnLanguage.setEnabled(true);
     }
 
     @Override
@@ -167,6 +216,10 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
         imgAvatar.setEnabled(false);
         imgAvatar.setBorderColor(getResources().getColor(R.color.color_white));
         btnEdit.setBackgroundResource(R.drawable.edit_icon);
+        txtPhone.setEnabled(false);
+        txtInstagram.setEnabled(false);
+        txtTwitter.setEnabled(false);
+        spnLanguage.setEnabled(false);
     }
 
     @Override
@@ -199,6 +252,20 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
             case R.id.avatar:
                 showAvatarOption();
                 break;
+            case R.id.location:
+                showPlacePicker();
+                break;
+        }
+    }
+
+    private void showPlacePicker() {
+        try {
+            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+            startActivityForResult(builder.build(getActivity()), Constants.PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
         }
     }
 
@@ -223,13 +290,14 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
 
     @Override
     public void onPressTakePhoto() {
-        CropImageUlti.startCamera(this, IMAGE_TAKE_PICTURE_NAME, Constants.CAMERA_CODE);
+        imageLocalPath = profilePresenter.getImageLocalPath();
+        CropImageUlti.startCamera(this, imageLocalPath, Constants.CAMERA_CODE);
     }
 
-    private static final int REQUEST_SELECT_PICTURE = 0x01;
+
 //    private static final String SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage.png";
-    private static final String IMAGE_TAKE_PICTURE_NAME = Environment
-            .getExternalStorageDirectory().getPath() + "/travelGuideTmpImage.jpg";
+//    public static final String IMAGE_TAKE_PICTURE_NAME = Environment
+//            .getExternalStorageDirectory().getPath() + "/travelGuideTmpImage.jpg";
 
 
     @Override
@@ -237,10 +305,11 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case REQUEST_SELECT_PICTURE:
+            case Constants.REQUEST_SELECT_PICTURE:
                 final Uri selectedUri = data.getData();
                 if (selectedUri != null) {
-                    CropImageUlti.startCropActivity(this, data.getData(), IMAGE_TAKE_PICTURE_NAME);
+                    imageLocalPath = profilePresenter.getImageLocalPath();
+                    CropImageUlti.startCropActivity(this, data.getData(), imageLocalPath);
                 } else {
                     Toast.makeText(getActivity(), R.string.toast_cannot_retrieve_selected_image, Toast.LENGTH_SHORT).show();
                 }
@@ -255,16 +324,26 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
 
                 handleImageResultFromTakePicture();
                 break;
+            case Constants.PLACE_PICKER_REQUEST:
+                place = PlacePicker.getPlace(getActivity(), data);
+
+                String toastMsg = place.getName() + " " + place.getAddress();
+                displayLocation(toastMsg);
+                break;
         }
 
 
     }
 
+    private void displayLocation(String location) {
+        btnLocation.setText(location);
+    }
+
     private void handleImageResultFromTakePicture() {
-        File file = new File(IMAGE_TAKE_PICTURE_NAME);
+        File file = new File(imageLocalPath);
         boolean exists = file.exists();
         if (exists) {
-            CropImageUlti.startCropActivity(this, Uri.fromFile(file), IMAGE_TAKE_PICTURE_NAME);
+            CropImageUlti.startCropActivity(this, Uri.fromFile(file), imageLocalPath);
         } else
             Toast.makeText(getActivity().getApplicationContext(),
                     "Something goes wrong while taking picture, please try again.",
@@ -295,7 +374,7 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
                     getString(R.string.permission_read_storage_rationale),
                     REQUEST_STORAGE_READ_ACCESS_PERMISSION);
         } else {
-            CropImageUlti.pickFromGallery(this, REQUEST_SELECT_PICTURE);
+            CropImageUlti.pickFromGallery(this, Constants.REQUEST_SELECT_PICTURE);
         }
     }
 
@@ -308,5 +387,14 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
         } else {
             Toast.makeText(getActivity(), R.string.toast_unexpected_error, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (dialog != null) {
+            dialog.dismiss();
+        }
+        profilePresenter.releaseResources();
     }
 }

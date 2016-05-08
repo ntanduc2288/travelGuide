@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.dd.processbutton.iml.ActionProcessButton;
 import com.travel.travelguide.R;
 import com.travel.travelguide.presenter.resetPassword.IResetPasswordView;
@@ -28,6 +29,7 @@ public class ResetPasswordFragment extends BaseFragment implements IResetPasswor
     Button btnBack;
 
     ResetPasswordPresenter resetPasswordPresenter;
+    private MaterialDialog dialog;
 
     public static ResetPasswordFragment newInstance(){
         return new ResetPasswordFragment();
@@ -59,11 +61,21 @@ public class ResetPasswordFragment extends BaseFragment implements IResetPasswor
     public void showLoading() {
         btnResetPassword.setProgress(50);
         btnResetPassword.setEnabled(false);
+        if(dialog == null){
+            dialog = new MaterialDialog.Builder(getActivity())
+                    .content(R.string.loading_three_dot)
+                    .progress(true, 0)
+                    .build();
+        }
+
+        dialog.show();
     }
 
     @Override
     public void hideLoading() {
-
+        if(dialog != null){
+            dialog.dismiss();
+        }
     }
 
     @Override

@@ -1,11 +1,11 @@
 package com.travel.travelguide.fragment;
 
+import android.support.v7.widget.AppCompatEditText;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.dd.processbutton.iml.ActionProcessButton;
 import com.travel.travelguide.R;
 import com.travel.travelguide.activity.MainActivity;
@@ -21,16 +21,16 @@ import butterknife.Bind;
  */
 public class LoginFragment extends BaseFragment implements ILoginView, View.OnClickListener{
     @Bind(R.id.email)
-    AutoCompleteTextView txtEmail;
+    AppCompatEditText txtEmail;
     @Bind(R.id.password)
-    EditText txtPassword;
+    AppCompatEditText txtPassword;
     @Bind(R.id.btnSignIn)
     ActionProcessButton btnActionSignIn;
     @Bind(R.id.btnRegister)
     ActionProcessButton btnActionRegister;
     @Bind(R.id.forgot_password)
     Button btnForgotPassword;
-
+    MaterialDialog dialog;
 
     private LoginPresenter loginPresenter;
     private final String TAG = LoginFragment.class.getSimpleName();
@@ -58,11 +58,23 @@ public class LoginFragment extends BaseFragment implements ILoginView, View.OnCl
     public void showLoading() {
         btnActionSignIn.setProgress(50);
         shouldEnableButtons(false);
+        if(dialog == null){
+            dialog = new MaterialDialog.Builder(getActivity())
+                    .content(R.string.waiting_dot)
+                    .backgroundColor(getResources().getColor(R.color.transparent))
+                    .progress(true, 0)
+                    .build();
+        }
+
+        dialog.show();
     }
 
     @Override
     public void hideLoading() {
         shouldEnableButtons(true);
+        if(dialog != null){
+            dialog.dismiss();
+        }
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.travel.travelguide.fragment;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.v4.app.ActivityCompat;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
@@ -23,12 +25,11 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.mikhaellopez.circularimageview.CircularImageView;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
 import com.travel.travelguide.Ulti.Constants;
 import com.travel.travelguide.Ulti.LogUtils;
+import com.travel.travelguide.activity.LoginActivity;
 import com.travel.travelguide.adapter.UserInfoWindowAdapter;
 import com.travel.travelguide.manager.TransactionManager;
 import com.travel.travelguide.manager.UserManager;
@@ -51,8 +52,13 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
     private UserInfoWindowAdapter customInfoWindowAdapter;
     @Bind(R.id.loading_progress)
     ProgressBar pbLoading;
-    @Bind(R.id.my_profile_avatar)
-    CircularImageView imgMyProfileAvatar;
+    @Bind(R.id.profile)
+    com.github.clans.fab.FloatingActionButton btnProfile;
+    @Bind(R.id.settings)
+    com.github.clans.fab.FloatingActionButton btnSettings;
+    @Bind(R.id.logout)
+    com.github.clans.fab.FloatingActionButton btnLogout;
+    private MaterialDialog dialog;
 
     public static MapGuideFragment newInstance() {
         return new MapGuideFragment();
@@ -78,9 +84,9 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
         placeAutocompleteFragment.setHint(getString(R.string.search_a_location));
         placeAutocompleteFragment.setOnPlaceSelectedListener(this);
 
-        bindMyProfileData(UserManager.getInstance().getCurrentUser(getActivity().getApplicationContext()));
-        imgMyProfileAvatar.setOnClickListener(this);
-
+        btnLogout.setOnClickListener(this);
+        btnProfile.setOnClickListener(this);
+        btnSettings.setOnClickListener(this);
         mapGuidePresenter.connect();
     }
 
@@ -142,13 +148,32 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
     }
 
     @Override
-    public void showLoading() {
+    public void showLoadingMarkerProcess() {
         pbLoading.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void hideLoading() {
+    public void hideLoadindMarkerProcess() {
         pbLoading.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showLoading() {
+        if(dialog == null){
+            dialog = new MaterialDialog.Builder(getActivity())
+                    .content(R.string.loading_three_dot)
+                    .progress(true, 0)
+                    .build();
+        }
+
+        dialog.show();
+    }
+
+    @Override
+    public void hideLoading() {
+        if(dialog != null){
+            dialog.dismiss();
+        }
     }
 
     @Override
@@ -204,16 +229,18 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
     }
 
     @Override
-    public void bindMyProfileData(User user) {
-        ImageLoader.getInstance().displayImage(user.getAvatar(), imgMyProfileAvatar);
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.my_profile_avatar:
+            case R.id.profile:
                 gotoProfileScreen(UserManager.getInstance().getCurrentUser(getActivity().getApplicationContext()));
                 break;
+            case R.id.settings:
+                Toast.makeText(getActivity(), "Comming soon", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.logout:
+                mapGuidePresenter.logout();
+                break;
+
         }
     }
 
@@ -221,5 +248,20 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
     public void gotoProfileScreen(User user) {
         TransactionManager.getInstance().addFragment(getFragmentManager(), ProfileFragment.newInstance(user));
 //        TransactionManager.getInstance().addFragment(getFragmentManager(), RegisterFragment.newInstance());
+    }
+
+    @Override
+    public void gotoLoginScreen() {
+        TransactionManager.getInstance().gotoActivity(getActivity(), LoginActivity.class, null, true);
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public Context getContext() {
+        return getActivity();
     }
 }

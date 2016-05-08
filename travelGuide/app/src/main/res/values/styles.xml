@@ -61,5 +61,25 @@
         <item name="android:windowExitAnimation">@anim/slide_bottom_out</item>
     </style>
 
+
+    <style name="MenuButtons">
+        <item name="menu_labels_ellipsize">end</item>
+        <item name="menu_labels_singleLine">true</item>
+
+        <item name="menu_colorNormal">@color/colorPrimary</item>
+        <item name="menu_colorRipple">@color/colorPrimaryDark</item>
+        <item name="menu_colorPressed">@color/colorPrimaryDark</item>
+        <item name="menu_labels_position">right</item>
+    </style>
+
+    <style name="MenuButtons.MenuButtonsSmall">
+        <item name="fab_size">mini</item>
+        <item name="fab_colorNormal">@color/colorPrimary</item>
+        <item name="fab_colorPressed">@color/colorPrimaryDark</item>
+        <item name="fab_colorRipple">@color/colorPrimaryDark</item>
+    </style>
+
+
+
 </resources>
 

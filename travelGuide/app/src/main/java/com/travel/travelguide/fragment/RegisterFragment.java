@@ -7,11 +7,12 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatSpinner;
-import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.backendless.geo.GeoPoint;
 import com.dd.processbutton.iml.ActionProcessButton;
 import com.google.android.gms.common.ConnectionResult;
@@ -24,6 +25,7 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
 import com.travel.travelguide.Ulti.Constants;
+import com.travel.travelguide.Ulti.Ulti;
 import com.travel.travelguide.activity.MainActivity;
 import com.travel.travelguide.manager.TransactionManager;
 import com.travel.travelguide.presenter.register.IRegisterView;
@@ -61,6 +63,8 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
     GoogleApiClient googleApiClient;
     RegisterPresenter registerPresenter;
     private Place place;
+    private MaterialDialog dialog;
+
 
     public static RegisterFragment newInstance(){
         return new RegisterFragment();
@@ -90,17 +94,33 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
                 })
                 .build();
         btnBack.setOnClickListener(this);
+
+        String[] languages = Ulti.parseLanguage(getActivity());
+        ArrayAdapter<String> languageAdapter = new ArrayAdapter<String>(getActivity(), R.layout.language_item, languages);
+        spnLanguage.setAdapter(languageAdapter);
+        spnLanguage.setSelection(languageAdapter.getPosition(Constants.DEFAULT_LANGUAGE));
     }
 
     @Override
     public void showLoading() {
         btnActionRegister.setProgress(50);
         btnActionRegister.setEnabled(false);
+        if(dialog == null){
+            dialog = new MaterialDialog.Builder(getActivity())
+                    .content(R.string.loading_three_dot)
+                    .progress(true, 0)
+                    .cancelable(false)
+                    .build();
+        }
+
+        dialog.show();
     }
 
     @Override
     public void hideLoading() {
-
+        if(dialog != null){
+            dialog.dismiss();
+        }
     }
 
     @Override
@@ -193,6 +213,7 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
             GeoPoint geoPoint = new GeoPoint(place.getLatLng().latitude, place.getLatLng().longitude);
             user.setlocation(geoPoint);
         }
+        user.setLanguage((String) spnLanguage.getSelectedItem());
         user.setTwitterLink(txtTwitter.getText().toString().trim());
         user.setInstagramLink(txtInstagram.getText().toString().trim());
         user.setPhoneNumber(txtPhone.getText().toString().trim());

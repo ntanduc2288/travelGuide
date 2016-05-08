@@ -12,6 +12,6 @@ public interface ProfilePresenter extends IBasePresenter{
     void setImageLocalPath(String imagePath);
     String getImageLocalPath();
     void switchMode();
-    void logout();
+
     void error(Integer errorCode);
 }

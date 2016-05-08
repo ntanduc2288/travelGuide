@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
 
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -38,12 +39,41 @@
        android:layout_marginLeft="10dp"
        android:visibility="gone" />
 
-   <com.mikhaellopez.circularimageview.CircularImageView
-       android:layout_width="50dp"
-       android:layout_height="50dp"
-       android:id="@+id/my_profile_avatar"
+
+   <com.github.clans.fab.FloatingActionMenu
+       android:id="@+id/menu_labels_right"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
        android:layout_alignParentBottom="true"
-       android:layout_marginLeft="10dp"
-       android:layout_marginBottom="20dp"
-       android:src="@drawable/my_profile_icon"/>
+       android:paddingRight="10dp"
+       android:paddingBottom="10dp"
+       android:paddingLeft="10dp"
+       style="@style/MenuButtons">
+
+      <com.github.clans.fab.FloatingActionButton
+          android:layout_width="wrap_content"
+          android:id="@+id/profile"
+          android:layout_height="wrap_content"
+          android:src="@drawable/profile_white"
+          style="@style/MenuButtons.MenuButtonsSmall"
+          fab:fab_label="@string/profile"
+          />
+
+      <com.github.clans.fab.FloatingActionButton
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:id="@+id/settings"
+          android:src="@drawable/setting_white"
+          style="@style/MenuButtons.MenuButtonsSmall"
+          fab:fab_label="@string/settings" />
+
+      <com.github.clans.fab.FloatingActionButton
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:src="@drawable/logout_white"
+          android:id="@+id/logout"
+          style="@style/MenuButtons.MenuButtonsSmall"
+          fab:fab_label="@string/log_out" />
+
+   </com.github.clans.fab.FloatingActionMenu>
 </RelativeLayout>

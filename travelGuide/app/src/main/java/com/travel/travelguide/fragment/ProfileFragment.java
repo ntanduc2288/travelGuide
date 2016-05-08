@@ -20,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -35,8 +36,7 @@ import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
 import com.travel.travelguide.Ulti.Constants;
 import com.travel.travelguide.Ulti.CropImageUlti;
-import com.travel.travelguide.activity.LoginActivity;
-import com.travel.travelguide.manager.TransactionManager;
+import com.travel.travelguide.Ulti.Ulti;
 import com.travel.travelguide.presenter.profile.IProfileView;
 import com.travel.travelguide.presenter.profile.ProfilePresenter;
 import com.travel.travelguide.presenter.profile.ProfilePresenterImpl;
@@ -75,8 +75,6 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
     Toolbar toolbar;
     @Bind(R.id.fab)
     FloatingActionButton btnChat;
-    @Bind(R.id.logout)
-    AppCompatButton btnLogout;
     @Bind(R.id.cover_picture)
     AppCompatImageView imgCoverPicture;
     @Bind(R.id.phone)
@@ -104,6 +102,7 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
     User user;
     ProfilePresenter profilePresenter;
     private Place place;
+    private ArrayAdapter<String> languageAdapter;
 
 
     public static ProfileFragment newInstance(User user) {
@@ -125,22 +124,28 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
     protected void setupViews() {
         toolbar.setBackgroundColor(getResources().getColor(R.color.black_transparent));
         profilePresenter = new ProfilePresenterImpl(this, user);
-        profilePresenter.getUserProfile();
+
         btnBack.setOnClickListener(this);
         btnEdit.setOnClickListener(this);
         imgAvatar.setOnClickListener(this);
-        btnLogout.setOnClickListener(this);
         btnLocation.setOnClickListener(this);
         lnTravelDateFrom.setOnClickListener(this);
         lnTravelDateTo.setOnClickListener(this);
+        String[] languages = Ulti.parseLanguage(getActivity());
+        languageAdapter = new ArrayAdapter<String>(getActivity(), R.layout.language_item, languages);
+        spnLanguage.setAdapter(languageAdapter);
+
+        profilePresenter.getUserProfile();
+
     }
 
     @Override
     public void showLoading() {
         if (dialog == null) {
             dialog = new MaterialDialog.Builder(getActivity())
-                    .title("Loading...")
-                    .positiveText(getString(R.string.label_ok))
+                    .content(getString(R.string.loading_three_dot))
+                    .progress(true, 0)
+                    .cancelable(false)
                     .build();
         }
 
@@ -164,6 +169,7 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
         txtInstagram.setText(user.getInstagramLink());
         txtTwitter.setText(user.getTwitterLink());
         txtPhone.setText(user.getPhoneNumber());
+        spnLanguage.setSelection(languageAdapter.getPosition(user.getLanguage()));
 
     }
 
@@ -172,7 +178,6 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
         txtPassword.setVisibility(View.GONE);
         txtConfirmPassword.setVisibility(View.GONE);
         btnEdit.setVisibility(View.VISIBLE);
-        btnLogout.setVisibility(View.VISIBLE);
         btnChat.setVisibility(View.GONE);
         rlTravelDateContainer.setVisibility(View.VISIBLE);
     }
@@ -182,7 +187,6 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
         txtPassword.setVisibility(View.GONE);
         txtConfirmPassword.setVisibility(View.GONE);
         btnEdit.setVisibility(View.GONE);
-        btnLogout.setVisibility(View.GONE);
         btnChat.setVisibility(View.VISIBLE);
         rlTravelDateContainer.setVisibility(View.GONE);
     }
@@ -223,11 +227,6 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
     }
 
     @Override
-    public void gotoLoginScreen() {
-        TransactionManager.getInstance().gotoActivity(getActivity(), LoginActivity.class, null, true);
-    }
-
-    @Override
     public void showMessage(String message) {
         Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
@@ -245,9 +244,6 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
                 break;
             case R.id.edit_button:
                 profilePresenter.switchMode();
-                break;
-            case R.id.logout:
-                profilePresenter.logout();
                 break;
             case R.id.avatar:
                 showAvatarOption();
@@ -293,11 +289,6 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
         imageLocalPath = profilePresenter.getImageLocalPath();
         CropImageUlti.startCamera(this, imageLocalPath, Constants.CAMERA_CODE);
     }
-
-
-//    private static final String SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage.png";
-//    public static final String IMAGE_TAKE_PICTURE_NAME = Environment
-//            .getExternalStorageDirectory().getPath() + "/travelGuideTmpImage.jpg";
 
 
     @Override

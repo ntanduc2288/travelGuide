@@ -36,4 +36,5 @@ public class Constants {
     public static final int PLACE_PICKER_REQUEST = 5;
     public static final int MAX_IMAGE_SIZE = 700;
     public static final String IMAGE_FOLDER_SERVER = "media/images";
+    public static final String DEFAULT_LANGUAGE = "English";
 }

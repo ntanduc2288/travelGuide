@@ -62,7 +62,7 @@ public class LoginPresenterImpl extends BasePresenter implements LoginPresenter 
 //                        UserManager.getInstance().setCurrentUser(new User(response));
 //                        UserManager.getInstance().saveUserToDatabase(context);
 //                        if (viewIsValid()) {
-//                            loginView.hideLoading();
+//                            loginView.hideLoadindMarkerProcess();
 //                            loginView.gotoMapScreen();
 //                        }
 //                    }
@@ -71,7 +71,7 @@ public class LoginPresenterImpl extends BasePresenter implements LoginPresenter 
 //                    public void handleFault(BackendlessFault fault) {
 //                        LogUtils.logD(TAG, "handleFault login: " + fault.getMessage());
 //                        if(viewIsValid()){
-//                            loginView.hideLoading();
+//                            loginView.hideLoadindMarkerProcess();
 //                            loginView.showError(fault.getMessage());
 //                        }
 //                    }

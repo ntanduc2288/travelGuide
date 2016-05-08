@@ -44,4 +44,5 @@ public interface MapGuidePresenter extends IBasePresenter {
 
     void getProfileUserInfoFromUser(Marker marker);
 
+    void logout();
 }

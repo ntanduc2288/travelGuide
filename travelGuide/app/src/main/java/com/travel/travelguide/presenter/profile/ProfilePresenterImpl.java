@@ -161,20 +161,6 @@ public class ProfilePresenterImpl implements ProfilePresenter {
         profileView.showMessage("Testing");
     }
 
-    @Override
-    public void logout() {
-        profileView.showLoading();
-        boolean result = UserManager.getInstance().clearCurrentUserInfo(profileView.getContext().getApplicationContext());
-        profileView.hideLoading();
-        if (result) {
-            profileView.gotoLoginScreen();
-        } else {
-            profileView.showMessage("Could not logout");
-        }
-
-
-    }
-
     private Observable<Bitmap> getFile(final String filePath) {
         return Observable.defer(new Func0<Observable<Bitmap>>() {
             @Override

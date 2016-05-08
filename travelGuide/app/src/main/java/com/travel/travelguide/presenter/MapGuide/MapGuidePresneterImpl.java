@@ -37,14 +37,23 @@ import com.travel.travelguide.Object.User;
 import com.travel.travelguide.Ulti.Constants;
 import com.travel.travelguide.Ulti.LogUtils;
 import com.travel.travelguide.Ulti.MapUlti;
+import com.travel.travelguide.manager.UserManager;
 
 import java.util.ArrayList;
+
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func0;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by user on 4/24/16.
  */
 public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
+    private final CompositeSubscription compositeSubscription;
 
     IMapGuideView mapGuideView;
     private GoogleApiClient mGoogleApiClient;
@@ -70,6 +79,7 @@ public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient
         this.activity = activity;
         handler = new Handler();
         users = new ArrayList<User>();
+        compositeSubscription = new CompositeSubscription();
     }
 
     @Override
@@ -210,15 +220,15 @@ public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient
 
     @Override
     public void getUserListWithRadius(double latitude, double longitude, float radius) {
-        mapGuideView.showLoading();
+        mapGuideView.showLoadingMarkerProcess();
         String whereClause = String.format(USERS_RADIUS_WHERE_CLAUSE, latitude, longitude, radius);
         LogUtils.logD(TAG, "Where clause: " + whereClause);
         BackendlessDataQuery backendlessDataQuery = new BackendlessDataQuery(whereClause);
         Backendless.Persistence.of(BackendlessUser.class).find(backendlessDataQuery, new AsyncCallback<BackendlessCollection<BackendlessUser>>() {
             @Override
             public void handleResponse(BackendlessCollection<BackendlessUser> response) {
-                if(viewIsValid()){
-                    mapGuideView.hideLoading();
+                if (viewIsValid()) {
+                    mapGuideView.hideLoadindMarkerProcess();
                     mapBackendlessUserToUser(response);
                 }
             }
@@ -226,7 +236,7 @@ public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient
             @Override
             public void handleFault(BackendlessFault fault) {
                 if (viewIsValid()) {
-                    mapGuideView.hideLoading();
+                    mapGuideView.hideLoadindMarkerProcess();
                     mapGuideView.showError(fault.getMessage());
                 }
             }
@@ -234,7 +244,7 @@ public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient
     }
 
     //Map backendless user to normal user then update user's marker on map
-    private void mapBackendlessUserToUser(BackendlessCollection<BackendlessUser> response){
+    private void mapBackendlessUserToUser(BackendlessCollection<BackendlessUser> response) {
         LogUtils.logD(TAG, "get user data response: " + response.getData().toString());
 
 
@@ -278,10 +288,10 @@ public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient
             @Override
             public void run() {
                 if (viewIsValid()) {
-                    mapGuideView.showLoading();
+                    mapGuideView.showLoadingMarkerProcess();
                     float radius = MapUlti.getRadius(googleMap);
                     Location centerLocation = MapUlti.getCenterLocation(googleMap);
-                    if(previousCenterLocation == null || centerLocation.distanceTo(previousCenterLocation) > 10){
+                    if (previousCenterLocation == null || centerLocation.distanceTo(previousCenterLocation) > 10) {
                         previousCenterLocation = centerLocation;
                         getUserListWithRadius(centerLocation.getLatitude(), centerLocation.getLongitude(), radius);
                     }
@@ -291,21 +301,24 @@ public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient
     }
 
 
-
     @Override
     public void releaseResources() {
         handler.removeCallbacksAndMessages(null);
         handler = null;
         mapGuideView = null;
+
+        if (compositeSubscription != null && !compositeSubscription.isUnsubscribed()) {
+            compositeSubscription.unsubscribe();
+        }
     }
 
     @Override
     public void getProfileUserInfoFromUser(Marker marker) {
-        if(mapGuideView != null){
-            mapGuideView.showLoading();
-            for(User user : users){
-                if(user.getId().endsWith(marker.getSnippet())){
-                    mapGuideView.hideLoading();
+        if (mapGuideView != null) {
+            mapGuideView.showLoadingMarkerProcess();
+            for (User user : users) {
+                if (user.getId().endsWith(marker.getSnippet())) {
+                    mapGuideView.hideLoadindMarkerProcess();
                     mapGuideView.gotoProfileScreen(user);
                     break;
                 }
@@ -314,4 +327,56 @@ public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient
         }
 
     }
+
+    @Override
+    public void logout() {
+        mapGuideView.showLoading();
+
+
+        Backendless.UserService.logout(new AsyncCallback<Void>() {
+            @Override
+            public void handleResponse(Void response) {
+                clearLocalUserData();
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                if (viewIsValid()) {
+                    mapGuideView.hideLoading();
+                    mapGuideView.showMessage(fault.getMessage());
+                }
+            }
+        });
+
+    }
+
+    private void clearLocalUserData() {
+
+        Observable observable = Observable.defer(new Func0<Observable<Boolean>>() {
+            @Override
+            public Observable<Boolean> call() {
+                return Observable.just(UserManager.getInstance().clearCurrentUserInfo(mapGuideView.getContext().getApplicationContext()));
+            }
+        }).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread());
+
+        compositeSubscription.add(observable.subscribe(new Action1<Boolean>() {
+            @Override
+            public void call(Boolean aBoolean) {
+                if (viewIsValid()) {
+                    mapGuideView.hideLoading();
+                    mapGuideView.gotoLoginScreen();
+                }
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                if (viewIsValid()) {
+                    mapGuideView.hideLoading();
+                    mapGuideView.showMessage("Could not logout");
+                }
+            }
+        }));
+    }
+
 }

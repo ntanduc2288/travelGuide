@@ -15,7 +15,6 @@ public interface IProfileView {
     void showUserProfileViews();
     void switchToEditMode();
     void switchToViewerMode();
-    void gotoLoginScreen();
     void showMessage(String message);
     Context getContext();
 }

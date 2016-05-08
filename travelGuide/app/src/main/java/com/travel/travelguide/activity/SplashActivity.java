@@ -44,7 +44,7 @@ public class SplashActivity extends BaseActivity {
                 if(currentUser != null){
                     TransactionManager.getInstance().gotoActivity(SplashActivity.this, MainActivity.class, null, true);
                 }else {
-                    TransactionManager.getInstance().gotoActivity(SplashActivity.this, LoginActivity.class, null, false, imageView, "TEST");
+                    TransactionManager.getInstance().gotoActivity(SplashActivity.this, LoginActivity.class, null, true, imageView, "TEST");
                 }
 
 

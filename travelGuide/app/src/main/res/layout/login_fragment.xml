@@ -64,22 +64,18 @@
             android:layout_marginTop="20dp"
             android:orientation="horizontal">
 
-            <com.andexert.library.RippleView
-                rv_centered="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1">
+
 
                 <com.dd.processbutton.iml.ActionProcessButton
                     android:id="@+id/btnSignIn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/log_in"
+                    android:layout_weight="1"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
                     android:textSize="18sp"
-
+                    android:layout_marginRight="5dp"
                     custom:pb_colorComplete="@color/colorPrimary"
                     custom:pb_colorError="@color/red_error"
                     custom:pb_colorNormal="@color/colorPrimary"
@@ -88,20 +84,15 @@
                     custom:pb_textComplete="@string/success"
                     custom:pb_textError="@string/error"
                     custom:pb_textProgress="@string/loading_dot" />
-            </com.andexert.library.RippleView>
 
-            <com.andexert.library.RippleView
-                rv_centered="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_weight="1">
+
 
                 <com.dd.processbutton.iml.ActionProcessButton
                     android:id="@+id/btnRegister"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
+                    android:layout_weight="1"
+                    android:layout_marginLeft="5dp"
                     android:text="@string/create_account"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
@@ -114,7 +105,7 @@
                     custom:pb_textComplete="Success"
                     custom:pb_textError="Error"
                     custom:pb_textProgress="Loading" />
-            </com.andexert.library.RippleView>
+
 
         </LinearLayout>
 

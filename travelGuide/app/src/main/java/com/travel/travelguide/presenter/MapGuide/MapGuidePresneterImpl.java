@@ -69,6 +69,7 @@ public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient
     private Activity activity;
     private Location mLastLocation;
     private Location previousCenterLocation;
+    private float previousRadius = 0;
     private String TAG = MapGuidePresneterImpl.class.getSimpleName();
     private String USERS_RADIUS_WHERE_CLAUSE = "distance(%s, %s, locations.latitude, locations.longitude)" + " <= km(%s)";
     private Handler handler;
@@ -150,8 +151,12 @@ public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient
 
     @Override
     public void stopLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(
-                mGoogleApiClient, this);
+        try {
+            LocationServices.FusedLocationApi.removeLocationUpdates(
+                    mGoogleApiClient, this);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -212,6 +217,7 @@ public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient
             @Override
             public void handleFault(BackendlessFault fault) {
                 if (viewIsValid()) {
+                    mapGuideView.hideLoadindMarkerProcess();
                     mapGuideView.showError(fault.getMessage());
                 }
             }
@@ -283,6 +289,7 @@ public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient
 
     @Override
     public void cameraChanged(final GoogleMap googleMap) {
+        mapGuideView.hideLoadindMarkerProcess();
         handler.removeCallbacksAndMessages(null);
         handler.postDelayed(new Runnable() {
             @Override
@@ -291,9 +298,14 @@ public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient
                     mapGuideView.showLoadingMarkerProcess();
                     float radius = MapUlti.getRadius(googleMap);
                     Location centerLocation = MapUlti.getCenterLocation(googleMap);
-                    if (previousCenterLocation == null || centerLocation.distanceTo(previousCenterLocation) > 10) {
+                    boolean needToGetListWithRadius = previousCenterLocation == null || centerLocation.distanceTo(previousCenterLocation) > 10 ||
+                            Math.abs(radius - previousRadius) > 1;
+                    if (needToGetListWithRadius) {
+                        previousRadius = radius;
                         previousCenterLocation = centerLocation;
                         getUserListWithRadius(centerLocation.getLatitude(), centerLocation.getLongitude(), radius);
+                    }else {
+                        mapGuideView.hideLoadindMarkerProcess();
                     }
                 }
             }

@@ -17,19 +17,13 @@
 
 
 
-    <com.andexert.library.RippleView
-        android:id="@+id/rippleRegister"
-        rv_centered="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="20dp"
-        >
+
 
 
         <com.dd.processbutton.iml.ActionProcessButton
             android:id="@+id/btnRegister"
-
+            android:layout_alignParentBottom="true"
+            android:layout_margin="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
@@ -45,6 +39,6 @@
             custom:pb_textComplete="Success"
             custom:pb_textError="Error"
             custom:pb_textProgress="Loading" />
-    </com.andexert.library.RippleView>
+
 
 </RelativeLayout>

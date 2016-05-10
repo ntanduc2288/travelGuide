@@ -125,10 +125,52 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/instagram"
-            android:hint="@string/google_plus_link"
+            android:hint="@string/instagram_link"
 
             android:text="Duc Instagram" />
 
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <com.andexert.library.RippleView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                custom:rv_centered="true">
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:background="@color/transparent"
+                    android:drawableLeft="@drawable/localtion"
+                    android:drawablePadding="5dp"
+                    android:gravity="center_vertical"
+                    android:minHeight="50dp"
+                    android:text="@string/select_location"
+                    android:textColor="@color/colorPrimary"
+
+
+                    />
+
+
+
+            </com.andexert.library.RippleView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="2dp"
+                android:layout_below="@+id/language"
+                android:background="@color/colorPrimary"
+                />
+        </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/relativelayout_travel_date"
@@ -144,6 +186,18 @@
                 android:drawableLeft="@drawable/calendar"
                 android:hint="@string/google_plus_link"
                 android:text="Travel date" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:textAllCaps="false"
+                android:id="@+id/button_add_travel_date"
+                android:drawableLeft="@drawable/plus"
+                android:text="@string/add_travel_date"
+                android:layout_toRightOf="@+id/travel_date_title"
+                android:background="@color/transparent"
+                android:textSize="@dimen/general_text_size"
+                android:layout_marginTop="15dp"
+                android:layout_height="30dp" />
 
             <LinearLayout
                 android:id="@+id/linearlayout_travel_from"
@@ -202,30 +256,6 @@
 
         </RelativeLayout>
 
-
-        <com.andexert.library.RippleView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            custom:rv_centered="true">
-
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/location"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:background="@color/transparent"
-                android:drawableLeft="@drawable/localtion"
-                android:drawablePadding="5dp"
-                android:gravity="center_vertical"
-                android:minHeight="50dp"
-                android:text="@string/location"
-                android:textColor="@color/colorPrimary"
-
-
-                />
-
-        </com.andexert.library.RippleView>
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

@@ -82,6 +82,9 @@
             android:theme="@style/AppTheme"
             />
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="83a06b3c2d80a19da73c7972c6e44207438c0f5d" />
     </application>
 
 

@@ -10,6 +10,7 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.files.BackendlessFile;
 import com.travel.travelguide.Object.User;
+import com.travel.travelguide.R;
 import com.travel.travelguide.Ulti.Constants;
 import com.travel.travelguide.Ulti.CropImageUlti;
 import com.travel.travelguide.Ulti.LogUtils;
@@ -52,7 +53,7 @@ public class ProfilePresenterImpl implements ProfilePresenter {
         } else {
             profileView.showUserProfileViews();
         }
-        profileView.switchToViewerMode();
+        profileView.switchToEditMode();
         profileView.hideLoading();
     }
 
@@ -132,8 +133,8 @@ public class ProfilePresenterImpl implements ProfilePresenter {
             public void handleResponse(BackendlessUser response) {
                 if(viewIsValid()){
                     profileView.hideLoading();
-                    profileView.switchToViewerMode();
-                    profileView.showMessage("Success");
+//                    profileView.switchToViewerMode();
+                    profileView.showMessage(profileView.getContext().getString(R.string.your_account_has_been_updated));
                 }
                 LogUtils.logD(TAG, "update profile: " + response.toString());
             }
@@ -189,4 +190,6 @@ public class ProfilePresenterImpl implements ProfilePresenter {
             return false;
         }
     }
+
+
 }

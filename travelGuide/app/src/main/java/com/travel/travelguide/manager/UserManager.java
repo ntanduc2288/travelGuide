@@ -73,7 +73,7 @@ public class UserManager {
                 databaseHelper = null;
             }
 
-            Toast.makeText(context, "Save data successful. ", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "Save data successful. ", Toast.LENGTH_SHORT).show();
         } catch (SQLException e) {
             e.printStackTrace();
             Toast.makeText(context, "Could not save user data. " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -95,6 +95,14 @@ public class UserManager {
         }
 
         return result > 0 ? true : false;
+    }
+
+    public boolean haveTravelDate(User user){
+        if(0 != user.getTravelDateFrom() && 0 != user.getTravelDateTo()){
+            return true;
+        }
+
+        return false;
     }
 
 }

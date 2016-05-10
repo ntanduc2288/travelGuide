@@ -26,6 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.backendless.geo.GeoPoint;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -37,6 +38,7 @@ import com.travel.travelguide.R;
 import com.travel.travelguide.Ulti.Constants;
 import com.travel.travelguide.Ulti.CropImageUlti;
 import com.travel.travelguide.Ulti.Ulti;
+import com.travel.travelguide.manager.UserManager;
 import com.travel.travelguide.presenter.profile.IProfileView;
 import com.travel.travelguide.presenter.profile.ProfilePresenter;
 import com.travel.travelguide.presenter.profile.ProfilePresenterImpl;
@@ -95,6 +97,9 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
     LinearLayout lnTravelDateFrom;
     @Bind(R.id.linearlayout_travel_to)
     LinearLayout lnTravelDateTo;
+    @Bind(R.id.button_add_travel_date)
+    AppCompatButton btnAddTravelDate;
+
 
     MaterialDialog dialog;
 
@@ -131,6 +136,8 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
         btnLocation.setOnClickListener(this);
         lnTravelDateFrom.setOnClickListener(this);
         lnTravelDateTo.setOnClickListener(this);
+        btnAddTravelDate.setOnClickListener(this);
+        btnChat.setOnClickListener(this);
         String[] languages = Ulti.parseLanguage(getActivity());
         languageAdapter = new ArrayAdapter<String>(getActivity(), R.layout.language_item, languages);
         spnLanguage.setAdapter(languageAdapter);
@@ -161,7 +168,7 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
     @Override
     public void bindData(User user) {
         lblTitle.setText(user.getName());
-        txtEmail.setText(user.getName());
+        txtName.setText(user.getName());
         ImageLoader.getInstance().displayImage(user.getAvatar(), imgAvatar);
         txtEmail.setText(user.getEmail());
         txtFacebook.setText(user.getFacebookLink());
@@ -171,6 +178,15 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
         txtPhone.setText(user.getPhoneNumber());
         spnLanguage.setSelection(languageAdapter.getPosition(user.getLanguage()));
 
+        if(UserManager.getInstance().haveTravelDate(user)){
+            lnTravelDateFrom.setVisibility(View.VISIBLE);
+            lnTravelDateTo.setVisibility(View.VISIBLE);
+
+        }else {
+            lnTravelDateFrom.setVisibility(View.GONE);
+            lnTravelDateTo.setVisibility(View.GONE);
+        }
+
     }
 
     @Override
@@ -179,7 +195,12 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
         txtConfirmPassword.setVisibility(View.GONE);
         btnEdit.setVisibility(View.VISIBLE);
         btnChat.setVisibility(View.GONE);
-        rlTravelDateContainer.setVisibility(View.VISIBLE);
+        rlTravelDateContainer.setVisibility(View.GONE);
+        if(UserManager.getInstance().haveTravelDate(UserManager.getInstance().getCurrentUser())){
+            btnAddTravelDate.setText(R.string.remove_travel_date);
+        }else {
+            btnAddTravelDate.setText(R.string.add_travel_date);
+        }
     }
 
     @Override
@@ -195,7 +216,7 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
     public void switchToEditMode() {
         txtConfirmPassword.setEnabled(true);
         txtPassword.setEnabled(true);
-        txtEmail.setEnabled(true);
+        txtEmail.setEnabled(false);
         txtFacebook.setEnabled(true);
         txtName.setEnabled(true);
         btnLocation.setEnabled(true);
@@ -206,6 +227,7 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
         txtInstagram.setEnabled(true);
         txtTwitter.setEnabled(true);
         spnLanguage.setEnabled(true);
+        btnAddTravelDate.setEnabled(true);
     }
 
     @Override
@@ -224,6 +246,7 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
         txtInstagram.setEnabled(false);
         txtTwitter.setEnabled(false);
         spnLanguage.setEnabled(false);
+        btnAddTravelDate.setEnabled(false);
     }
 
     @Override
@@ -243,7 +266,8 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
                 getActivity().onBackPressed();
                 break;
             case R.id.edit_button:
-                profilePresenter.switchMode();
+//                profilePresenter.switchMode();
+                editButtonCLicked();
                 break;
             case R.id.avatar:
                 showAvatarOption();
@@ -251,7 +275,29 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
             case R.id.location:
                 showPlacePicker();
                 break;
+            case R.id.button_add_travel_date:
+
+                break;
+            case R.id.fab:
+                Toast.makeText(getActivity(), "Chat feature. Comming soon", Toast.LENGTH_SHORT).show();
+                break;
         }
+    }
+
+    private void editButtonCLicked() {
+        user.setName(txtName.getText().toString());
+        user.setPhoneNumber(txtPhone.getText().toString());
+        user.setLanguage((String) spnLanguage.getSelectedItem());
+        user.setFacebookLink(txtFacebook.getText().toString());
+        user.setTwitterLink(txtTwitter.getText().toString());
+        user.setInstagramLink(txtInstagram.getText().toString());
+        if(place != null){
+            GeoPoint geoPoint = new GeoPoint(place.getLatLng().latitude, place.getLatLng().longitude);
+            user.setlocation(geoPoint);
+            user.setLocationName(place.getName() + " " + place.getAddress());
+        }
+        profilePresenter.updateUserProfile(imageLocalPath);
+
     }
 
     private void showPlacePicker() {

@@ -282,7 +282,7 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.PLACE_PICKER_REQUEST) {
-            if (resultCode == getActivity().RESULT_OK) {
+            if (resultCode == getActivity().RESULT_OK && data != null) {
                 place = PlacePicker.getPlace(getActivity(), data);
 
                 String toastMsg = place.getName() + " " + place.getAddress();

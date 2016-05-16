@@ -400,29 +400,38 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
 
         switch (requestCode) {
             case Constants.REQUEST_SELECT_PICTURE:
-                final Uri selectedUri = data.getData();
-                if (selectedUri != null) {
-                    imageLocalPath = profilePresenter.getImageLocalPath();
-                    CropImageUlti.startCropActivity(this, data.getData(), imageLocalPath);
-                } else {
-                    Toast.makeText(getActivity(), R.string.toast_cannot_retrieve_selected_image, Toast.LENGTH_SHORT).show();
+                if(data != null){
+
+                    final Uri selectedUri = data.getData();
+                    if (selectedUri != null) {
+                        imageLocalPath = profilePresenter.getImageLocalPath();
+                        CropImageUlti.startCropActivity(this, data.getData(), imageLocalPath);
+                    } else {
+                        Toast.makeText(getActivity(), R.string.toast_cannot_retrieve_selected_image, Toast.LENGTH_SHORT).show();
+                    }
                 }
                 break;
             case UCrop.REQUEST_CROP:
-                handleCropResultFromUCrop(UCrop.getOutput(data));
+                if(data != null){
+                    handleCropResultFromUCrop(UCrop.getOutput(data));
+                }
                 break;
             case UCrop.RESULT_ERROR:
-                handleCropError(data);
+                if(data!= null){
+                    handleCropError(data);
+                }
                 break;
             case Constants.CAMERA_CODE:
 
                 handleImageResultFromTakePicture();
                 break;
             case Constants.PLACE_PICKER_REQUEST:
-                place = PlacePicker.getPlace(getActivity(), data);
+                if(data != null){
+                    place = PlacePicker.getPlace(getActivity(), data);
 
-                String toastMsg = place.getName() + " " + place.getAddress();
-                displayLocation(toastMsg);
+                    String toastMsg = place.getName() + " " + place.getAddress();
+                    displayLocation(toastMsg);
+                }
                 break;
         }
 

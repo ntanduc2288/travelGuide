@@ -11,12 +11,13 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -31,13 +32,17 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.michael.easydialog.EasyDialog;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.travel.travelguide.Object.SocialObject;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
 import com.travel.travelguide.Ulti.Constants;
 import com.travel.travelguide.Ulti.CropImageUlti;
 import com.travel.travelguide.Ulti.Ulti;
+import com.travel.travelguide.View.MultiSelectionSpinner;
+import com.travel.travelguide.View.SocialPickerView;
 import com.travel.travelguide.manager.UserManager;
 import com.travel.travelguide.presenter.profile.IProfileView;
 import com.travel.travelguide.presenter.profile.ProfilePresenter;
@@ -65,8 +70,6 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
     AppCompatEditText txtPassword;
     @Bind(R.id.name)
     AppCompatEditText txtName;
-    @Bind(R.id.facebook)
-    AppCompatEditText txtFacebook;
     @Bind(R.id.confirm_password)
     AppCompatEditText txtConfirmPassword;
     @Bind(R.id.location)
@@ -82,11 +85,7 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
     @Bind(R.id.phone)
     AppCompatEditText txtPhone;
     @Bind(R.id.language)
-    AppCompatSpinner spnLanguage;
-    @Bind(R.id.twitter)
-    AppCompatEditText txtTwitter;
-    @Bind(R.id.instagram)
-    AppCompatEditText txtInstagram;
+    MultiSelectionSpinner spnLanguage;
     @Bind(R.id.textview_from)
     AppCompatTextView lblTravelDateFrom;
     @Bind(R.id.textview_to)
@@ -99,6 +98,13 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
     LinearLayout lnTravelDateTo;
     @Bind(R.id.button_add_travel_date)
     AppCompatButton btnAddTravelDate;
+    @Bind(R.id.linearlayout_social_container)
+    LinearLayout lnSocialContainer;
+    @Bind(R.id.button_add_social) AppCompatButton btnAddSocialLink;
+
+    private SocialPickerView socialPickerView;
+    private EasyDialog easyDialog;
+
 
 
     MaterialDialog dialog;
@@ -138,9 +144,12 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
         lnTravelDateTo.setOnClickListener(this);
         btnAddTravelDate.setOnClickListener(this);
         btnChat.setOnClickListener(this);
+        btnAddSocialLink.setOnClickListener(this);
         String[] languages = Ulti.parseLanguage(getActivity());
-        languageAdapter = new ArrayAdapter<String>(getActivity(), R.layout.language_item, languages);
-        spnLanguage.setAdapter(languageAdapter);
+//        languageAdapter = new ArrayAdapter<String>(getActivity(), R.layout.language_item, languages);
+//        spnLanguage.setAdapter(languageAdapter);
+        spnLanguage.setItems(languages);
+
 
         profilePresenter.getUserProfile();
 
@@ -171,12 +180,12 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
         txtName.setText(user.getName());
         ImageLoader.getInstance().displayImage(user.getAvatar(), imgAvatar);
         txtEmail.setText(user.getEmail());
-        txtFacebook.setText(user.getFacebookLink());
         btnLocation.setText(user.getLocationName());
-        txtInstagram.setText(user.getInstagramLink());
-        txtTwitter.setText(user.getTwitterLink());
         txtPhone.setText(user.getPhoneNumber());
-        spnLanguage.setSelection(languageAdapter.getPosition(user.getLanguage()));
+        if(!TextUtils.isEmpty(user.getLanguage())){
+            String[] languages = user.getLanguage().split(",");
+            spnLanguage.setSelection(languages);
+        }
 
         if(UserManager.getInstance().haveTravelDate(user)){
             lnTravelDateFrom.setVisibility(View.VISIBLE);
@@ -185,6 +194,18 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
         }else {
             lnTravelDateFrom.setVisibility(View.GONE);
             lnTravelDateTo.setVisibility(View.GONE);
+        }
+
+        if(!TextUtils.isEmpty(user.getFacebookLink())){
+            profilePresenter.addMoreSocialView(lnSocialContainer, new SocialObject(SocialObject.FACEBOOK_TYPE, user.getFacebookLink()));
+        }
+
+        if(!TextUtils.isEmpty(user.getInstagramLink())){
+            profilePresenter.addMoreSocialView(lnSocialContainer, new SocialObject(SocialObject.INSTAGRAM_TYPE, user.getInstagramLink()));
+        }
+
+        if(!TextUtils.isEmpty(user.getTwitterLink())){
+            profilePresenter.addMoreSocialView(lnSocialContainer, new SocialObject(SocialObject.TWITTER_TYPE, user.getTwitterLink()));
         }
 
     }
@@ -217,15 +238,12 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
         txtConfirmPassword.setEnabled(true);
         txtPassword.setEnabled(true);
         txtEmail.setEnabled(false);
-        txtFacebook.setEnabled(true);
         txtName.setEnabled(true);
         btnLocation.setEnabled(true);
         imgAvatar.setEnabled(true);
         imgAvatar.setBorderColor(getResources().getColor(R.color.colorPrimary));
         btnEdit.setBackgroundResource(R.drawable.save_icon);
         txtPhone.setEnabled(true);
-        txtInstagram.setEnabled(true);
-        txtTwitter.setEnabled(true);
         spnLanguage.setEnabled(true);
         btnAddTravelDate.setEnabled(true);
     }
@@ -235,7 +253,6 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
         txtConfirmPassword.setEnabled(false);
         txtPassword.setEnabled(false);
         txtEmail.setEnabled(false);
-        txtFacebook.setEnabled(false);
         txtName.setEnabled(false);
         txtName.clearFocus();
         btnLocation.setEnabled(false);
@@ -243,8 +260,6 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
         imgAvatar.setBorderColor(getResources().getColor(R.color.color_white));
         btnEdit.setBackgroundResource(R.drawable.edit_icon);
         txtPhone.setEnabled(false);
-        txtInstagram.setEnabled(false);
-        txtTwitter.setEnabled(false);
         spnLanguage.setEnabled(false);
         btnAddTravelDate.setEnabled(false);
     }
@@ -281,20 +296,62 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
             case R.id.fab:
                 Toast.makeText(getActivity(), "Chat feature. Comming soon", Toast.LENGTH_SHORT).show();
                 break;
+            case R.id.button_add_social:
+                btnSocialLinkClicked();
+                break;
         }
+    }
+
+    private void btnSocialLinkClicked() {
+        if(profilePresenter.getListSocialsRemainingItems().size() > 0){
+            initSocialPicker();
+            int[] attachedViewLocation = new int[2];
+            btnAddSocialLink.getLocationInWindow(attachedViewLocation);
+            easyDialog = new EasyDialog(getActivity()).setLayout(socialPickerView)
+                    .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.transparent))
+                    .setGravity(EasyDialog.GRAVITY_TOP)
+                    .setLocationByAttachedView(btnAddSocialLink)
+                    .setTouchOutsideDismiss(true)
+                    .setMatchParent(false);
+            easyDialog.show();
+        }
+
+    }
+
+    private void initSocialPicker() {
+        socialPickerView = new SocialPickerView(getActivity(), profilePresenter.getListSocialsRemainingItems(), new SocialPickerView.SelectedSocialCallback() {
+            @Override
+            public void itemSelected(SocialObject socialObject) {
+                profilePresenter.addMoreSocialView(lnSocialContainer, socialObject);
+                if(easyDialog != null){
+                    easyDialog.dismiss();
+                }
+            }
+        });
     }
 
     private void editButtonCLicked() {
         user.setName(txtName.getText().toString());
         user.setPhoneNumber(txtPhone.getText().toString());
-        user.setLanguage((String) spnLanguage.getSelectedItem());
-        user.setFacebookLink(txtFacebook.getText().toString());
-        user.setTwitterLink(txtTwitter.getText().toString());
-        user.setInstagramLink(txtInstagram.getText().toString());
+        user.setLanguage(spnLanguage.getSelectedItemsAsString());
         if(place != null){
             GeoPoint geoPoint = new GeoPoint(place.getLatLng().latitude, place.getLatLng().longitude);
             user.setlocation(geoPoint);
             user.setLocationName(place.getName() + " " + place.getAddress());
+        }
+        for(SocialObject socialObject : profilePresenter.getListSocialsSelectedItems(lnSocialContainer)){
+            String socialLink = socialObject.getName();
+            switch (socialObject.getId()){
+                case SocialObject.FACEBOOK_TYPE:
+                    user.setFacebookLink(socialLink);
+                    break;
+                case SocialObject.INSTAGRAM_TYPE:
+                    user.setInstagramLink(socialLink);
+                    break;
+                case SocialObject.TWITTER_TYPE:
+                    user.setTwitterLink(socialLink);
+                    break;
+            }
         }
         profilePresenter.updateUserProfile(imageLocalPath);
 
@@ -432,6 +489,17 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
         if (dialog != null) {
             dialog.dismiss();
         }
+        socialPickerView = null;
         profilePresenter.releaseResources();
+    }
+
+    @Override
+    public void showAddSocialButton() {
+        btnAddSocialLink.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideAddSocialButton() {
+        btnAddSocialLink.setVisibility(View.GONE);
     }
 }

@@ -49,12 +49,17 @@ public class UserManager {
         if(user == null){
             try {
                 ArrayList<User> users = (ArrayList<User>) getDatabaseHelper(context).getUser().queryForAll();
-                if(users != null && users.size() > 1){
+                if(users != null && users.size() > 0){
                     user = users.get(0);
+
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
+
+        if(user != null){
+            user.setId(user.getId());
         }
         return user;
     }

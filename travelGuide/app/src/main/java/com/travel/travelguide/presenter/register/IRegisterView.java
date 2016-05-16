@@ -15,5 +15,7 @@ public interface IRegisterView {
     void showError(String errorMessage);
     void gotoMapScreen();
     void displayLocation(String location);
+    void showAddSocialButton();
+    void hideAddSocialButton();
     Context getContext();
 }

@@ -80,12 +80,13 @@
                 android:layout_marginLeft="2dp"
                 android:id="@+id/icon_speak"/>
 
-            <android.support.v7.widget.AppCompatSpinner
+            <com.travel.travelguide.View.MultiSelectionSpinner
                 android:id="@+id/language"
                 android:spinnerMode="dialog"
                 android:layout_toRightOf="@+id/icon_speak"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/transparent"
                 android:prompt="@string/choose_a_language"
                 android:text="Language" />
 
@@ -99,38 +100,38 @@
 
         </RelativeLayout>
 
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/facebook"
-            style="@style/EdittextStyle"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/facebook"
-            android:hint="@string/facebook_link"
+            android:orientation="vertical"
+            android:id="@+id/linearlayout_social_container">
 
-            android:text="Duc FB" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/social_container_title"
+                    style="@style/EdittextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/calendar"
+                    android:hint="@string/google_plus_link"
+                    android:text="Social link" />
 
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/twitter"
-            style="@style/EdittextStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/twitter"
-            android:hint="@string/twitter_link"
+                <android.support.v7.widget.AppCompatButton
+                    android:layout_width="50dp"
+                    android:textAllCaps="false"
+                    android:id="@+id/button_add_social"
+                    android:drawableLeft="@drawable/plus"
+                    android:text="@string/add"
+                    android:layout_toRightOf="@+id/social_container_title"
+                    android:background="@color/transparent"
+                    android:textSize="@dimen/general_text_size"
+                    android:layout_marginTop="15dp"
+                    android:layout_height="30dp" />
+            </RelativeLayout>
 
-            android:text="Duc Twitter" />
-
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/instagram"
-            style="@style/EdittextStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/instagram"
-            android:hint="@string/instagram_link"
-
-            android:text="Duc Instagram" />
-
-
-
+        </LinearLayout>
 
 
         <LinearLayout

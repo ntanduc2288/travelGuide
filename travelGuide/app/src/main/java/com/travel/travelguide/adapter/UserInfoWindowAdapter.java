@@ -2,13 +2,20 @@ package com.travel.travelguide.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
-import com.mikhaellopez.circularimageview.CircularImageView;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+import com.squareup.picasso.Transformation;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
 
@@ -21,9 +28,16 @@ public class UserInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     Context context;
     ArrayList<User> users;
     private TextView lblUsername, lblDescription;
-    private CircularImageView imgAvatar;
+    private ImageView imgAvatar;
+    Transformation transformation;
 
     public UserInfoWindowAdapter(Context context) {
+        transformation = new RoundedTransformationBuilder()
+                .borderColor(Color.BLACK)
+                .borderWidthDp(3)
+                .cornerRadiusDp(30)
+                .oval(true)
+                .build();
         this.context = context;
     }
 
@@ -41,7 +55,7 @@ public class UserInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         View view = ((Activity)context).getLayoutInflater().inflate(R.layout.user_info_window, null);
         lblUsername = (TextView) view.findViewById(R.id.title);
         lblDescription = (TextView) view.findViewById(R.id.snippet);
-        imgAvatar = (CircularImageView) view.findViewById(R.id.badge);
+        imgAvatar = (ImageView) view.findViewById(R.id.badge);
 
         bindData(marker);
         return view;
@@ -53,7 +67,23 @@ public class UserInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
                 if(user.getId().equals(marker.getSnippet())){
                     lblUsername.setText(user.getName());
                     lblDescription.setText(user.getLocationName());
-                    ImageLoader.getInstance().displayImage(user.getAvatar(), imgAvatar);
+//                    ImageLoader.getInstance().displayImage(user.getAvatar(), imgAvatar);
+                    Picasso.with(context).load(user.getAvatar()).transform(transformation).into(new Target() {
+                        @Override
+                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                            imgAvatar.setImageBitmap(bitmap);
+                        }
+
+                        @Override
+                        public void onBitmapFailed(Drawable errorDrawable) {
+                            imgAvatar.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.anonymous_icon));
+                        }
+
+                        @Override
+                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+                            imgAvatar.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.loading_icon));
+                        }
+                    });
                     break;
                 }
             }

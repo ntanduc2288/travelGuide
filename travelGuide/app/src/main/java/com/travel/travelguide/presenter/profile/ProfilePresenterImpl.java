@@ -3,20 +3,25 @@ package com.travel.travelguide.presenter.profile;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.files.BackendlessFile;
+import com.travel.travelguide.Object.SocialObject;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
 import com.travel.travelguide.Ulti.Constants;
 import com.travel.travelguide.Ulti.CropImageUlti;
 import com.travel.travelguide.Ulti.LogUtils;
+import com.travel.travelguide.View.SocialItemView;
 import com.travel.travelguide.manager.UserManager;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import rx.Observable;
@@ -37,11 +42,18 @@ public class ProfilePresenterImpl implements ProfilePresenter {
     boolean isInEditMode;
     private CompositeSubscription compositeSubscription;
     private String imageLocalPath = Constants.EMPTY_STRING;
+    ArrayList<SocialObject> socialObjectsOriginal;
+    ArrayList<SocialObject> socialObjectsSelected;
 
     public ProfilePresenterImpl(IProfileView profileView, User user) {
         this.profileView = profileView;
         this.user = user;
         isMyProfileView = user.getId().equalsIgnoreCase(UserManager.getInstance().getCurrentUser().getId());
+        socialObjectsOriginal = new ArrayList<>();
+        socialObjectsOriginal.add(new SocialObject(SocialObject.FACEBOOK_TYPE, Constants.EMPTY_STRING));
+        socialObjectsOriginal.add(new SocialObject(SocialObject.TWITTER_TYPE, Constants.EMPTY_STRING));
+        socialObjectsOriginal.add(new SocialObject(SocialObject.INSTAGRAM_TYPE, Constants.EMPTY_STRING));
+        socialObjectsSelected = new ArrayList<>();
     }
 
     @Override
@@ -191,5 +203,54 @@ public class ProfilePresenterImpl implements ProfilePresenter {
         }
     }
 
+    @Override
+    public ArrayList<SocialObject> getListSocialsRemainingItems() {
+        ArrayList<SocialObject> objectsRemaining = new ArrayList<>();
+        objectsRemaining.addAll(socialObjectsOriginal);
+        for(SocialObject socialObjectSelected : socialObjectsSelected){
+            for(SocialObject socialObjectOriginal : objectsRemaining){
+                if(socialObjectOriginal.getId() == socialObjectSelected.getId()){
+                    objectsRemaining.remove(socialObjectOriginal);
+                    break;
+                }
+            }
+        }
+
+        return objectsRemaining;
+    }
+
+    @Override
+    public ArrayList<SocialObject> getListSocialsSelectedItems(LinearLayout lnContainer) {
+        ArrayList<SocialObject> socialObjects = new ArrayList<>();
+        for (int i = 0; i < lnContainer.getChildCount(); i++) {
+            View viewGroup = lnContainer.getChildAt(i);
+            if(viewGroup instanceof SocialItemView){
+                socialObjects.add(((SocialItemView)viewGroup).getSocialObject());
+            }
+        }
+        return socialObjects;
+    }
+
+    @Override
+    public void addMoreSocialView(LinearLayout lnContainer, final SocialObject socialObject) {
+        SocialItemView socialItemView = new SocialItemView(profileView.getContext(), socialObject, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                socialObjectsSelected.remove(socialObject);
+                checkShowHideAddSocialButton();
+            }
+        });
+        lnContainer.addView(socialItemView);
+        socialObjectsSelected.add(socialObject);
+        checkShowHideAddSocialButton();
+    }
+
+    private void checkShowHideAddSocialButton(){
+        if(socialObjectsSelected.size() == socialObjectsOriginal.size()){
+            profileView.hideAddSocialButton();
+        }else {
+            profileView.showAddSocialButton();
+        }
+    }
 
 }

@@ -17,4 +17,6 @@ public interface IProfileView {
     void switchToViewerMode();
     void showMessage(String message);
     Context getContext();
+    void showAddSocialButton();
+    void hideAddSocialButton();
 }

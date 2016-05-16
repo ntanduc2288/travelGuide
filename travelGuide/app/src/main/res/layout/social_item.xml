@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ android:layout_width="match_parent"
+    android:paddingLeft="30dp"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.AppCompatEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/social"
+        android:drawableLeft="@drawable/instagram"
+        android:layout_toLeftOf="@+id/button_delete_social"
+        style="@style/EdittextStyle"
+        android:maxLines="1"/>
+
+    <android.support.v7.widget.AppCompatButton
+        android:layout_width="20dp"
+        android:id="@+id/button_delete_social"
+        android:layout_alignParentRight="true"
+        android:layout_height="20dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/delete"/>
+
+
+
+</RelativeLayout>

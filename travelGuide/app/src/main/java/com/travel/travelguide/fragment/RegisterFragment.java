@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.AppCompatSpinner;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,10 +22,14 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.michael.easydialog.EasyDialog;
+import com.travel.travelguide.Object.SocialObject;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
 import com.travel.travelguide.Ulti.Constants;
 import com.travel.travelguide.Ulti.Ulti;
+import com.travel.travelguide.View.MultiSelectionSpinner;
+import com.travel.travelguide.View.SocialPickerView;
 import com.travel.travelguide.activity.MainActivity;
 import com.travel.travelguide.manager.TransactionManager;
 import com.travel.travelguide.presenter.register.IRegisterView;
@@ -33,13 +37,14 @@ import com.travel.travelguide.presenter.register.RegisterPresenter;
 import com.travel.travelguide.presenter.register.RegisterPresenterImpl;
 
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.Bind;
 
 /**
  * Created by user on 4/23/16.
  */
-public class RegisterFragment extends BaseFragment implements IRegisterView, View.OnClickListener {
+public class RegisterFragment extends BaseFragment implements IRegisterView, View.OnClickListener, MultiSelectionSpinner.OnMultipleItemsSelectedListener {
     @Bind(R.id.email)
     AppCompatEditText txtEmail;
     @Bind(R.id.password)
@@ -47,7 +52,6 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
     @Bind(R.id.btnRegister)
     ActionProcessButton btnActionRegister;
     @Bind(R.id.name) AppCompatEditText txtName;
-    @Bind(R.id.facebook) AppCompatEditText txtFacebook;
     @Bind(R.id.confirm_password) AppCompatEditText txtConfirmPassword;
     @Bind(R.id.location)
     AppCompatButton lblLocation;
@@ -56,14 +60,18 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
     @Bind(R.id.back_button)
     AppCompatButton btnBack;
     @Bind(R.id.phone) AppCompatEditText txtPhone;
-    @Bind(R.id.language) AppCompatSpinner spnLanguage;
-    @Bind(R.id.twitter) AppCompatEditText txtTwitter;
-    @Bind(R.id.instagram) AppCompatEditText txtInstagram;
+    @Bind(R.id.language)
+    MultiSelectionSpinner spnLanguage;
+    @Bind(R.id.linearlayout_social_container)
+    LinearLayout lnSocialContainer;
+    @Bind(R.id.button_add_social) AppCompatButton btnAddSocialLink;
 
     GoogleApiClient googleApiClient;
     RegisterPresenter registerPresenter;
     private Place place;
     private MaterialDialog dialog;
+    private SocialPickerView socialPickerView;
+    private EasyDialog easyDialog;
 
 
     public static RegisterFragment newInstance(){
@@ -81,6 +89,7 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
         btnActionRegister.setOnClickListener(this);
         btnActionRegister.setMode(ActionProcessButton.Mode.ENDLESS);
         lblLocation.setOnClickListener(this);
+        btnAddSocialLink.setOnClickListener(this);
         lblTitle.setText(getString(R.string.create_account));
         txtEmail.setText("user"+ Calendar.getInstance().getTimeInMillis() + "@gmail.com");
         googleApiClient = new GoogleApiClient.Builder(getActivity())
@@ -96,9 +105,13 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
         btnBack.setOnClickListener(this);
 
         String[] languages = Ulti.parseLanguage(getActivity());
-        ArrayAdapter<String> languageAdapter = new ArrayAdapter<String>(getActivity(), R.layout.language_item, languages);
-        spnLanguage.setAdapter(languageAdapter);
-        spnLanguage.setSelection(languageAdapter.getPosition(Constants.DEFAULT_LANGUAGE));
+//        ArrayAdapter<String> languageAdapter = new ArrayAdapter<String>(getActivity(), R.layout.language_item, languages);
+//        spnLanguage.setAdapter(languageAdapter);
+//        spnLanguage.setSelection(languageAdapter.getPosition(Constants.DEFAULT_LANGUAGE));
+        spnLanguage.setItems(languages);
+//        spnLanguage.setSelection(28);
+        spnLanguage.setSelection(new String[]{Constants.DEFAULT_LANGUAGE});
+        spnLanguage.setListener(this);
     }
 
     @Override
@@ -184,7 +197,38 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
             case R.id.back_button:
                 getActivity().onBackPressed();
                 break;
+            case R.id.button_add_social:
+                btnSocialLinkClicked();
+                break;
         }
+    }
+
+    private void btnSocialLinkClicked() {
+        if(registerPresenter.getListSocialsRemainingItems().size() > 0){
+            initSocialPicker();
+            int[] attachedViewLocation = new int[2];
+            btnAddSocialLink.getLocationInWindow(attachedViewLocation);
+            easyDialog = new EasyDialog(getActivity()).setLayout(socialPickerView)
+                    .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.transparent))
+                    .setGravity(EasyDialog.GRAVITY_TOP)
+                    .setLocationByAttachedView(btnAddSocialLink)
+                    .setTouchOutsideDismiss(true)
+                    .setMatchParent(false);
+            easyDialog.show();
+        }
+
+    }
+
+    private void initSocialPicker() {
+        socialPickerView = new SocialPickerView(getActivity(), registerPresenter.getListSocialsRemainingItems(), new SocialPickerView.SelectedSocialCallback() {
+            @Override
+            public void itemSelected(SocialObject socialObject) {
+                registerPresenter.addMoreSocialView(lnSocialContainer, socialObject);
+                if(easyDialog != null){
+                    easyDialog.dismiss();
+                }
+            }
+        });
     }
 
     private void locationClicked() {
@@ -207,17 +251,30 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
         User user = new User();
         user.setEmail(txtEmail.getText().toString().trim());
         user.setName(txtName.getText().toString().trim());
-        user.setFacebookLink(txtFacebook.getText().toString().trim());
         if(place != null){
             user.setLocationName(lblLocation.getText().toString().trim());
             GeoPoint geoPoint = new GeoPoint(place.getLatLng().latitude, place.getLatLng().longitude);
             user.setlocation(geoPoint);
         }
-        user.setLanguage((String) spnLanguage.getSelectedItem());
-        user.setTwitterLink(txtTwitter.getText().toString().trim());
-        user.setInstagramLink(txtInstagram.getText().toString().trim());
+        user.setLanguage(spnLanguage.getSelectedItemsAsString());
         user.setPhoneNumber(txtPhone.getText().toString().trim());
-        user.setLanguage((String) spnLanguage.getSelectedItem());
+
+
+        for(SocialObject socialObject : registerPresenter.getListSocialsSelectedItems(lnSocialContainer)){
+            String socialLink = socialObject.getName();
+            switch (socialObject.getId()){
+                case SocialObject.FACEBOOK_TYPE:
+                    user.setFacebookLink(socialLink);
+                    break;
+                case SocialObject.INSTAGRAM_TYPE:
+                    user.setInstagramLink(socialLink);
+                    break;
+                case SocialObject.TWITTER_TYPE:
+                    user.setTwitterLink(socialLink);
+                    break;
+            }
+        }
+
         return user;
     }
 
@@ -243,5 +300,25 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
         }
         registerPresenter.releaseResources();
         super.onDestroyView();
+    }
+
+    @Override
+    public void selectedIndices(List<Integer> indices) {
+
+    }
+
+    @Override
+    public void selectedStrings(List<String> strings) {
+
+    }
+
+    @Override
+    public void showAddSocialButton() {
+        btnAddSocialLink.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideAddSocialButton() {
+        btnAddSocialLink.setVisibility(View.GONE);
     }
 }

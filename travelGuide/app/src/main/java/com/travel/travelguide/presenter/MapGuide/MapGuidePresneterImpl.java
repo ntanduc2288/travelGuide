@@ -308,6 +308,7 @@ public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient
                         mapGuideView.hideLoadindMarkerProcess();
                     }
                 }
+
             }
         }, DELAY_TIME);
     }

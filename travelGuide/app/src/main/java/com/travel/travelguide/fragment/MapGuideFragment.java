@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -25,9 +26,13 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.mikhaellopez.circularimageview.CircularImageView;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.otto.Subscribe;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
 import com.travel.travelguide.Ulti.Constants;
+import com.travel.travelguide.Ulti.EvenBusHelper;
 import com.travel.travelguide.Ulti.LogUtils;
 import com.travel.travelguide.activity.LoginActivity;
 import com.travel.travelguide.adapter.UserInfoWindowAdapter;
@@ -59,6 +64,10 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
     @Bind(R.id.logout)
     com.github.clans.fab.FloatingActionButton btnLogout;
     private MaterialDialog dialog;
+    @Bind(R.id.imageview_my_profile)
+    CircularImageView imgProfile;
+    @Bind(R.id.textview_profile_name)
+    AppCompatTextView lblProfileName;
 
     public static MapGuideFragment newInstance() {
         return new MapGuideFragment();
@@ -71,6 +80,7 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
 
     @Override
     protected void setupViews() {
+        EvenBusHelper.getInstance().registerEventBus(this);
         //add map view
         SupportMapFragment supportMapFragment = SupportMapFragment.newInstance();
         TransactionManager.getInstance().addFragment(getChildFragmentManager(), supportMapFragment, R.id.map_container);
@@ -87,7 +97,10 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
         btnLogout.setOnClickListener(this);
         btnProfile.setOnClickListener(this);
         btnSettings.setOnClickListener(this);
+        imgProfile.setOnClickListener(this);
+        lblProfileName.setOnClickListener(this);
         mapGuidePresenter.connect();
+        updateUserView(UserManager.getInstance().getCurrentUser());
     }
 
     @Override
@@ -132,6 +145,7 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
     public void onDestroyView() {
         mapGuidePresenter.disConnect();
         mapGuidePresenter.releaseResources();
+        EvenBusHelper.getInstance().unRegisterEventBus(this);
         super.onDestroyView();
     }
 
@@ -194,7 +208,7 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
             LatLng sydney = new LatLng(user.getLocation().getLatitude(), user.getLocation().getLongitude());
             Marker marker = mMap.addMarker(new MarkerOptions().position(sydney).title(user.getLocationName())
             .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_icon)));
-            marker.setSnippet(user.getId());
+            marker.setSnippet(user.getbackendlessUserId());
             markers.add(marker);
         }
         return markers;
@@ -240,6 +254,10 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
             case R.id.logout:
                 mapGuidePresenter.logout();
                 break;
+            case R.id.imageview_my_profile:
+            case R.id.textview_profile_name:
+                gotoProfileScreen(UserManager.getInstance().getCurrentUser());
+                break;
 
         }
     }
@@ -263,5 +281,14 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
     @Override
     public Context getContext() {
         return getActivity();
+    }
+
+    @Subscribe
+    @Override
+    public void updateUserView(User user) {
+        if(user != null && user.getbackendlessUserId().equalsIgnoreCase(UserManager.getInstance().getCurrentUser().getUserId())){
+            lblProfileName.setText(user.getName());
+            ImageLoader.getInstance().displayImage(user.getAvatar(), imgProfile);
+        }
     }
 }

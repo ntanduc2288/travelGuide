@@ -64,7 +64,7 @@ public class UserInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     private void bindData(Marker marker){
         if(users != null){
             for(User user : users){
-                if(user.getId().equals(marker.getSnippet())){
+                if(user.getbackendlessUserId().equals(marker.getSnippet())){
                     lblUsername.setText(user.getName());
                     lblDescription.setText(user.getLocationName());
 //                    ImageLoader.getInstance().displayImage(user.getAvatar(), imgAvatar);

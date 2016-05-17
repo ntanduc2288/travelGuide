@@ -13,8 +13,8 @@ import com.travel.travelguide.Ulti.Ulti;
  */
 @DatabaseTable(tableName = "User")
 public class User extends BackendlessUser {
-    @DatabaseField
-    String id = Constants.EMPTY_STRING;
+    @DatabaseField(id = true)
+    String backendlessUserId = Constants.EMPTY_STRING;
     @DatabaseField
     String name = Constants.EMPTY_STRING;
     @DatabaseField
@@ -53,11 +53,13 @@ public class User extends BackendlessUser {
     }
 
     public User(BackendlessUser backendlessUser){
-        setId(backendlessUser.getUserId());
+        setbackendlessUserId(backendlessUser.getUserId());
         setName((String) backendlessUser.getProperty(Constants.KEY_NAME));
         setEmail(backendlessUser.getEmail());
         setFacebookLink((String) backendlessUser.getProperty(Constants.KEY_FACEBOK_LINK));
-        setlocation(Ulti.extractGeoPoint(backendlessUser));
+        if(backendlessUser.getProperty(Constants.KEY_LOCATION) != null){
+            setlocation(Ulti.extractGeoPoint(backendlessUser));
+        }
         setLocationName((String) backendlessUser.getProperty(Constants.KEY_LOCATION_NAME));
         setAvatar((String) backendlessUser.getProperty(Constants.KEY_AVATAR));
         setCoverPicture((String) backendlessUser.getProperty(Constants.KEY_COVER_PICTURE));
@@ -186,12 +188,12 @@ public class User extends BackendlessUser {
         setProperty(Constants.KEY_LOCATION_NAME, locationName);
     }
 
-    public String getId() {
-        return id;
+    public String getbackendlessUserId() {
+        return backendlessUserId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setbackendlessUserId(String id) {
+        this.backendlessUserId = id;
         setProperty(Constants.KEY_OBJECT_ID, id);
     }
 

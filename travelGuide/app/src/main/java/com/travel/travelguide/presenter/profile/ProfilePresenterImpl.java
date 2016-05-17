@@ -44,11 +44,12 @@ public class ProfilePresenterImpl implements ProfilePresenter {
     private String imageLocalPath = Constants.EMPTY_STRING;
     ArrayList<SocialObject> socialObjectsOriginal;
     ArrayList<SocialObject> socialObjectsSelected;
+    String avatarLocalFile = "";
 
     public ProfilePresenterImpl(IProfileView profileView, User user) {
         this.profileView = profileView;
         this.user = user;
-        isMyProfileView = user.getId().equalsIgnoreCase(UserManager.getInstance().getCurrentUser().getId());
+        isMyProfileView = user.getbackendlessUserId().equalsIgnoreCase(UserManager.getInstance().getCurrentUser().getbackendlessUserId());
         socialObjectsOriginal = new ArrayList<>();
         socialObjectsOriginal.add(new SocialObject(SocialObject.FACEBOOK_TYPE, Constants.EMPTY_STRING));
         socialObjectsOriginal.add(new SocialObject(SocialObject.TWITTER_TYPE, Constants.EMPTY_STRING));
@@ -147,8 +148,11 @@ public class ProfilePresenterImpl implements ProfilePresenter {
                     profileView.hideLoading();
 //                    profileView.switchToViewerMode();
                     profileView.showMessage(profileView.getContext().getString(R.string.your_account_has_been_updated));
+                    UserManager.getInstance().setCurrentUser(new User(response));
+                    profileView.updateUserInfoSuccessfull(user);
                 }
                 LogUtils.logD(TAG, "update profile: " + response.toString());
+
             }
 
             @Override
@@ -164,7 +168,7 @@ public class ProfilePresenterImpl implements ProfilePresenter {
 
     @Override
     public String getImageLocalPath() {
-        imageLocalPath =  Environment.getExternalStorageDirectory().getPath() + "/" + user.getId() + "_" +Calendar.getInstance().getTimeInMillis() + ".jpg";
+        imageLocalPath =  Environment.getExternalStorageDirectory().getPath() + "/" + user.getbackendlessUserId() + "_" +Calendar.getInstance().getTimeInMillis() + ".jpg";
         return imageLocalPath;
     }
 

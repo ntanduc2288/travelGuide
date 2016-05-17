@@ -25,5 +25,6 @@ public interface IMapGuideView {
     void gotoProfileScreen(User user);
     void gotoLoginScreen();
     void showMessage(String message);
+    void updateUserView(User user);
     Context getContext();
 }

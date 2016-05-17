@@ -330,7 +330,7 @@ public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient
         if (mapGuideView != null) {
             mapGuideView.showLoadingMarkerProcess();
             for (User user : users) {
-                if (user.getId().endsWith(marker.getSnippet())) {
+                if (user.getbackendlessUserId().endsWith(marker.getSnippet())) {
                     mapGuideView.hideLoadindMarkerProcess();
                     mapGuideView.gotoProfileScreen(user);
                     break;

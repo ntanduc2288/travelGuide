@@ -40,6 +40,7 @@ import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
 import com.travel.travelguide.Ulti.Constants;
 import com.travel.travelguide.Ulti.CropImageUlti;
+import com.travel.travelguide.Ulti.EvenBusHelper;
 import com.travel.travelguide.Ulti.Ulti;
 import com.travel.travelguide.View.MultiSelectionSpinner;
 import com.travel.travelguide.View.SocialPickerView;
@@ -50,13 +51,14 @@ import com.travel.travelguide.presenter.profile.ProfilePresenterImpl;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
+import java.util.List;
 
 import butterknife.Bind;
 
 /**
  * Created by user on 4/29/16.
  */
-public class ProfileFragment extends BaseFragment implements IProfileView, View.OnClickListener, AddPhotoSelectionDialogFrament.IAddPhotoSelelectionListener {
+public class ProfileFragment extends BaseFragment implements IProfileView, View.OnClickListener, AddPhotoSelectionDialogFrament.IAddPhotoSelelectionListener, MultiSelectionSpinner.OnMultipleItemsSelectedListener  {
 
     @Bind(R.id.title)
     AppCompatTextView lblTitle;
@@ -149,7 +151,7 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
 //        languageAdapter = new ArrayAdapter<String>(getActivity(), R.layout.language_item, languages);
 //        spnLanguage.setAdapter(languageAdapter);
         spnLanguage.setItems(languages);
-
+        spnLanguage.setListener(this);
 
         profilePresenter.getUserProfile();
 
@@ -510,5 +512,22 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
     @Override
     public void hideAddSocialButton() {
         btnAddSocialLink.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void updateUserInfoSuccessfull(User user) {
+        imageLocalPath = Constants.EMPTY_STRING;
+        UserManager.getInstance().updateUserToDatabase(getActivity());
+        EvenBusHelper.getInstance().notifyUserDataChanged(user);
+    }
+
+    @Override
+    public void selectedIndices(List<Integer> indices) {
+
+    }
+
+    @Override
+    public void selectedStrings(List<String> strings) {
+
     }
 }

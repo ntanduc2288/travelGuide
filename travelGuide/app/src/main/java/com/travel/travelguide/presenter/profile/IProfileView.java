@@ -19,4 +19,5 @@ public interface IProfileView {
     Context getContext();
     void showAddSocialButton();
     void hideAddSocialButton();
+    void updateUserInfoSuccessfull(User user);
 }

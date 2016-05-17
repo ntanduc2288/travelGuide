@@ -18,4 +18,10 @@
                 <item name="android:windowEnterTransition">@android:transition/slide_left</item>
                 <!--<item name="android:windowExitTransition">@android:transition/slide_right</item>-->
         </style>
+
+        <style name="ratingStyle" parent="Theme.AppCompat">
+                <item name="android:colorControlNormal">@color/colorPrimaryDark</item>
+                <item name="colorControlActivated">@color/colorAccent</item>
+                <item name="colorControlHighlight">@color/colorAccent</item>
+        </style>
 </resources>

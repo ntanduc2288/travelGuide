@@ -40,7 +40,6 @@ import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
 import com.travel.travelguide.Ulti.Constants;
 import com.travel.travelguide.Ulti.CropImageUlti;
-import com.travel.travelguide.Ulti.EvenBusHelper;
 import com.travel.travelguide.Ulti.Ulti;
 import com.travel.travelguide.View.MultiSelectionSpinner;
 import com.travel.travelguide.View.SocialPickerView;
@@ -517,8 +516,7 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
     @Override
     public void updateUserInfoSuccessfull(User user) {
         imageLocalPath = Constants.EMPTY_STRING;
-        UserManager.getInstance().updateUserToDatabase(getActivity());
-        EvenBusHelper.getInstance().notifyUserDataChanged(user);
+
     }
 
     @Override

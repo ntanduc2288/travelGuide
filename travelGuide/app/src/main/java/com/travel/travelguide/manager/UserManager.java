@@ -2,7 +2,6 @@ package com.travel.travelguide.manager;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
@@ -12,6 +11,12 @@ import com.travel.travelguide.Ulti.DatabaseHelper;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by user on 4/23/16.
@@ -71,53 +76,40 @@ public class UserManager {
 
     public void saveUserToDatabase(final Context context){
 
-//        Observable.create(new Observable.OnSubscribe<Object>() {
-//            @Override
-//            public void call(Subscriber<? super Object> subscriber) {
-//                try {
-//                    getDatabaseHelper(context).getUser().create(user);
-//
-//                    if(databaseHelper != null){
-//                        OpenHelperManager.releaseHelper();
-//                        databaseHelper = null;
-//                    }
-//
-//                } catch (SQLException e) {
-//                    e.printStackTrace();
-//                    Toast.makeText(context, "Could not save user data. " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//                }
-//                subscriber.onNext(null);
-//                subscriber.onCompleted();
-//            }
-//        }).subscribeOn(Schedulers.newThread())
-//                .observeOn(AndroidSchedulers.mainThread())
-//        .subscribe(new Action1<Object>() {
-//            @Override
-//            public void call(Object o) {
-//
-//            }
-//        }, new Action1<Throwable>() {
-//            @Override
-//            public void call(Throwable throwable) {
-//
-//            }
-//        });
+        Observable.create(new Observable.OnSubscribe<Object>() {
+            @Override
+            public void call(Subscriber<? super Object> subscriber) {
+                try {
+                    getDatabaseHelper(context).getUser().create(user);
 
-        try {
-            getDatabaseHelper(context).getUser().create(user);
+                    if(databaseHelper != null){
+                        OpenHelperManager.releaseHelper();
+                        databaseHelper = null;
+                    }
 
-            if(databaseHelper != null){
-                OpenHelperManager.releaseHelper();
-                databaseHelper = null;
+                    Log.e(UserManager.class.getSimpleName(), "Save data successful DB.");
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    Log.e(UserManager.class.getSimpleName(), e.toString());
+                }
+                subscriber.onNext(null);
+                subscriber.onCompleted();
             }
+        }).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Action1<Object>() {
+            @Override
+            public void call(Object o) {
 
-            Toast.makeText(context, "Save data successful DB. ", Toast.LENGTH_SHORT).show();
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            Toast.makeText(context, "Could not save user data. " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            Log.e(UserManager.class.getSimpleName(), e.toString());
-        }
+            }
+        });
+
+
 
 
 
@@ -125,53 +117,40 @@ public class UserManager {
 
     public void updateUserToDatabase(final Context context){
 
-//        Observable.create(new Observable.OnSubscribe<Object>() {
-//            @Override
-//            public void call(Subscriber<? super Object> subscriber) {
-//                try {
-//                    getDatabaseHelper(context).getUser().create(user);
-//
-//                    if(databaseHelper != null){
-//                        OpenHelperManager.releaseHelper();
-//                        databaseHelper = null;
-//                    }
-//
-//                } catch (SQLException e) {
-//                    e.printStackTrace();
-//                    Toast.makeText(context, "Could not save user data. " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//                }
-//                subscriber.onNext(null);
-//                subscriber.onCompleted();
-//            }
-//        }).subscribeOn(Schedulers.newThread())
-//                .observeOn(AndroidSchedulers.mainThread())
-//        .subscribe(new Action1<Object>() {
-//            @Override
-//            public void call(Object o) {
-//
-//            }
-//        }, new Action1<Throwable>() {
-//            @Override
-//            public void call(Throwable throwable) {
-//
-//            }
-//        });
+        Observable.create(new Observable.OnSubscribe<Object>() {
+            @Override
+            public void call(Subscriber<? super Object> subscriber) {
+                try {
+                    getDatabaseHelper(context).getUser().update(user);
 
-        try {
-            getDatabaseHelper(context).getUser().update(user);
+                    if(databaseHelper != null){
+                        OpenHelperManager.releaseHelper();
+                        databaseHelper = null;
+                    }
 
-            if(databaseHelper != null){
-                OpenHelperManager.releaseHelper();
-                databaseHelper = null;
+                    Log.e(UserManager.class.getSimpleName(), "update user into db successful");
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    Log.e(UserManager.class.getSimpleName(), e.toString());
+                }
+                subscriber.onNext(null);
+                subscriber.onCompleted();
             }
+        }).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Action1<Object>() {
+            @Override
+            public void call(Object o) {
 
-            Toast.makeText(context, "Update data successful DB. ", Toast.LENGTH_SHORT).show();
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            Toast.makeText(context, "Could not Update user data. " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            Log.e(UserManager.class.getSimpleName(), e.toString());
-        }
+            }
+        });
+
+
 
 
 
@@ -182,7 +161,7 @@ public class UserManager {
         try {
             Dao<User, Long> dao =  getDatabaseHelper(context).getUser();
             DeleteBuilder<User, Long> deleteBuilder = dao.deleteBuilder();
-            deleteBuilder.where().eq("id", user.getbackendlessUserId());
+            deleteBuilder.where().eq("backendlessUserId", user.getbackendlessUserId());
             result = deleteBuilder.delete();
             if(result > 0){
                 user = null;

@@ -16,6 +16,7 @@ import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
 import com.travel.travelguide.Ulti.Constants;
 import com.travel.travelguide.Ulti.CropImageUlti;
+import com.travel.travelguide.Ulti.EvenBusHelper;
 import com.travel.travelguide.Ulti.LogUtils;
 import com.travel.travelguide.View.SocialItemView;
 import com.travel.travelguide.manager.UserManager;
@@ -149,6 +150,8 @@ public class ProfilePresenterImpl implements ProfilePresenter {
 //                    profileView.switchToViewerMode();
                     profileView.showMessage(profileView.getContext().getString(R.string.your_account_has_been_updated));
                     UserManager.getInstance().setCurrentUser(new User(response));
+                    UserManager.getInstance().updateUserToDatabase(profileView.getContext());
+                    EvenBusHelper.getInstance().notifyUserDataChanged(user);
                     profileView.updateUserInfoSuccessfull(user);
                 }
                 LogUtils.logD(TAG, "update profile: " + response.toString());

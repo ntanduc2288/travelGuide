@@ -402,4 +402,15 @@
     <string name="add_facebook_link">Add Facebook Link</string>
     <string name="add_instagram_link">Add Instagram Link</string>
     <string name="add_twitter_link">Add Twitter Link</string>
+    <string name="email_colon">Email:</string>
+    <string name="phone_colon">Phone:</string>
+    <string name="languages_spoken_colon">Languages Spoken:</string>
+    <string name="social_link_colon">Social Link:</string>
+    <string name="location_colon">Location:</string>
+    <string name="interests_colon">Interests:</string>
+    <string name="about">About</string>
+    <string name="reviews">Reviews</string>
+    <string name="not_available">N/A</string>
+    <string name="aboutme_colon">About Me:</string>
+    <string name="tell_something_about_yourself">Tell something about yourself</string>
 </resources>

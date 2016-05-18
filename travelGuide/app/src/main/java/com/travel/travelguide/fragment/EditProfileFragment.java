@@ -44,9 +44,9 @@ import com.travel.travelguide.Ulti.Ulti;
 import com.travel.travelguide.View.MultiSelectionSpinner;
 import com.travel.travelguide.View.SocialPickerView;
 import com.travel.travelguide.manager.UserManager;
-import com.travel.travelguide.presenter.profile.IProfileView;
-import com.travel.travelguide.presenter.profile.ProfilePresenter;
-import com.travel.travelguide.presenter.profile.ProfilePresenterImpl;
+import com.travel.travelguide.presenter.editProfile.IEditProfileView;
+import com.travel.travelguide.presenter.editProfile.ProfilePresenter;
+import com.travel.travelguide.presenter.editProfile.ProfilePresenterImpl;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
@@ -57,7 +57,7 @@ import butterknife.Bind;
 /**
  * Created by user on 4/29/16.
  */
-public class ProfileFragment extends BaseFragment implements IProfileView, View.OnClickListener, AddPhotoSelectionDialogFrament.IAddPhotoSelelectionListener, MultiSelectionSpinner.OnMultipleItemsSelectedListener  {
+public class EditProfileFragment extends BaseFragment implements IEditProfileView, View.OnClickListener, AddPhotoSelectionDialogFrament.IAddPhotoSelelectionListener, MultiSelectionSpinner.OnMultipleItemsSelectedListener  {
 
     @Bind(R.id.title)
     AppCompatTextView lblTitle;
@@ -102,11 +102,10 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
     @Bind(R.id.linearlayout_social_container)
     LinearLayout lnSocialContainer;
     @Bind(R.id.button_add_social) AppCompatButton btnAddSocialLink;
+    @Bind(R.id.aboutme) AppCompatEditText txtAboutMe;
 
     private SocialPickerView socialPickerView;
     private EasyDialog easyDialog;
-
-
 
     MaterialDialog dialog;
 
@@ -117,8 +116,8 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
     private ArrayAdapter<String> languageAdapter;
 
 
-    public static ProfileFragment newInstance(User user) {
-        ProfileFragment profileFragment = new ProfileFragment();
+    public static EditProfileFragment newInstance(User user) {
+        EditProfileFragment profileFragment = new EditProfileFragment();
         profileFragment.setUser(user);
         return profileFragment;
     }
@@ -129,7 +128,7 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
 
     @Override
     protected int getLayoutId() {
-        return R.layout.profile_screen;
+        return R.layout.edit_profile_screen;
     }
 
     @Override
@@ -187,6 +186,7 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
             String[] languages = user.getLanguage().split(",");
             spnLanguage.setSelection(languages);
         }
+        txtAboutMe.setText(user.getAboutMe());
 
         if(UserManager.getInstance().haveTravelDate(user)){
             lnTravelDateFrom.setVisibility(View.VISIBLE);
@@ -245,6 +245,8 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
         imgAvatar.setBorderColor(getResources().getColor(R.color.colorPrimary));
         btnEdit.setBackgroundResource(R.drawable.save_icon);
         txtPhone.setEnabled(true);
+        txtAboutMe.setEnabled(true);
+        txtAboutMe.setVisibility(View.VISIBLE);
         spnLanguage.setEnabled(true);
         btnAddTravelDate.setEnabled(true);
     }
@@ -261,6 +263,7 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
         imgAvatar.setBorderColor(getResources().getColor(R.color.color_white));
         btnEdit.setBackgroundResource(R.drawable.edit_icon);
         txtPhone.setEnabled(false);
+        txtAboutMe.setEnabled(false);
         spnLanguage.setEnabled(false);
         btnAddTravelDate.setEnabled(false);
     }
@@ -335,6 +338,7 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
         user.setName(txtName.getText().toString());
         user.setPhoneNumber(txtPhone.getText().toString());
         user.setLanguage(spnLanguage.getSelectedItemsAsString());
+        user.setAboutMe(txtAboutMe.getText().toString());
         if(place != null){
             GeoPoint geoPoint = new GeoPoint(place.getLatLng().latitude, place.getLatLng().longitude);
             user.setlocation(geoPoint);
@@ -486,7 +490,7 @@ public class ProfileFragment extends BaseFragment implements IProfileView, View.
     private void handleCropError(@NonNull Intent result) {
         final Throwable cropError = UCrop.getError(result);
         if (cropError != null) {
-            Log.e(ProfileFragment.class.getSimpleName(), "handleCropError: ", cropError);
+            Log.e(EditProfileFragment.class.getSimpleName(), "handleCropError: ", cropError);
             Toast.makeText(getActivity(), cropError.getMessage(), Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(getActivity(), R.string.toast_unexpected_error, Toast.LENGTH_SHORT).show();

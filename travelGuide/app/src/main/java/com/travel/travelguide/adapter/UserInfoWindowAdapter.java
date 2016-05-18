@@ -3,9 +3,9 @@ package com.travel.travelguide.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,7 +33,7 @@ public class UserInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     public UserInfoWindowAdapter(Context context) {
         transformation = new RoundedTransformationBuilder()
-                .borderColor(Color.BLACK)
+                .borderColor(R.color.colorPrimary)
                 .borderWidthDp(3)
                 .cornerRadiusDp(30)
                 .oval(true)
@@ -68,22 +68,27 @@ public class UserInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
                     lblUsername.setText(user.getName());
                     lblDescription.setText(user.getLocationName());
 //                    ImageLoader.getInstance().displayImage(user.getAvatar(), imgAvatar);
-                    Picasso.with(context).load(user.getAvatar()).transform(transformation).into(new Target() {
-                        @Override
-                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                            imgAvatar.setImageBitmap(bitmap);
-                        }
+                    if(!TextUtils.isEmpty(user.getAvatar())){
+                        Picasso.with(context).load(user.getAvatar()).transform(transformation).into(new Target() {
+                            @Override
+                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                imgAvatar.setImageBitmap(bitmap);
+                            }
 
-                        @Override
-                        public void onBitmapFailed(Drawable errorDrawable) {
-                            imgAvatar.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.anonymous_icon));
-                        }
+                            @Override
+                            public void onBitmapFailed(Drawable errorDrawable) {
+                                imgAvatar.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.anonymous_icon));
+                            }
 
-                        @Override
-                        public void onPrepareLoad(Drawable placeHolderDrawable) {
-                            imgAvatar.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.loading_icon));
-                        }
-                    });
+                            @Override
+                            public void onPrepareLoad(Drawable placeHolderDrawable) {
+                                imgAvatar.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.loading_icon));
+                            }
+                        });
+                    }else{
+                        Picasso.with(context).load(R.drawable.anonymous_icon).transform(transformation).into(imgAvatar);
+                    }
+
                     break;
                 }
             }

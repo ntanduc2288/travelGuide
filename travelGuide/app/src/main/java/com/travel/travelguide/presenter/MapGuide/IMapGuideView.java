@@ -22,7 +22,8 @@ public interface IMapGuideView {
     void showError(String errorMessage);
     void zoomToLevel(CameraUpdate cameraUpdate);
     void zoomToLevel(float level);
-    void gotoProfileScreen(User user);
+    void gotoEditProfileScreen(User user);
+    void gotoUserProfileScreen(User user);
     void gotoLoginScreen();
     void showMessage(String message);
     void updateUserView(User user);

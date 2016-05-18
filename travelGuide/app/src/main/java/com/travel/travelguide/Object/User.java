@@ -47,6 +47,9 @@ public class User extends BackendlessUser {
     @DatabaseField
     long travelDateTo = 0;
 
+    @DatabaseField
+    String aboutMe = Constants.EMPTY_STRING;
+
 
     public User(){
 
@@ -67,6 +70,7 @@ public class User extends BackendlessUser {
         setTwitterLink((String) backendlessUser.getProperty(Constants.KEY_TWITTER_LINK));
         setInstagramLink((String) backendlessUser.getProperty(Constants.KEY_INSTAGRAM_LINK));
         setLanguage((String) backendlessUser.getProperty(Constants.KEY_LANGUAGE));
+        setAboutMe((String) backendlessUser.getProperty(Constants.KEY_ABOUT_ME));
         try {
             setTravelDateFrom((long) backendlessUser.getProperty(Constants.KEY_TRAVEL_DATE_FROM));
             setTravelDateTo((long) backendlessUser.getProperty(Constants.KEY_TRAVEL_DATE_TO));
@@ -75,6 +79,15 @@ public class User extends BackendlessUser {
             LogUtils.logE(User.class.getSimpleName(), e.toString());
         }
 
+    }
+
+    public String getAboutMe() {
+        return aboutMe;
+    }
+
+    public void setAboutMe(String aboutMe) {
+        this.aboutMe = aboutMe;
+        setProperty(Constants.KEY_ABOUT_ME, aboutMe);
     }
 
     public String getPhoneNumber() {

@@ -1,4 +1,4 @@
-package com.travel.travelguide.presenter.profile;
+package com.travel.travelguide.presenter.editProfile;
 
 import android.widget.LinearLayout;
 

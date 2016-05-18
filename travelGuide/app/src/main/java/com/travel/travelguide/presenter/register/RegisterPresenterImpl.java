@@ -13,7 +13,7 @@ import com.travel.travelguide.Object.User;
 import com.travel.travelguide.Ulti.Constants;
 import com.travel.travelguide.Ulti.LogUtils;
 import com.travel.travelguide.Ulti.Ulti;
-import com.travel.travelguide.View.SocialItemView;
+import com.travel.travelguide.View.SocialItemEditText;
 import com.travel.travelguide.manager.UserManager;
 
 import java.util.ArrayList;
@@ -106,8 +106,8 @@ public class RegisterPresenterImpl implements RegisterPresenter {
         ArrayList<SocialObject> socialObjects = new ArrayList<>();
         for (int i = 0; i < lnContainer.getChildCount(); i++) {
             View viewGroup = lnContainer.getChildAt(i);
-            if(viewGroup instanceof SocialItemView){
-                socialObjects.add(((SocialItemView)viewGroup).getSocialObject());
+            if(viewGroup instanceof SocialItemEditText){
+                socialObjects.add(((SocialItemEditText)viewGroup).getSocialObject());
             }
         }
         return socialObjects;
@@ -115,7 +115,7 @@ public class RegisterPresenterImpl implements RegisterPresenter {
 
     @Override
     public void addMoreSocialView(LinearLayout lnContainer, final SocialObject socialObject) {
-        SocialItemView socialItemView = new SocialItemView(registerView.getContext(), socialObject, new View.OnClickListener() {
+        SocialItemEditText socialItemView = new SocialItemEditText(registerView.getContext(), socialObject, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 socialObjectsSelected.remove(socialObject);

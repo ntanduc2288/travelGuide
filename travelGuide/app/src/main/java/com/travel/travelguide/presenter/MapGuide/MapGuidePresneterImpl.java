@@ -71,7 +71,7 @@ public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient
     private Location previousCenterLocation;
     private float previousRadius = 0;
     private String TAG = MapGuidePresneterImpl.class.getSimpleName();
-    private String USERS_RADIUS_WHERE_CLAUSE = "distance(%s, %s, locations.latitude, locations.longitude)" + " <= km(%s)";
+    private String USERS_RADIUS_WHERE_CLAUSE = Constants.KEY_OBJECT_ID + " != '%s' AND " + "distance(%s, %s, locations.latitude, locations.longitude)" + " <= km(%s)";
     private Handler handler;
     ArrayList<User> users;
 
@@ -227,7 +227,7 @@ public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient
     @Override
     public void getUserListWithRadius(double latitude, double longitude, float radius) {
         mapGuideView.showLoadingMarkerProcess();
-        String whereClause = String.format(USERS_RADIUS_WHERE_CLAUSE, latitude, longitude, radius);
+        String whereClause = String.format(USERS_RADIUS_WHERE_CLAUSE, UserManager.getInstance().getCurrentUser().getbackendlessUserId(), latitude, longitude, radius);
         LogUtils.logD(TAG, "Where clause: " + whereClause);
         BackendlessDataQuery backendlessDataQuery = new BackendlessDataQuery(whereClause);
         Backendless.Persistence.of(BackendlessUser.class).find(backendlessDataQuery, new AsyncCallback<BackendlessCollection<BackendlessUser>>() {
@@ -332,7 +332,7 @@ public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient
             for (User user : users) {
                 if (user.getbackendlessUserId().endsWith(marker.getSnippet())) {
                     mapGuideView.hideLoadindMarkerProcess();
-                    mapGuideView.gotoProfileScreen(user);
+                    mapGuideView.gotoUserProfileScreen(user);
                     break;
                 }
             }

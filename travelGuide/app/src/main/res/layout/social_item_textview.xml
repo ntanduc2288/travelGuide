@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ android:layout_width="match_parent"
+    android:paddingLeft="30dp"
+    android:padding="5dp"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/social"
+        android:autoLink="web"
+        android:drawablePadding="3dp"
+        android:drawableLeft="@drawable/instagram"
+        android:layout_toLeftOf="@+id/button_delete_social"
+        style="@style/TextviewStyle_profile"
+        android:maxLines="1"/>
+
+
+
+</RelativeLayout>

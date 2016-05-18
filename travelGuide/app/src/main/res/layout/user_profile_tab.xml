@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_menu"
+    android:layout_width="wrap_content"
+    android:layout_height="40dp"
+
+    android:orientation="horizontal">
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_about"
+        android:layout_width="0dp"
+        android:layout_height="35dip"
+        android:layout_weight="1"
+        android:background="@drawable/xml_left_tab_find_people"
+        android:text="@string/about"
+        android:textAllCaps="false"
+        android:textColor="@color/colorPrimary"
+        android:textSize="15sp"
+        />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_reviews"
+        android:layout_width="0dp"
+        android:layout_height="35dip"
+        android:layout_weight="1"
+        android:textAllCaps="false"
+        android:background="@drawable/xml_right_tab_find_people"
+        android:text="@string/reviews"
+        android:textColor="@color/colorPrimary"
+        android:textSize="15sp"
+        android:visibility="visible"
+        />
+</LinearLayout>

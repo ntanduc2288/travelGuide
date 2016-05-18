@@ -3,11 +3,9 @@ package com.travel.travelguide.View;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.travel.travelguide.Object.SocialObject;
@@ -20,20 +18,16 @@ import butterknife.ButterKnife;
 /**
  * Created by user on 5/14/16.
  */
-public class SocialItemView extends LinearLayout implements View.OnClickListener{
+public class SocialItemTextView extends LinearLayout{
 
     @Bind(R.id.social)
-    AppCompatEditText txtSocial;
-    @Bind(R.id.button_delete_social)
-    AppCompatButton btnDeleteSocial;
+    AppCompatTextView lblSocial;
 
-    OnClickListener deleteListener;
     SocialObject socialObject;
 
-    public SocialItemView(Context context, SocialObject socialObject, OnClickListener deleteListener) {
+    public SocialItemTextView(Context context, SocialObject socialObject) {
         super(context);
         this.socialObject = socialObject;
-        this.deleteListener = deleteListener;
         setupViews();
     }
 
@@ -41,15 +35,14 @@ public class SocialItemView extends LinearLayout implements View.OnClickListener
 
     public SocialObject getSocialObject()
     {
-        socialObject.setName(txtSocial.getText().toString().trim());
+        socialObject.setName(lblSocial.getText().toString().trim());
         return socialObject;
     }
 
     private void setupViews() {
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-        View container = layoutInflater.inflate(R.layout.social_item, this, true);
+        View container = layoutInflater.inflate(R.layout.social_item_textview, this, true);
         ButterKnife.bind(this);
-        btnDeleteSocial.setOnClickListener(this);
         mappingSocialType();
     }
 
@@ -75,27 +68,12 @@ public class SocialItemView extends LinearLayout implements View.OnClickListener
         int w = drawable.getIntrinsicWidth();
         drawable.setBounds(0,0,w,h);
 
-        txtSocial.setCompoundDrawables(drawable, null, null, null);
-        txtSocial.setHint(hint);
-        txtSocial.setText(socialObject.getName());
+        lblSocial.setCompoundDrawables(drawable, null, null, null);
+        lblSocial.setHint(hint);
+        lblSocial.setText(socialObject.getName());
     }
 
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.button_delete_social:
-                deleteSocial();
-                deleteListener.onClick(v);
-                break;
-        }
-    }
-
-    private void deleteSocial() {
-        ViewGroup parent = (ViewGroup) getParent();
-        parent.removeView(this);
-
-    }
 
     @Override
     protected void onDetachedFromWindow() {

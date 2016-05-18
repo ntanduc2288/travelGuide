@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:padding="20dp"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextviewStyle_profile"
+        android:textStyle="bold"
+        android:id="@+id/email_title"
+        android:textColor="@color/black"
+        android:text="@string/email_colon"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_marginTop="@dimen/profile_item_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextviewStyle_profile"
+        android:id="@+id/email_content"
+        android:autoLink="email"
+        android:text="N/A"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_marginTop="@dimen/profile_item_section_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextviewStyle_profile"
+        android:textStyle="bold"
+        android:id="@+id/phone_title"
+        android:textColor="@color/black"
+        android:text="@string/phone_colon"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_marginTop="@dimen/profile_item_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextviewStyle_profile"
+        android:id="@+id/phone_content"
+        android:autoLink="phone"
+        android:text="N/A"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_marginTop="@dimen/profile_item_section_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextviewStyle_profile"
+        android:textStyle="bold"
+        android:id="@+id/aboutme_title"
+        android:textColor="@color/black"
+        android:text="@string/aboutme_colon"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_marginTop="@dimen/profile_item_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextviewStyle_profile"
+        android:id="@+id/aboutme_content"
+        android:text="N/A"/>
+
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_marginTop="@dimen/profile_item_section_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextviewStyle_profile"
+        android:textStyle="bold"
+        android:id="@+id/language_title"
+        android:textColor="@color/black"
+        android:text="@string/languages_spoken_colon"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_marginTop="@dimen/profile_item_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextviewStyle_profile"
+        android:id="@+id/language_content"
+        android:text="N/A"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_marginTop="@dimen/profile_item_section_margin"
+        android:layout_height="wrap_content"
+        style="@style/TextviewStyle_profile"
+        android:textStyle="bold"
+        android:id="@+id/social_title"
+        android:textColor="@color/black"
+        android:text="@string/social_link_colon"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:id="@+id/social_container"></LinearLayout>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_marginTop="@dimen/profile_item_section_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextviewStyle_profile"
+        android:textStyle="bold"
+        android:id="@+id/location_title"
+        android:textColor="@color/black"
+        android:text="@string/location_colon"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_marginTop="@dimen/profile_item_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextviewStyle_profile"
+        android:id="@+id/location_content"
+        android:text="N/A"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_marginTop="@dimen/profile_item_section_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextviewStyle_profile"
+        android:textStyle="bold"
+        android:id="@+id/interest_title"
+        android:textColor="@color/black"
+        android:text="@string/interests_colon"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_marginTop="@dimen/profile_item_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextviewStyle_profile"
+        android:id="@+id/interest_content"
+        android:text="N/A"/>
+
+
+
+</LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

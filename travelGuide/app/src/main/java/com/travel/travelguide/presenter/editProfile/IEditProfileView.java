@@ -1,4 +1,4 @@
-package com.travel.travelguide.presenter.profile;
+package com.travel.travelguide.presenter.editProfile;
 
 import android.content.Context;
 
@@ -7,7 +7,7 @@ import com.travel.travelguide.Object.User;
 /**
  * Created by user on 4/29/16.
  */
-public interface IProfileView {
+public interface IEditProfileView {
     void showLoading();
     void hideLoading();
     void bindData(User user);

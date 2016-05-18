@@ -1,4 +1,4 @@
-package com.travel.travelguide.presenter.profile;
+package com.travel.travelguide.presenter.editProfile;
 
 import android.graphics.Bitmap;
 import android.os.Environment;
@@ -18,7 +18,7 @@ import com.travel.travelguide.Ulti.Constants;
 import com.travel.travelguide.Ulti.CropImageUlti;
 import com.travel.travelguide.Ulti.EvenBusHelper;
 import com.travel.travelguide.Ulti.LogUtils;
-import com.travel.travelguide.View.SocialItemView;
+import com.travel.travelguide.View.SocialItemEditText;
 import com.travel.travelguide.manager.UserManager;
 
 import java.io.File;
@@ -37,7 +37,7 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class ProfilePresenterImpl implements ProfilePresenter {
     private final String TAG = ProfilePresenterImpl.class.getSimpleName();
-    IProfileView profileView;
+    IEditProfileView profileView;
     User user;
     boolean isMyProfileView;
     boolean isInEditMode;
@@ -47,7 +47,7 @@ public class ProfilePresenterImpl implements ProfilePresenter {
     ArrayList<SocialObject> socialObjectsSelected;
     String avatarLocalFile = "";
 
-    public ProfilePresenterImpl(IProfileView profileView, User user) {
+    public ProfilePresenterImpl(IEditProfileView profileView, User user) {
         this.profileView = profileView;
         this.user = user;
         isMyProfileView = user.getbackendlessUserId().equalsIgnoreCase(UserManager.getInstance().getCurrentUser().getbackendlessUserId());
@@ -231,8 +231,8 @@ public class ProfilePresenterImpl implements ProfilePresenter {
         ArrayList<SocialObject> socialObjects = new ArrayList<>();
         for (int i = 0; i < lnContainer.getChildCount(); i++) {
             View viewGroup = lnContainer.getChildAt(i);
-            if(viewGroup instanceof SocialItemView){
-                socialObjects.add(((SocialItemView)viewGroup).getSocialObject());
+            if(viewGroup instanceof SocialItemEditText){
+                socialObjects.add(((SocialItemEditText)viewGroup).getSocialObject());
             }
         }
         return socialObjects;
@@ -240,7 +240,7 @@ public class ProfilePresenterImpl implements ProfilePresenter {
 
     @Override
     public void addMoreSocialView(LinearLayout lnContainer, final SocialObject socialObject) {
-        SocialItemView socialItemView = new SocialItemView(profileView.getContext(), socialObject, new View.OnClickListener() {
+        SocialItemEditText socialItemView = new SocialItemEditText(profileView.getContext(), socialObject, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 socialObjectsSelected.remove(socialObject);

@@ -22,6 +22,7 @@ public class Constants {
     public static final String KEY_LANGUAGE = "language";
     public static final String KEY_TRAVEL_DATE_FROM = "travelDateFrom";
     public static final String KEY_TRAVEL_DATE_TO = "travelDateTo";
+    public static final String KEY_ABOUT_ME = "aboutMe";
 
     public static final float DEFAULT_RADIUS = 20; //mile
     public static final float DEFAULT_ZOOM_LEVEL = 14;

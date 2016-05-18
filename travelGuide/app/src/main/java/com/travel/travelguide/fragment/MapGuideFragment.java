@@ -246,7 +246,7 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.profile:
-                gotoProfileScreen(UserManager.getInstance().getCurrentUser(getActivity().getApplicationContext()));
+                gotoEditProfileScreen(UserManager.getInstance().getCurrentUser(getActivity().getApplicationContext()));
                 break;
             case R.id.settings:
                 Toast.makeText(getActivity(), "Comming soon", Toast.LENGTH_SHORT).show();
@@ -256,16 +256,21 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
                 break;
             case R.id.imageview_my_profile:
             case R.id.textview_profile_name:
-                gotoProfileScreen(UserManager.getInstance().getCurrentUser());
+                gotoEditProfileScreen(UserManager.getInstance().getCurrentUser());
                 break;
 
         }
     }
 
     @Override
-    public void gotoProfileScreen(User user) {
-        TransactionManager.getInstance().addFragment(getFragmentManager(), ProfileFragment.newInstance(user));
+    public void gotoEditProfileScreen(User user) {
+        TransactionManager.getInstance().addFragment(getFragmentManager(), EditProfileFragment.newInstance(user));
 //        TransactionManager.getInstance().addFragment(getFragmentManager(), RegisterFragment.newInstance());
+    }
+
+    @Override
+    public void gotoUserProfileScreen(User user) {
+        TransactionManager.getInstance().addFragment(getFragmentManager(), UserProfileFragment.newInstance(user));
     }
 
     @Override

@@ -251,6 +251,16 @@
 
         </RelativeLayout>
 
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/aboutme"
+            style="@style/EdittextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/about"
+            android:visibility="gone"
+            android:hint="@string/tell_something_about_yourself"
+             />
+
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

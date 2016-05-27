@@ -113,7 +113,7 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
         mMap.setInfoWindowAdapter(customInfoWindowAdapter);
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
+//        mMap.getUiSettings().setZoomControlsEnabled(true);
 
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
@@ -178,6 +178,10 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
                     .content(R.string.loading_three_dot)
                     .progress(true, 0)
                     .build();
+        }
+
+        if(dialog.isShowing()){
+            return;
         }
 
         dialog.show();
@@ -246,7 +250,7 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.profile:
-                gotoEditProfileScreen(UserManager.getInstance().getCurrentUser(getActivity().getApplicationContext()));
+                gotoSettingsScreen(UserManager.getInstance().getCurrentUser(getActivity().getApplicationContext()));
                 break;
             case R.id.settings:
                 Toast.makeText(getActivity(), "Comming soon", Toast.LENGTH_SHORT).show();
@@ -256,15 +260,15 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
                 break;
             case R.id.imageview_my_profile:
             case R.id.textview_profile_name:
-                gotoEditProfileScreen(UserManager.getInstance().getCurrentUser());
+                gotoSettingsScreen(UserManager.getInstance().getCurrentUser());
                 break;
 
         }
     }
 
     @Override
-    public void gotoEditProfileScreen(User user) {
-        TransactionManager.getInstance().addFragment(getFragmentManager(), EditProfileFragment.newInstance(user));
+    public void gotoSettingsScreen(User user) {
+        TransactionManager.getInstance().addFragment(getFragmentManager(), new SettingsFragment());
 //        TransactionManager.getInstance().addFragment(getFragmentManager(), RegisterFragment.newInstance());
     }
 

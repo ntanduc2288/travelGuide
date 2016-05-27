@@ -86,7 +86,7 @@ public class UserInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
                             }
                         });
                     }else{
-                        Picasso.with(context).load(R.drawable.anonymous_icon).transform(transformation).into(imgAvatar);
+//                        Picasso.with(context).load(R.drawable.anonymous_icon).transform(transformation).into(imgAvatar);
                     }
 
                     break;

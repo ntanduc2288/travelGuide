@@ -62,8 +62,9 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/phone"
             android:hint="@string/phone_number"
+            android:visibility="gone"
             android:inputType="phone"
-            android:text="0908790918" />
+             />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -100,6 +101,16 @@
 
         </RelativeLayout>
 
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/interest"
+            style="@style/EdittextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/interest"
+            android:hint="@string/interests"
+            android:singleLine="true"
+             />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -116,17 +127,19 @@
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/calendar"
                     android:hint="@string/google_plus_link"
-                    android:text="Social link" />
+                    android:text="@string/social_media" />
 
                 <android.support.v7.widget.AppCompatButton
-                    android:layout_width="50dp"
+                    android:layout_width="wrap_content"
                     android:textAllCaps="false"
                     android:id="@+id/button_add_social"
                     android:drawableLeft="@drawable/plus"
                     android:text="@string/add"
+                    android:gravity="center"
                     android:layout_toRightOf="@+id/social_container_title"
                     android:background="@color/transparent"
                     android:textSize="@dimen/general_text_size"
+                    android:textColor="@color/black"
                     android:layout_marginTop="15dp"
                     android:layout_height="30dp" />
             </RelativeLayout>
@@ -150,9 +163,10 @@
                     android:drawablePadding="5dp"
                     android:gravity="center_vertical"
                     android:minHeight="50dp"
+                    android:textAllCaps="false"
                     android:text="@string/select_location"
                     android:textColor="@color/colorPrimary"
-
+                    android:textSize="@dimen/general_text_size"
 
                     />
 

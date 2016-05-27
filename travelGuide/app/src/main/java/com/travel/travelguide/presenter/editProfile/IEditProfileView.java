@@ -20,4 +20,5 @@ public interface IEditProfileView {
     void showAddSocialButton();
     void hideAddSocialButton();
     void updateUserInfoSuccessfull(User user);
+    void gotoLoginScreen();
 }

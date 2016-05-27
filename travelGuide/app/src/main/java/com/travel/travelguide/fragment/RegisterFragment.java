@@ -65,6 +65,7 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
     @Bind(R.id.linearlayout_social_container)
     LinearLayout lnSocialContainer;
     @Bind(R.id.button_add_social) AppCompatButton btnAddSocialLink;
+    @Bind(R.id.interest) AppCompatEditText txtInterest;
 
     GoogleApiClient googleApiClient;
     RegisterPresenter registerPresenter;
@@ -258,6 +259,7 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
         }
         user.setLanguage(spnLanguage.getSelectedItemsAsString());
         user.setPhoneNumber(txtPhone.getText().toString().trim());
+        user.setInterest(txtInterest.getText().toString().trim());
 
 
         for(SocialObject socialObject : registerPresenter.getListSocialsSelectedItems(lnSocialContainer)){

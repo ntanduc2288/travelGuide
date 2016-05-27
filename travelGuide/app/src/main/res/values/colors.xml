@@ -9,4 +9,8 @@
     <color name="gray">#c5c5c5</color>
     <color name="Gray">#9B9B9B</color>
     <color name="black_transparent">#50000000</color>
+    <color name="anomo_gray_color">#F0EFF4</color>
+    <color name="settings_color_select">#FF303030</color>
+    <color name="color_item_separate">#C8C7CC</color>
+    <color name="DarkGray">#A9A9A9</color>
 </resources>

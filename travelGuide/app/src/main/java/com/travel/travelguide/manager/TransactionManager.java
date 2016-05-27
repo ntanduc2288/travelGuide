@@ -39,8 +39,8 @@ public class TransactionManager {
 
     public void replaceFragment(FragmentManager fragmentManager, Fragment fragment, int resContainerId){
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.setCustomAnimations(R.anim.slide_right_to_left,
-//                0, 0, R.anim.slide_left_to_right);
+        fragmentTransaction.setCustomAnimations(R.anim.slide_right_to_left,
+                0, 0, R.anim.slide_left_to_right);
         fragmentTransaction.replace(resContainerId, fragment);
         fragmentTransaction.addToBackStack(fragment.getClass().getSimpleName());
 
@@ -53,8 +53,8 @@ public class TransactionManager {
 
     public void addFragment(FragmentManager fragmentManager, Fragment fragment, int resContainerId){
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.setCustomAnimations(R.anim.slide_right_to_left,
-//                0, 0, R.anim.slide_left_to_right);
+        fragmentTransaction.setCustomAnimations(R.anim.slide_right_to_left,
+                0, 0, R.anim.slide_left_to_right);
         fragmentTransaction.add(resContainerId, fragment);
         fragmentTransaction.addToBackStack(fragment.getClass().getSimpleName());
         fragmentTransaction.commit();

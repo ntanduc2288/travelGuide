@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.backendless.geo.GeoPoint;
+import com.dd.processbutton.iml.ActionProcessButton;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -43,6 +44,8 @@ import com.travel.travelguide.Ulti.CropImageUlti;
 import com.travel.travelguide.Ulti.Ulti;
 import com.travel.travelguide.View.MultiSelectionSpinner;
 import com.travel.travelguide.View.SocialPickerView;
+import com.travel.travelguide.activity.LoginActivity;
+import com.travel.travelguide.manager.TransactionManager;
 import com.travel.travelguide.manager.UserManager;
 import com.travel.travelguide.presenter.editProfile.IEditProfileView;
 import com.travel.travelguide.presenter.editProfile.ProfilePresenter;
@@ -103,6 +106,9 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
     LinearLayout lnSocialContainer;
     @Bind(R.id.button_add_social) AppCompatButton btnAddSocialLink;
     @Bind(R.id.aboutme) AppCompatEditText txtAboutMe;
+    @Bind(R.id.interest) AppCompatEditText txtInterest;
+    @Bind(R.id.btnLogout)
+    ActionProcessButton btnLogout;
 
     private SocialPickerView socialPickerView;
     private EasyDialog easyDialog;
@@ -145,6 +151,8 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
         btnAddTravelDate.setOnClickListener(this);
         btnChat.setOnClickListener(this);
         btnAddSocialLink.setOnClickListener(this);
+        btnLogout.setOnClickListener(this);
+        btnLogout.setVisibility(View.GONE); //Do not need logout in this screen (keep it in this screen just in case :D)
         String[] languages = Ulti.parseLanguage(getActivity());
 //        languageAdapter = new ArrayAdapter<String>(getActivity(), R.layout.language_item, languages);
 //        spnLanguage.setAdapter(languageAdapter);
@@ -187,6 +195,7 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
             spnLanguage.setSelection(languages);
         }
         txtAboutMe.setText(user.getAboutMe());
+        txtInterest.setText(user.getInterest());
 
         if(UserManager.getInstance().haveTravelDate(user)){
             lnTravelDateFrom.setVisibility(View.VISIBLE);
@@ -245,6 +254,7 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
         imgAvatar.setBorderColor(getResources().getColor(R.color.colorPrimary));
         btnEdit.setBackgroundResource(R.drawable.save_icon);
         txtPhone.setEnabled(true);
+        txtPhone.setVisibility(View.VISIBLE);
         txtAboutMe.setEnabled(true);
         txtAboutMe.setVisibility(View.VISIBLE);
         spnLanguage.setEnabled(true);
@@ -264,6 +274,7 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
         btnEdit.setBackgroundResource(R.drawable.edit_icon);
         txtPhone.setEnabled(false);
         txtAboutMe.setEnabled(false);
+        txtPhone.setVisibility(View.VISIBLE);
         spnLanguage.setEnabled(false);
         btnAddTravelDate.setEnabled(false);
     }
@@ -303,6 +314,9 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
             case R.id.button_add_social:
                 btnSocialLinkClicked();
                 break;
+            case R.id.btnLogout:
+                profilePresenter.logout();
+                break;
         }
     }
 
@@ -339,6 +353,7 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
         user.setPhoneNumber(txtPhone.getText().toString());
         user.setLanguage(spnLanguage.getSelectedItemsAsString());
         user.setAboutMe(txtAboutMe.getText().toString());
+        user.setInterest(txtInterest.getText().toString().trim());
         if(place != null){
             GeoPoint geoPoint = new GeoPoint(place.getLatLng().latitude, place.getLatLng().longitude);
             user.setlocation(geoPoint);
@@ -531,5 +546,10 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
     @Override
     public void selectedStrings(List<String> strings) {
 
+    }
+
+    @Override
+    public void gotoLoginScreen() {
+        TransactionManager.getInstance().gotoActivity(getActivity(), LoginActivity.class, null, true);
     }
 }

@@ -56,6 +56,7 @@ public class ProfilePresenterImpl implements ProfilePresenter {
         socialObjectsOriginal.add(new SocialObject(SocialObject.TWITTER_TYPE, Constants.EMPTY_STRING));
         socialObjectsOriginal.add(new SocialObject(SocialObject.INSTAGRAM_TYPE, Constants.EMPTY_STRING));
         socialObjectsSelected = new ArrayList<>();
+        compositeSubscription = new CompositeSubscription();
     }
 
     @Override
@@ -260,4 +261,54 @@ public class ProfilePresenterImpl implements ProfilePresenter {
         }
     }
 
+    @Override
+    public void logout() {
+        profileView.showLoading();
+
+
+        Backendless.UserService.logout(new AsyncCallback<Void>() {
+            @Override
+            public void handleResponse(Void response) {
+                clearLocalUserData();
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                if (viewIsValid()) {
+                    profileView.hideLoading();
+                    profileView.showMessage(fault.getMessage());
+                }
+            }
+        });
+
+    }
+
+    private void clearLocalUserData() {
+
+        Observable observable = Observable.defer(new Func0<Observable<Boolean>>() {
+            @Override
+            public Observable<Boolean> call() {
+                return Observable.just(UserManager.getInstance().clearCurrentUserInfo(profileView.getContext().getApplicationContext()));
+            }
+        }).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread());
+
+        compositeSubscription.add(observable.subscribe(new Action1<Boolean>() {
+            @Override
+            public void call(Boolean aBoolean) {
+                if (viewIsValid()) {
+                    profileView.hideLoading();
+                    profileView.gotoLoginScreen();
+                }
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                if (viewIsValid()) {
+                    profileView.hideLoading();
+                    profileView.showMessage("Could not logout");
+                }
+            }
+        }));
+    }
 }

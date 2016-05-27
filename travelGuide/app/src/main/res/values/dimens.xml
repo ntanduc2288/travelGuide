@@ -9,4 +9,9 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="profile_item_margin">5dp</dimen>
     <dimen name="profile_item_section_margin">10dp</dimen>
+    <dimen name="setting_row_height">70dp</dimen>
+    <dimen name="margin_top_bottom_item_setting">30dp</dimen>
+    <dimen name="padding_content_item_settings">15dp</dimen>
+    <dimen name="height_of_item_settings">50dp</dimen>
+    <dimen name="back_next_text_size">20sp</dimen>
 </resources>

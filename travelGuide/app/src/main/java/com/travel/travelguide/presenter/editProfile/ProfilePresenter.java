@@ -21,5 +21,6 @@ public interface ProfilePresenter extends IBasePresenter{
     void addMoreSocialView(LinearLayout lnContainer, SocialObject socialObject);
     ArrayList<SocialObject> getListSocialsRemainingItems();
     ArrayList<SocialObject> getListSocialsSelectedItems(LinearLayout lnContainer);
+    void logout();
 
 }

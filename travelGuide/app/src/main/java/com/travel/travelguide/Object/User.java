@@ -50,6 +50,9 @@ public class User extends BackendlessUser {
     @DatabaseField
     String aboutMe = Constants.EMPTY_STRING;
 
+    @DatabaseField
+    String interest = Constants.EMPTY_STRING;
+
 
     public User(){
 
@@ -71,6 +74,7 @@ public class User extends BackendlessUser {
         setInstagramLink((String) backendlessUser.getProperty(Constants.KEY_INSTAGRAM_LINK));
         setLanguage((String) backendlessUser.getProperty(Constants.KEY_LANGUAGE));
         setAboutMe((String) backendlessUser.getProperty(Constants.KEY_ABOUT_ME));
+        setInterest((String) backendlessUser.getProperty(Constants.KEY_INTEREST));
         try {
             setTravelDateFrom((long) backendlessUser.getProperty(Constants.KEY_TRAVEL_DATE_FROM));
             setTravelDateTo((long) backendlessUser.getProperty(Constants.KEY_TRAVEL_DATE_TO));
@@ -79,6 +83,15 @@ public class User extends BackendlessUser {
             LogUtils.logE(User.class.getSimpleName(), e.toString());
         }
 
+    }
+
+    public String getInterest() {
+        return interest;
+    }
+
+    public void setInterest(String interest) {
+        this.interest = interest;
+        setProperty(Constants.KEY_INTEREST, interest);
     }
 
     public String getAboutMe() {

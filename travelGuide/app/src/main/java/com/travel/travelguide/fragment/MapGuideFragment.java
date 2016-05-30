@@ -91,7 +91,7 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
 
         //Init search place fragment
         SupportPlaceAutocompleteFragment placeAutocompleteFragment = (SupportPlaceAutocompleteFragment) getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-        placeAutocompleteFragment.setHint(getString(R.string.search_a_location));
+        placeAutocompleteFragment.setHint(getString(R.string.search_your_destination));
         placeAutocompleteFragment.setOnPlaceSelectedListener(this);
 
         btnLogout.setOnClickListener(this);

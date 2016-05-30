@@ -13,7 +13,7 @@ import android.view.View;
 import com.travel.travelguide.R;
 
 /**
- * Created by user on 4/22/16.
+ * Created by bkUser on 4/22/16.
  */
 public class TransactionManager {
     private static TransactionManager instance;

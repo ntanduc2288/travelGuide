@@ -18,6 +18,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
 import com.travel.travelguide.adapter.UserProfileAdapter;
+import com.travel.travelguide.manager.TransactionManager;
 import com.travel.travelguide.presenter.userProfile.IUserProfileView;
 
 import butterknife.Bind;
@@ -146,7 +147,7 @@ public class UserProfileFragment extends BaseFragment implements IUserProfileVie
                 getActivity().onBackPressed();
                 break;
             case R.id.fab:
-                Toast.makeText(getActivity().getApplicationContext(), "Chat feature. Comming soon", Toast.LENGTH_SHORT).show();
+                TransactionManager.getInstance().addFragment(getFragmentManager(), ChatFragment.newInstance(user));
                 break;
             case R.id.btn_about:
                 selectAboutTab();

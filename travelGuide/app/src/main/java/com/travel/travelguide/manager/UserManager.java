@@ -12,6 +12,8 @@ import com.backendless.exceptions.BackendlessFault;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
+import com.quickblox.chat.QBChatService;
+import com.quickblox.chat.QBPrivateChatManager;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.QBUsers;
@@ -32,12 +34,12 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by user on 4/23/16.
+ * Created by bkUser on 4/23/16.
  */
 public class UserManager {
     private final String TAG = UserManager.class.getSimpleName();
     private static UserManager instance;
-    User user;
+    User bkUser;
     DatabaseHelper databaseHelper;
     public static UserManager getInstance(){
         if(instance == null){
@@ -61,15 +63,15 @@ public class UserManager {
     private UserManager(){}
 
     public User getCurrentUser() {
-        return user;
+        return bkUser;
     }
 
     public User getCurrentUser(Context context) {
-        if(user == null){
+        if(bkUser == null){
             try {
                 ArrayList<User> users = (ArrayList<User>) getDatabaseHelper(context).getUser().queryForAll();
                 if(users != null && users.size() > 0){
-                    user = users.get(0);
+                    bkUser = users.get(0);
 
                 }
             } catch (SQLException e) {
@@ -77,14 +79,14 @@ public class UserManager {
             }
         }
 
-        if(user != null){
-            user.setbackendlessUserId(user.getbackendlessUserId());
+        if(bkUser != null){
+            bkUser.setbackendlessUserId(bkUser.getbackendlessUserId());
         }
-        return user;
+        return bkUser;
     }
 
     public void setCurrentUser(User user) {
-        this.user = user;
+        this.bkUser = user;
     }
 
     public void saveUserToDatabase(final Context context){
@@ -93,7 +95,7 @@ public class UserManager {
             @Override
             public void call(Subscriber<? super Object> subscriber) {
                 try {
-                    getDatabaseHelper(context).getUser().create(user);
+                    getDatabaseHelper(context).getUser().create(bkUser);
 
                     if(databaseHelper != null){
                         OpenHelperManager.releaseHelper();
@@ -134,14 +136,14 @@ public class UserManager {
             @Override
             public void call(Subscriber<? super Object> subscriber) {
                 try {
-                    getDatabaseHelper(context).getUser().update(user);
+                    getDatabaseHelper(context).getUser().update(bkUser);
 
                     if(databaseHelper != null){
                         OpenHelperManager.releaseHelper();
                         databaseHelper = null;
                     }
 
-                    Log.e(UserManager.class.getSimpleName(), "update user into db successful");
+                    Log.e(UserManager.class.getSimpleName(), "update bkUser into db successful");
                 } catch (SQLException e) {
                     e.printStackTrace();
                     Log.e(UserManager.class.getSimpleName(), e.toString());
@@ -184,8 +186,20 @@ public class UserManager {
             public void handleResponse(BackendlessUser response) {
                 LogUtils.logD(TAG, "handle response login: " + response.toString());
                 UserManager.getInstance().setCurrentUser(new User(response));
-                UserManager.getInstance().saveUserToDatabase(context);
-                signInQBUser(context, UserManager.getInstance().getCurrentUser(), generalCallback);
+
+                signInQBUser(context, UserManager.getInstance().getCurrentUser(), new GeneralCallback<QBUser>(context) {
+                    @Override
+                    public void success(QBUser qbUser) {
+                        UserManager.getInstance().getCurrentUser().setQbUserId(qbUser.getId());
+                        UserManager.getInstance().saveUserToDatabase(context);
+                        generalCallback.success(UserManager.getInstance().getCurrentUser());
+                    }
+
+                    @Override
+                    public void error(String errorMessage) {
+                        generalCallback.error(errorMessage);
+                    }
+                });
             }
 
 
@@ -214,10 +228,10 @@ public class UserManager {
 
     public void signInQBUser(final Context context, final User user, final GeneralCallback generalCallback){
         QBUser qbUser = new QBUser(user.getEmail(), user.getbackendlessUserId());
-        QBManager.getInstance().signInQBUser(qbUser, new QBEntityCallback() {
+        QBManager.getInstance().signInQBUser(qbUser, new QBEntityCallback<QBUser>() {
             @Override
-            public void onSuccess(Object o, Bundle bundle) {
-                generalCallback.success(user);
+            public void onSuccess(QBUser qbUser, Bundle bundle) {
+                generalCallback.success(qbUser);
             }
 
             @Override
@@ -240,8 +254,15 @@ public class UserManager {
                 LogUtils.logD(TAG, response.toString());
                 User userTmp = new User(response);
                 UserManager.getInstance().setCurrentUser(userTmp);
-                UserManager.getInstance().saveUserToDatabase(context);
-                signUpQBUser( UserManager.getInstance().getCurrentUser(), generalCallback);
+
+                signUpQBUser(UserManager.getInstance().getCurrentUser(), new GeneralCallback<QBUser>(context) {
+                    @Override
+                    public void success(QBUser qbUser) {
+                        UserManager.getInstance().getCurrentUser().setQbUserId(qbUser.getId());
+                        UserManager.getInstance().saveUserToDatabase(context);
+                        generalCallback.success(UserManager.getInstance().getCurrentUser());
+                    }
+                });
             }
 
             @Override
@@ -253,10 +274,10 @@ public class UserManager {
 
     public void signUpQBUser(final User user, final GeneralCallback callback){
         final QBUser qbUser = new QBUser(user.getEmail(), user.getbackendlessUserId());
-        QBManager.getInstance().signUpQBUser(qbUser, new QBEntityCallback() {
+        QBManager.getInstance().signUpQBUser(qbUser, new QBEntityCallback<QBUser>() {
             @Override
-            public void onSuccess(Object o, Bundle bundle) {
-                callback.success(user);
+            public void onSuccess(QBUser o, Bundle bundle) {
+                callback.success(o);
             }
 
             @Override
@@ -292,10 +313,10 @@ public class UserManager {
                 try {
                     Dao<User, Long> dao =  getDatabaseHelper(context).getUser();
                     DeleteBuilder<User, Long> deleteBuilder = dao.deleteBuilder();
-                    deleteBuilder.where().eq("backendlessUserId", user.getbackendlessUserId());
+                    deleteBuilder.where().eq("backendlessUserId", bkUser.getbackendlessUserId());
                     result = deleteBuilder.delete();
                     if(result > 0){
-                        user = null;
+                        bkUser = null;
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -317,8 +338,27 @@ public class UserManager {
                         generalCallback.success(null);
                     }
                 });
+    }
 
+    public void chat(){
+        if(QBChatService.getInstance().isLoggedIn()){
 
+        }else {
+            QBChatService.getInstance().login(new QBUser(UserManager.getInstance().getCurrentUser().getEmail(),
+                    UserManager.getInstance().getCurrentUser().getbackendlessUserId()), new QBEntityCallback() {
+                @Override
+                public void onSuccess(Object o, Bundle bundle) {
+
+                }
+
+                @Override
+                public void onError(QBResponseException e) {
+
+                }
+            });
+        }
+        QBPrivateChatManager privateChatManager = QBChatService.getInstance().getPrivateChatManager();
+//        privateChatManager.create
     }
 
 }

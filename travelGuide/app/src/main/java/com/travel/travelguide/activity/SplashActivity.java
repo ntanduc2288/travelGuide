@@ -96,7 +96,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void createQBSession(){
-        QBManager.getInstance().createSession(this, new GeneralCallback<QBSession>(this){
+        QBManager.getInstance().createSession(new GeneralCallback<QBSession>(this){
 
             @Override
             public void success(QBSession o) {

@@ -53,6 +53,9 @@ public class User extends BackendlessUser {
     @DatabaseField
     String interest = Constants.EMPTY_STRING;
 
+    @DatabaseField
+    int qbUserId = 0;
+
 
     public User(){
 
@@ -82,7 +85,14 @@ public class User extends BackendlessUser {
             e.printStackTrace();
             LogUtils.logE(User.class.getSimpleName(), e.toString());
         }
+    }
 
+    public int getQbUserId() {
+        return qbUserId;
+    }
+
+    public void setQbUserId(int qbUserId) {
+        this.qbUserId = qbUserId;
     }
 
     public String getInterest() {

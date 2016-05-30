@@ -418,4 +418,8 @@
     <string name="edit_personal_info">Edit personal info</string>
     <string name="add_edit_travel_itinerary">Add / Edit travel itinerary</string>
     <string name="invite_friends">Invite friends</string>
+    <string name="search_your_destination">Search your destination</string>
+    <string name="messages">Messages</string>
+    <string name="send">Send</string>
+    <string name="write_a_message">Write a message</string>
 </resources>

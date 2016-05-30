@@ -1,11 +1,11 @@
 package com.travel.travelguide.manager;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.quickblox.auth.QBAuth;
 import com.quickblox.auth.model.QBSession;
+import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.core.server.BaseService;
@@ -14,7 +14,7 @@ import com.quickblox.users.model.QBUser;
 import com.travel.travelguide.Ulti.GeneralCallback;
 
 /**
- * Created by user on 5/27/16.
+ * Created by bkUser on 5/27/16.
  */
 public class QBManager {
     private static QBManager instance;
@@ -30,7 +30,7 @@ public class QBManager {
 
     private QBManager(){}
 
-    public void createSession(Context context, final GeneralCallback generalCallback){
+    public void createSession(final GeneralCallback generalCallback){
 
         QBAuth.createSession(new QBEntityCallback<QBSession>() {
             @Override
@@ -59,6 +59,10 @@ public class QBManager {
 
         return result;
 
+    }
+
+    public boolean isLoggedIn(){
+        return QBChatService.getInstance().isLoggedIn();
     }
 
     public void signUpQBUser(QBUser user, final QBEntityCallback callback){

@@ -52,7 +52,7 @@
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/button_message"
                     style="@style/buttonStyleSetting"
-                    android:text="@string/edit_personal_info" />
+                    android:text="@string/messages" />
 
                 <View
                     android:layout_width="fill_parent"

@@ -4,14 +4,10 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.backendless.Backendless;
-import com.backendless.BackendlessUser;
-import com.backendless.async.callback.BackendlessCallback;
-import com.backendless.exceptions.BackendlessFault;
 import com.travel.travelguide.Object.SocialObject;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.Ulti.Constants;
-import com.travel.travelguide.Ulti.LogUtils;
+import com.travel.travelguide.Ulti.GeneralCallback;
 import com.travel.travelguide.Ulti.Ulti;
 import com.travel.travelguide.View.SocialItemEditText;
 import com.travel.travelguide.manager.UserManager;
@@ -61,25 +57,20 @@ public class RegisterPresenterImpl implements RegisterPresenter {
 
     @Override
     public void register(User user) {
-        Backendless.UserService.register(user, new BackendlessCallback<BackendlessUser>() {
+        UserManager.getInstance().signUpBKUser(registerView.getContext(), user, new GeneralCallback(registerView.getContext()) {
             @Override
-            public void handleResponse(BackendlessUser response) {
-                    LogUtils.logD(TAG, response.toString());
-                    User userTmp = new User(response);
-                    UserManager.getInstance().setCurrentUser(userTmp);
-                     UserManager.getInstance().saveUserToDatabase(registerView.getContext());
-                    if(viewIsValid()){
-                        registerView.hideLoading();
-                        registerView.gotoMapScreen();
-                    }
-
+            public void success(Object o) {
+                if(viewIsValid()){
+                    registerView.hideLoading();
+                    registerView.gotoMapScreen();
+                }
             }
 
             @Override
-            public void handleFault(BackendlessFault fault) {
+            public void error(String errorMessage) {
+                super.error(errorMessage);
                 if(viewIsValid()){
                     registerView.hideLoading();
-                    registerView.showError(fault.getMessage());
                 }
             }
         });
@@ -153,4 +144,7 @@ public class RegisterPresenterImpl implements RegisterPresenter {
     public void releaseResources() {
         registerView = null;
     }
+
+
+
 }

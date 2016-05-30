@@ -256,7 +256,7 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
                 Toast.makeText(getActivity(), "Comming soon", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.logout:
-                mapGuidePresenter.logout();
+//                mapGuidePresenter.logout();
                 break;
             case R.id.imageview_my_profile:
             case R.id.textview_profile_name:

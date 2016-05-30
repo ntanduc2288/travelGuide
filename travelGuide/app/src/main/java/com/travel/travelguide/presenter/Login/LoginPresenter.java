@@ -9,5 +9,4 @@ public interface LoginPresenter extends IBasePresenter{
     void validateData(String email, String password);
     void login(String email, String password);
     void error(Integer errorCode);
-
 }

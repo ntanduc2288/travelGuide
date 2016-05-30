@@ -12,7 +12,6 @@ public interface IRegisterView {
     void invalidPassword();
     void invalidLocation();
     void showError(Integer errorCode);
-    void showError(String errorMessage);
     void gotoMapScreen();
     void displayLocation(String location);
     void showAddSocialButton();

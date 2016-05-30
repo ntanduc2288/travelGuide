@@ -3,8 +3,11 @@ package com.travel.travelguide.activity;
 import android.os.Handler;
 import android.widget.ImageView;
 
+import com.quickblox.auth.model.QBSession;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
+import com.travel.travelguide.Ulti.GeneralCallback;
+import com.travel.travelguide.manager.QBManager;
 import com.travel.travelguide.manager.TransactionManager;
 import com.travel.travelguide.manager.UserManager;
 
@@ -31,25 +34,23 @@ public class SplashActivity extends BaseActivity {
             return;
         }
 
-        handler = new Handler();
+//        handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                User currentUser = UserManager.getInstance().getCurrentUser(getApplicationContext());
+//                if(currentUser != null){
+//                    TransactionManager.getInstance().gotoActivity(SplashActivity.this, MainActivity.class, null, true);
+//                }else {
+//                    TransactionManager.getInstance().gotoActivity(SplashActivity.this, LoginActivity.class, null, true, imageView, "TEST");
+//                }
+//
+//
+//            }
+//        }, 2 * 1000);
 
-
-
-
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-                User currentUser = UserManager.getInstance().getCurrentUser(getApplicationContext());
-                if(currentUser != null){
-                    TransactionManager.getInstance().gotoActivity(SplashActivity.this, MainActivity.class, null, true);
-                }else {
-                    TransactionManager.getInstance().gotoActivity(SplashActivity.this, LoginActivity.class, null, true, imageView, "TEST");
-                }
-
-
-            }
-        }, 2 * 1000);
+        createQBSession();
 
 
 //        imageView.post(new Runnable() {
@@ -79,7 +80,35 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        handler.removeCallbacksAndMessages(null);
-        handler = null;
+        if(handler != null){
+            handler.removeCallbacksAndMessages(null);
+            handler = null;
+        }
+    }
+
+    private void gotoNextScreen(){
+        User currentUser = UserManager.getInstance().getCurrentUser(getApplicationContext());
+        if(currentUser != null){
+            TransactionManager.getInstance().gotoActivity(SplashActivity.this, MainActivity.class, null, true);
+        }else {
+            TransactionManager.getInstance().gotoActivity(SplashActivity.this, LoginActivity.class, null, true, imageView, "TEST");
+        }
+    }
+
+    private void createQBSession(){
+        QBManager.getInstance().createSession(this, new GeneralCallback<QBSession>(this){
+
+            @Override
+            public void success(QBSession o) {
+                gotoNextScreen();
+            }
+
+            @Override
+            public void error(String errorMessage) {
+                super.error(errorMessage);
+            }
+        });
+
+
     }
 }

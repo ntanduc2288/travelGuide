@@ -41,11 +41,6 @@ import com.travel.travelguide.manager.UserManager;
 
 import java.util.ArrayList;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func0;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -339,57 +334,6 @@ public class MapGuidePresneterImpl implements MapGuidePresenter, GoogleApiClient
 
         }
 
-    }
-
-    @Override
-    public void logout() {
-        mapGuideView.showLoading();
-
-
-        Backendless.UserService.logout(new AsyncCallback<Void>() {
-            @Override
-            public void handleResponse(Void response) {
-                clearLocalUserData();
-            }
-
-            @Override
-            public void handleFault(BackendlessFault fault) {
-                if (viewIsValid()) {
-                    mapGuideView.hideLoading();
-                    mapGuideView.showMessage(fault.getMessage());
-                }
-            }
-        });
-
-    }
-
-    private void clearLocalUserData() {
-
-        Observable observable = Observable.defer(new Func0<Observable<Boolean>>() {
-            @Override
-            public Observable<Boolean> call() {
-                return Observable.just(UserManager.getInstance().clearCurrentUserInfo(mapGuideView.getContext().getApplicationContext()));
-            }
-        }).subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread());
-
-        compositeSubscription.add(observable.subscribe(new Action1<Boolean>() {
-            @Override
-            public void call(Boolean aBoolean) {
-                if (viewIsValid()) {
-                    mapGuideView.hideLoading();
-                    mapGuideView.gotoLoginScreen();
-                }
-            }
-        }, new Action1<Throwable>() {
-            @Override
-            public void call(Throwable throwable) {
-                if (viewIsValid()) {
-                    mapGuideView.hideLoading();
-                    mapGuideView.showMessage("Could not logout");
-                }
-            }
-        }));
     }
 
 }

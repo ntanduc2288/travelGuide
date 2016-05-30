@@ -315,7 +315,7 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
                 btnSocialLinkClicked();
                 break;
             case R.id.btnLogout:
-                profilePresenter.logout();
+//                profilePresenter.logout();
                 break;
         }
     }

@@ -96,12 +96,6 @@ public class LoginFragment extends BaseFragment implements ILoginView, View.OnCl
         Toast.makeText(getActivity(), "Error code: " + errorCode, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void showError(String errorMessage) {
-        btnActionSignIn.setProgress(0);
-        Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
-    }
-
     private void shouldEnableButtons(boolean should){
         btnActionSignIn.setEnabled(should);
         btnActionRegister.setEnabled(should);

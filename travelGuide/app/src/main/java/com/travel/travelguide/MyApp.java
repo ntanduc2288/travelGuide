@@ -14,6 +14,8 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+import com.quickblox.core.QBSettings;
+
 import io.fabric.sdk.android.Fabric;
 
 /**
@@ -24,12 +26,18 @@ public class MyApp extends Application {
     final String backendlessAppId = "404AF5BC-38D5-B76F-FF51-58E77AEA4500";
     final String backendlessSecretKey = "9050B7F0-D660-1F08-FFE2-EE0F25F84400";
     final String backendlessVersion = "v1";
+
+    final String APP_ID = "41448";
+    final String AUTH_KEY = "5rzFKJE7dW5yeej";
+    final String AUTH_SECRET = "km-cmTV5K53zXp8";
+    final String ACCOUNT_KEY = "bRa24gx5BFx5WuyyfGh7";
+
     @Override
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
         initBackendless();
-        test();
+        initQB();
         initImageloader();
     }
 
@@ -66,13 +74,14 @@ public class MyApp extends Application {
                 config.build());
     }
 
-    private void test() {
-
-    }
-
     private void initBackendless() {
         Backendless.initApp(getApplicationContext(), backendlessAppId, backendlessSecretKey, backendlessVersion);
         //
+    }
+
+    private void initQB(){
+        QBSettings.getInstance().init(getApplicationContext(), APP_ID, AUTH_KEY, AUTH_SECRET);
+        QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
     }
 
     @Override

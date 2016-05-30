@@ -2,12 +2,7 @@ package com.travel.travelguide.presenter.Login;
 
 import android.content.Context;
 
-import com.backendless.Backendless;
-import com.backendless.BackendlessUser;
-import com.backendless.async.callback.AsyncCallback;
-import com.backendless.exceptions.BackendlessFault;
-import com.travel.travelguide.Object.User;
-import com.travel.travelguide.Ulti.LogUtils;
+import com.travel.travelguide.Ulti.GeneralCallback;
 import com.travel.travelguide.Ulti.Ulti;
 import com.travel.travelguide.manager.UserManager;
 import com.travel.travelguide.presenter.BasePresenter;
@@ -43,48 +38,20 @@ public class LoginPresenterImpl extends BasePresenter implements LoginPresenter 
     @Override
     public void login(String email, String password) {
 
-        Backendless.UserService.login(email, password, new AsyncCallback<BackendlessUser>() {
+        UserManager.getInstance().signInBKUser(loginView.getContext(), email, password, new GeneralCallback(loginView.getContext()) {
             @Override
-            public void handleResponse(BackendlessUser response) {
-                LogUtils.logD(TAG, "handle response login: " + response.toString());
-                UserManager.getInstance().setCurrentUser(new User(response));
-                UserManager.getInstance().saveUserToDatabase(context);
+            public void success(Object o) {
                 if(viewIsValid()){
                     loginView.hideLoading();
                     loginView.gotoMapScreen();
                 }
-
-//                response.setProperty("avatar", "Link " + Calendar.getInstance().getTimeInMillis());
-//                UserManager.getInstance().setCurrentUser(new User(response));
-//                Backendless.UserService.update(UserManager.getInstance().getCurrentUser(), new AsyncCallback<BackendlessUser>() {
-//                    @Override
-//                    public void handleResponse(BackendlessUser response) {
-//                        UserManager.getInstance().setCurrentUser(new User(response));
-//                        UserManager.getInstance().saveUserToDatabase(context);
-//                        if (viewIsValid()) {
-//                            loginView.hideLoadindMarkerProcess();
-//                            loginView.gotoMapScreen();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void handleFault(BackendlessFault fault) {
-//                        LogUtils.logD(TAG, "handleFault login: " + fault.getMessage());
-//                        if(viewIsValid()){
-//                            loginView.hideLoadindMarkerProcess();
-//                            loginView.showError(fault.getMessage());
-//                        }
-//                    }
-//                });
             }
 
-
             @Override
-            public void handleFault(BackendlessFault fault) {
-                LogUtils.logD(TAG, "handleFault login: " + fault.getMessage());
+            public void error(String errorMessage) {
+                super.error(errorMessage);
                 if(viewIsValid()){
                     loginView.hideLoading();
-                    loginView.showError(fault.getMessage());
                 }
             }
         });
@@ -109,4 +76,6 @@ public class LoginPresenterImpl extends BasePresenter implements LoginPresenter 
         if(loginView != null) return true;
         return false;
     }
+
+
 }

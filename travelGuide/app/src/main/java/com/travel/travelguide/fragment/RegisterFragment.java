@@ -168,13 +168,6 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
     }
 
     @Override
-    public void showError(String errorMessage) {
-        Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
-        btnActionRegister.setProgress(0);
-        btnActionRegister.setEnabled(true);
-    }
-
-    @Override
     public void gotoMapScreen() {
         btnActionRegister.setProgress(100);
         btnActionRegister.setEnabled(true);

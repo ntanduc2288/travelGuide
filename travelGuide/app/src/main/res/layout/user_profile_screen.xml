@@ -44,7 +44,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="70dp"
                     android:src="@drawable/anonymous_icon"
-                    app:civ_shadow="true" />
+                    />
 
                 <android.support.v7.widget.AppCompatRatingBar
                     android:layout_width="wrap_content"

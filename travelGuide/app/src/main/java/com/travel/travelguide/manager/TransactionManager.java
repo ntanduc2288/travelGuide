@@ -83,8 +83,9 @@ public class TransactionManager {
         }else {
             activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, transitionView, transitionName);
         }
-        ActivityCompat.startActivity(activity, intent,  activityOptionsCompat.toBundle());
 
+
+        ActivityCompat.startActivity(activity, intent,  activityOptionsCompat.toBundle());
 
 //        activity.overridePendingTransition(R.anim.slide_right_to_left, R.anim.slide_left_to_right);
 //        activity.startActivity(intent);

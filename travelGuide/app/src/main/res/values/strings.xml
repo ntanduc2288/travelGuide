@@ -422,4 +422,7 @@
     <string name="messages">Messages</string>
     <string name="send">Send</string>
     <string name="write_a_message">Write a message</string>
+
+    <string name="default_media_location_folder">Applozic</string>
+    <string name="application_applozic_key">2ce40e24b9dc9de3bb65d3755a1f91020</string>
 </resources>

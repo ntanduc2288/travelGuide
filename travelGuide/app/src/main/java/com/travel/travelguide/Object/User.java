@@ -85,6 +85,7 @@ public class User extends BackendlessUser {
             e.printStackTrace();
             LogUtils.logE(User.class.getSimpleName(), e.toString());
         }
+        setQbUserId((Integer) backendlessUser.getProperty(Constants.KEY_QBLOX_USER_ID));
     }
 
     public int getQbUserId() {
@@ -93,6 +94,7 @@ public class User extends BackendlessUser {
 
     public void setQbUserId(int qbUserId) {
         this.qbUserId = qbUserId;
+        setProperty(Constants.KEY_QBLOX_USER_ID, qbUserId);
     }
 
     public String getInterest() {

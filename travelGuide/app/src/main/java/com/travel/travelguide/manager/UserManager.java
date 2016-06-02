@@ -1,9 +1,13 @@
 package com.travel.travelguide.manager;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
+import com.applozic.mobicomkit.api.account.user.UserLoginTask;
+import com.applozic.mobicomkit.uiwidgets.ApplozicSetting;
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
@@ -16,7 +20,6 @@ import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBPrivateChatManager;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
-import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.Ulti.Constants;
@@ -183,23 +186,17 @@ public class UserManager {
     public void signInBKUser(final Context context, String email, String password, final GeneralCallback generalCallback) {
         Backendless.UserService.login(email, password, new AsyncCallback<BackendlessUser>() {
             @Override
-            public void handleResponse(BackendlessUser response) {
+            public void handleResponse(final BackendlessUser response) {
                 LogUtils.logD(TAG, "handle response login: " + response.toString());
-                UserManager.getInstance().setCurrentUser(new User(response));
+                User userTmp = new User(response);
+                UserManager.getInstance().setCurrentUser(userTmp);
+                UserManager.getInstance().saveUserToDatabase(context);
+//                generalCallback.success(UserManager.getInstance().getCurrentUser());
 
-                signInQBUser(context, UserManager.getInstance().getCurrentUser(), new GeneralCallback<QBUser>(context) {
-                    @Override
-                    public void success(QBUser qbUser) {
-                        UserManager.getInstance().getCurrentUser().setQbUserId(qbUser.getId());
-                        UserManager.getInstance().saveUserToDatabase(context);
-                        generalCallback.success(UserManager.getInstance().getCurrentUser());
-                    }
 
-                    @Override
-                    public void error(String errorMessage) {
-                        generalCallback.error(errorMessage);
-                    }
-                });
+                loginAppzolicUser(context, UserManager.getInstance().getCurrentUser(), generalCallback);
+
+
             }
 
 
@@ -227,42 +224,45 @@ public class UserManager {
     }
 
     public void signInQBUser(final Context context, final User user, final GeneralCallback generalCallback){
-        QBUser qbUser = new QBUser(user.getEmail(), user.getbackendlessUserId());
+        final QBUser qbUser = new QBUser(user.getEmail(), user.getEmail());
         QBManager.getInstance().signInQBUser(qbUser, new QBEntityCallback<QBUser>() {
             @Override
-            public void onSuccess(QBUser qbUser, Bundle bundle) {
-                generalCallback.success(qbUser);
+            public void onSuccess(final QBUser qbUser, Bundle bundle) {
+                user.setQbUserId(qbUser.getId());
+                signInBKUser(context, user.getEmail(), user.getPassword(), generalCallback);
             }
 
             @Override
-            public void onError(QBResponseException e) {
+            public void onError(final QBResponseException e) {
                 LogUtils.logD(TAG, "handleFault login: " + e.getMessage());
-
-                if(e.getMessage().equalsIgnoreCase(Constants.UNAUTHORIZE_ERROR)){
-                    signUpQBUser( user, generalCallback);
-                }else {
-                    generalCallback.error(e.getMessage());
+                if(context instanceof Activity){
+                    ((Activity) context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(e.getMessage().equalsIgnoreCase(Constants.UNAUTHORIZE_ERROR)){
+                                signUpQBUser( context, user, generalCallback);
+                            }else {
+                                generalCallback.error(e.getMessage());
+                            }
+                        }
+                    });
                 }
+
             }
         });
+
+
     }
 
     public void signUpBKUser(final Context context, User bkUser, final GeneralCallback generalCallback){
         Backendless.UserService.register(bkUser, new BackendlessCallback<BackendlessUser>() {
             @Override
-            public void handleResponse(BackendlessUser response) {
+            public void handleResponse(final BackendlessUser response) {
                 LogUtils.logD(TAG, response.toString());
                 User userTmp = new User(response);
                 UserManager.getInstance().setCurrentUser(userTmp);
-
-                signUpQBUser(UserManager.getInstance().getCurrentUser(), new GeneralCallback<QBUser>(context) {
-                    @Override
-                    public void success(QBUser qbUser) {
-                        UserManager.getInstance().getCurrentUser().setQbUserId(qbUser.getId());
-                        UserManager.getInstance().saveUserToDatabase(context);
-                        generalCallback.success(UserManager.getInstance().getCurrentUser());
-                    }
-                });
+                UserManager.getInstance().saveUserToDatabase(context);
+                generalCallback.success(UserManager.getInstance().getCurrentUser());
             }
 
             @Override
@@ -272,12 +272,13 @@ public class UserManager {
         });
     }
 
-    public void signUpQBUser(final User user, final GeneralCallback callback){
-        final QBUser qbUser = new QBUser(user.getEmail(), user.getbackendlessUserId());
+    public void signUpQBUser(final Context context, final User user, final GeneralCallback callback){
+        final QBUser qbUser = new QBUser(user.getEmail(), user.getEmail());
         QBManager.getInstance().signUpQBUser(qbUser, new QBEntityCallback<QBUser>() {
             @Override
             public void onSuccess(QBUser o, Bundle bundle) {
-                callback.success(o);
+                user.setQbUserId(o.getId());
+                signUpBKUser(context, user, callback);
             }
 
             @Override
@@ -288,16 +289,17 @@ public class UserManager {
     }
 
     private void logoutQBUser(final Context context, final GeneralCallback generalCallback){
-        QBUsers.signOut(new QBEntityCallback<Void>() {
+
+        QBManager.getInstance().logout(new QBEntityCallback() {
             @Override
-            public void onSuccess(Void aVoid, Bundle bundle) {
-                generalCallback.success(null);
+            public void onSuccess(Object o, Bundle bundle) {
+                QBChatService.getInstance().destroy();
                 clearLocalUserData(context, generalCallback);
             }
 
             @Override
             public void onError(QBResponseException e) {
-                generalCallback.success(null);
+                QBChatService.getInstance().destroy();
                 clearLocalUserData(context, generalCallback);
             }
         });
@@ -359,6 +361,31 @@ public class UserManager {
         }
         QBPrivateChatManager privateChatManager = QBChatService.getInstance().getPrivateChatManager();
 //        privateChatManager.create
+    }
+
+    private void loginAppzolicUser(Context context, User user, final GeneralCallback callback){
+        UserLoginTask.TaskListener listener = new UserLoginTask.TaskListener() {
+            @Override
+            public void onSuccess(RegistrationResponse registrationResponse, Context context) {
+                // After successful registration with Applozic server the callback will come here
+                ApplozicSetting.getInstance(context).showStartNewButton();//To show contact list.
+                ApplozicSetting.getInstance(context).enableRegisteredUsersContactCall();//To enable the applozic Registered Users Contact Note:for disable that you can comment this line of code
+                callback.success(registrationResponse);
+            }
+
+            @Override
+            public void onFailure(RegistrationResponse registrationResponse, Exception exception) {
+                callback.error(exception.getMessage());
+            }
+        };
+
+        com.applozic.mobicomkit.api.account.user.User userAppzolic = new com.applozic.mobicomkit.api.account.user.User();
+        userAppzolic.setUserId(user.getbackendlessUserId());
+        userAppzolic.setPassword(user.getbackendlessUserId());
+        userAppzolic.setEmail(user.getEmail());
+        userAppzolic.setImageLink(user.getAvatar());
+        userAppzolic.setDisplayName(user.getName());
+        new UserLoginTask(userAppzolic, listener, context).execute((Void) null);
     }
 
 }

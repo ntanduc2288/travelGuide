@@ -1,5 +1,6 @@
 package com.travel.travelguide.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -13,15 +14,16 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.mikhaellopez.circularimageview.CircularImageView;
+import com.applozic.mobicomkit.uiwidgets.conversation.ConversationUIService;
+import com.applozic.mobicomkit.uiwidgets.conversation.activity.ConversationActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
 import com.travel.travelguide.adapter.UserProfileAdapter;
-import com.travel.travelguide.manager.TransactionManager;
 import com.travel.travelguide.presenter.userProfile.IUserProfileView;
 
 import butterknife.Bind;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by user on 5/18/16.
@@ -32,7 +34,7 @@ public class UserProfileFragment extends BaseFragment implements IUserProfileVie
     @Bind(R.id.back_button)
     AppCompatButton btnBack;
     @Bind(R.id.avatar)
-    CircularImageView imgAvatar;
+    CircleImageView imgAvatar;
     @Bind(R.id.btn_about)
     AppCompatButton btnAbout;
     @Bind(R.id.btn_reviews)
@@ -147,7 +149,29 @@ public class UserProfileFragment extends BaseFragment implements IUserProfileVie
                 getActivity().onBackPressed();
                 break;
             case R.id.fab:
-                TransactionManager.getInstance().addFragment(getFragmentManager(), ChatFragment.newInstance(user));
+//                TransactionManager.getInstance().addFragment(getFragmentManager(), ChatFragment.newInstance(user));
+
+
+//                Contact contact = new Contact();
+//                contact.setUserId(user.getbackendlessUserId());
+//                contact.setFullName(user.getName());
+//                ConversationFragment conversationFragment = new ConversationFragment(contact, null, null);
+
+//                Intent intent = new Intent(getActivity(), ConversationActivity.class);
+//                if(ApplozicClient.getInstance(getActivity()).isContextBasedChat()){
+//                    intent.putExtra(ConversationUIService.CONTEXT_BASED_CHAT,true);
+//                }
+//                startActivity(intent);
+
+//                Intent intent = new Intent(getActivity(), ChatActivity.class);
+//                intent.putExtra("USER_ID", user.getbackendlessUserId());
+//                intent.putExtra("USERNAME", user.getName());
+//                startActivity(intent);
+                Intent intent = new Intent(getActivity(), ConversationActivity.class);
+                intent.putExtra(ConversationUIService.USER_ID, user.getbackendlessUserId());
+                intent.putExtra(ConversationUIService.DISPLAY_NAME, user.getName()); //put it for displaying the title.
+                intent.putExtra(ConversationActivity.TAKE_ORDER, true);
+                startActivity(intent);
                 break;
             case R.id.btn_about:
                 selectAboutTab();

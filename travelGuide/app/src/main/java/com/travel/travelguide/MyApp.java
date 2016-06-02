@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.multidex.MultiDex;
 
+import com.applozic.mobicomkit.uiwidgets.ApplozicSetting;
 import com.backendless.Backendless;
 import com.crashlytics.android.Crashlytics;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -14,6 +15,8 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+import com.quickblox.chat.QBChatService;
+import com.quickblox.core.LogLevel;
 import com.quickblox.core.QBSettings;
 
 import io.fabric.sdk.android.Fabric;
@@ -38,7 +41,32 @@ public class MyApp extends Application {
         Fabric.with(this, new Crashlytics());
         initBackendless();
         initQB();
+        initApplozic();
         initImageloader();
+    }
+
+    private void initApplozic() {
+//        Show/Hide Green Dot for Online
+        ApplozicSetting.getInstance(getApplicationContext()).hideOnlineStatusInMasterList();
+
+//        Show/hide 'Start New Conversation' Plus (+) Button
+        ApplozicSetting.getInstance(getApplicationContext()).hideStartNewButton();
+
+//        Show/hide 'Start New' FloatingActionButton
+        ApplozicSetting.getInstance(getApplicationContext()).hideStartNewFloatingActionButton();
+
+//        For Group Add Member Button Hide
+        ApplozicSetting.getInstance(getApplicationContext()).setHideGroupAddButton(true);
+
+//        For Group Exit Button Hide
+        ApplozicSetting.getInstance(getApplicationContext()).setHideGroupExitButton(true);
+
+//        For Group Name Change Button Hide
+        ApplozicSetting.getInstance(getApplicationContext()).setHideGroupNameEditButton(true);
+
+//        For Group Memebr Remove Option Hide
+        ApplozicSetting.getInstance(getApplicationContext()).setHideGroupRemoveMemberOption(true);
+
     }
 
     private void initImageloader() {
@@ -82,6 +110,9 @@ public class MyApp extends Application {
     private void initQB(){
         QBSettings.getInstance().init(getApplicationContext(), APP_ID, AUTH_KEY, AUTH_SECRET);
         QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
+        QBSettings.getInstance().setLogLevel(LogLevel.DEBUG);
+        QBChatService.setDebugEnabled(true);
+
     }
 
     @Override

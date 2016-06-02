@@ -36,7 +36,6 @@ import com.travel.travelguide.presenter.register.IRegisterView;
 import com.travel.travelguide.presenter.register.RegisterPresenter;
 import com.travel.travelguide.presenter.register.RegisterPresenterImpl;
 
-import java.util.Calendar;
 import java.util.List;
 
 import butterknife.Bind;
@@ -92,7 +91,7 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
         lblLocation.setOnClickListener(this);
         btnAddSocialLink.setOnClickListener(this);
         lblTitle.setText(getString(R.string.create_account));
-        txtEmail.setText("user"+ Calendar.getInstance().getTimeInMillis() + "@gmail.com");
+//        txtEmail.setText("user"+ Calendar.getInstance().getTimeInMillis() + "@gmail.com");
         googleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)

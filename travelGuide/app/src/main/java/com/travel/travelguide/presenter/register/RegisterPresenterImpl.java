@@ -57,7 +57,7 @@ public class RegisterPresenterImpl implements RegisterPresenter {
 
     @Override
     public void register(User user) {
-        UserManager.getInstance().signUpBKUser(registerView.getContext(), user, new GeneralCallback(registerView.getContext()) {
+        UserManager.getInstance().signUpQBUser(registerView.getContext(), user, new GeneralCallback(registerView.getContext()) {
             @Override
             public void success(Object o) {
                 if(viewIsValid()){

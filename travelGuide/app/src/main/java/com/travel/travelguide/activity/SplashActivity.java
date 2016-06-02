@@ -34,23 +34,25 @@ public class SplashActivity extends BaseActivity {
             return;
         }
 
-//        handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                User currentUser = UserManager.getInstance().getCurrentUser(getApplicationContext());
-//                if(currentUser != null){
-//                    TransactionManager.getInstance().gotoActivity(SplashActivity.this, MainActivity.class, null, true);
-//                }else {
-//                    TransactionManager.getInstance().gotoActivity(SplashActivity.this, LoginActivity.class, null, true, imageView, "TEST");
-//                }
-//
-//
-//            }
-//        }, 2 * 1000);
+        handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
 
-        createQBSession();
+                User currentUser = UserManager.getInstance().getCurrentUser(getApplicationContext());
+                if(currentUser != null){
+                    TransactionManager.getInstance().gotoActivity(SplashActivity.this, MainActivity.class, null, true);
+                }else {
+                    TransactionManager.getInstance().gotoActivity(SplashActivity.this, LoginActivity.class, null, true, imageView, "TEST");
+                }
+
+//                TransactionManager.getInstance().gotoActivity(SplashActivity.this, LoginActivity.class, null, true, imageView, "TEST");
+
+
+            }
+        }, 2 * 1000);
+
+//        createQBSession();
 
 
 //        imageView.post(new Runnable() {

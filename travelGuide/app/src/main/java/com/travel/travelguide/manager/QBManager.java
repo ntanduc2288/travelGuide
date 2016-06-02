@@ -1,6 +1,8 @@
 package com.travel.travelguide.manager;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 
 import com.quickblox.auth.QBAuth;
@@ -18,6 +20,8 @@ import com.travel.travelguide.Ulti.GeneralCallback;
  */
 public class QBManager {
     private static QBManager instance;
+    private QBChatService qbChatService;
+    protected static final Handler mainThreadHandler = new Handler(Looper.getMainLooper());
     public static QBManager getInstance(){
         synchronized (QBManager.class){
             if(instance == null){
@@ -28,7 +32,13 @@ public class QBManager {
         return instance;
     }
 
-    private QBManager(){}
+    private QBManager(){
+        qbChatService = QBChatService.getInstance();
+    }
+
+    public QBUser getCurrentUser(){
+        return QBChatService.getInstance().getUser();
+    }
 
     public void createSession(final GeneralCallback generalCallback){
 
@@ -71,16 +81,66 @@ public class QBManager {
     }
 
     public void signInQBUser(final QBUser qbUser, final QBEntityCallback userQBCallback){
-
-        QBUsers.signIn(qbUser, new QBEntityCallback<QBUser>() {
+        QBAuth.createSession(qbUser, new QBEntityCallback<QBSession>() {
             @Override
-            public void onSuccess(QBUser qbUser, Bundle bundle) {
-                userQBCallback.onSuccess(qbUser, bundle);
+            public void onSuccess(final QBSession qbSession, Bundle bundle) {
+                qbUser.setId(qbSession.getUserId());
+                loginToChat(qbUser, userQBCallback);
+            }
+
+            @Override
+            public void onError(final QBResponseException e) {
+                mainThreadHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        userQBCallback.onError(e);
+                    }
+                });
+            }
+        });
+
+    }
+
+    private void loginToChat(final QBUser qbUser, final QBEntityCallback callback){
+        if(qbChatService.isLoggedIn()){
+            callback.onSuccess(qbUser, null);
+            return;
+        }
+
+        qbChatService.login(qbUser, new QBEntityCallback() {
+            @Override
+            public void onSuccess(Object o, Bundle bundle) {
+                mainThreadHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onSuccess(qbUser, null);
+                    }
+                });
+            }
+
+            @Override
+            public void onError(final QBResponseException e) {
+                mainThreadHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onError(e);
+                    }
+                });
+            }
+        });
+    }
+
+    public void logout(final QBEntityCallback callback){
+        qbChatService.logout(new QBEntityCallback<Void>() {
+            @Override
+            public void onSuccess(Void aVoid, Bundle bundle) {
+                callback.onSuccess(aVoid, bundle);
+                qbChatService.destroy();
             }
 
             @Override
             public void onError(QBResponseException e) {
-                userQBCallback.onError(e);
+                callback.onError(e);
             }
         });
     }

@@ -1,7 +1,9 @@
 package com.travel.travelguide.presenter.Login;
 
 import android.content.Context;
+import android.util.Log;
 
+import com.travel.travelguide.Object.User;
 import com.travel.travelguide.Ulti.GeneralCallback;
 import com.travel.travelguide.Ulti.Ulti;
 import com.travel.travelguide.manager.UserManager;
@@ -38,6 +40,9 @@ public class LoginPresenterImpl extends BasePresenter implements LoginPresenter 
     @Override
     public void login(String email, String password) {
 
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(password);
         UserManager.getInstance().signInBKUser(loginView.getContext(), email, password, new GeneralCallback(loginView.getContext()) {
             @Override
             public void success(Object o) {
@@ -49,7 +54,8 @@ public class LoginPresenterImpl extends BasePresenter implements LoginPresenter 
 
             @Override
             public void error(String errorMessage) {
-                super.error(errorMessage);
+//                super.error(errorMessage);
+                Log.e(LoginPresenterImpl.class.getSimpleName(), errorMessage);
                 if(viewIsValid()){
                     loginView.hideLoading();
                 }

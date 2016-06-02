@@ -34,7 +34,6 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.michael.easydialog.EasyDialog;
-import com.mikhaellopez.circularimageview.CircularImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.travel.travelguide.Object.SocialObject;
 import com.travel.travelguide.Object.User;
@@ -56,6 +55,7 @@ import java.io.File;
 import java.util.List;
 
 import butterknife.Bind;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by user on 4/29/16.
@@ -67,7 +67,7 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
     @Bind(R.id.back_button)
     AppCompatButton btnBack;
     @Bind(R.id.avatar)
-    CircularImageView imgAvatar;
+    CircleImageView imgAvatar;
     @Bind(R.id.email)
     AppCompatEditText txtEmail;
     @Bind(R.id.password)

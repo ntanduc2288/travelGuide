@@ -19,7 +19,7 @@
             android:drawableLeft="@drawable/name"
             android:hint="@string/name"
             android:singleLine="true"
-            android:text="Duc Nguyen" />
+            android:text="user" />
 
 
         <android.support.v7.widget.AppCompatEditText

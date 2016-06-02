@@ -26,7 +26,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.mikhaellopez.circularimageview.CircularImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.otto.Subscribe;
 import com.travel.travelguide.Object.User;
@@ -45,6 +44,7 @@ import com.travel.travelguide.presenter.MapGuide.MapGuidePresneterImpl;
 import java.util.ArrayList;
 
 import butterknife.Bind;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by user on 4/23/16.
@@ -65,7 +65,7 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
     com.github.clans.fab.FloatingActionButton btnLogout;
     private MaterialDialog dialog;
     @Bind(R.id.imageview_my_profile)
-    CircularImageView imgProfile;
+    CircleImageView imgProfile;
     @Bind(R.id.textview_profile_name)
     AppCompatTextView lblProfileName;
 

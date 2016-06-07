@@ -322,6 +322,7 @@ public class ConversationActivity extends AppCompatActivity implements MessageCo
         if (!MobiComUserPreference.getInstance(this).isLoggedIn()) {
             //user is not logged in
             Log.i("AL", "user is not logged in yet.");
+            finish();
             return;
         }
 

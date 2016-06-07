@@ -1,8 +1,6 @@
 package com.travel.travelguide.manager;
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
 import android.util.Log;
 
 import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
@@ -16,13 +14,7 @@ import com.backendless.exceptions.BackendlessFault;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
-import com.quickblox.chat.QBChatService;
-import com.quickblox.chat.QBPrivateChatManager;
-import com.quickblox.core.QBEntityCallback;
-import com.quickblox.core.exception.QBResponseException;
-import com.quickblox.users.model.QBUser;
 import com.travel.travelguide.Object.User;
-import com.travel.travelguide.Ulti.Constants;
 import com.travel.travelguide.Ulti.DatabaseHelper;
 import com.travel.travelguide.Ulti.GeneralCallback;
 import com.travel.travelguide.Ulti.LogUtils;
@@ -213,46 +205,17 @@ public class UserManager {
         Backendless.UserService.logout(new AsyncCallback<Void>() {
             @Override
             public void handleResponse(Void response) {
-                logoutQBUser(context, callback);
+                clearLocalUserData(context, callback);
             }
 
             @Override
             public void handleFault(BackendlessFault fault) {
-                callback.error(fault.getMessage());
+                clearLocalUserData(context, callback);
             }
         });
     }
 
-    public void signInQBUser(final Context context, final User user, final GeneralCallback generalCallback){
-        final QBUser qbUser = new QBUser(user.getEmail(), user.getEmail());
-        QBManager.getInstance().signInQBUser(qbUser, new QBEntityCallback<QBUser>() {
-            @Override
-            public void onSuccess(final QBUser qbUser, Bundle bundle) {
-                user.setQbUserId(qbUser.getId());
-                signInBKUser(context, user.getEmail(), user.getPassword(), generalCallback);
-            }
 
-            @Override
-            public void onError(final QBResponseException e) {
-                LogUtils.logD(TAG, "handleFault login: " + e.getMessage());
-                if(context instanceof Activity){
-                    ((Activity) context).runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(e.getMessage().equalsIgnoreCase(Constants.UNAUTHORIZE_ERROR)){
-                                signUpQBUser( context, user, generalCallback);
-                            }else {
-                                generalCallback.error(e.getMessage());
-                            }
-                        }
-                    });
-                }
-
-            }
-        });
-
-
-    }
 
     public void signUpBKUser(final Context context, User bkUser, final GeneralCallback generalCallback){
         Backendless.UserService.register(bkUser, new BackendlessCallback<BackendlessUser>() {
@@ -270,40 +233,6 @@ public class UserManager {
                 generalCallback.error(fault.getMessage());
             }
         });
-    }
-
-    public void signUpQBUser(final Context context, final User user, final GeneralCallback callback){
-        final QBUser qbUser = new QBUser(user.getEmail(), user.getEmail());
-        QBManager.getInstance().signUpQBUser(qbUser, new QBEntityCallback<QBUser>() {
-            @Override
-            public void onSuccess(QBUser o, Bundle bundle) {
-                user.setQbUserId(o.getId());
-                signUpBKUser(context, user, callback);
-            }
-
-            @Override
-            public void onError(QBResponseException e) {
-                callback.error(e.getMessage());
-            }
-        });
-    }
-
-    private void logoutQBUser(final Context context, final GeneralCallback generalCallback){
-
-        QBManager.getInstance().logout(new QBEntityCallback() {
-            @Override
-            public void onSuccess(Object o, Bundle bundle) {
-                QBChatService.getInstance().destroy();
-                clearLocalUserData(context, generalCallback);
-            }
-
-            @Override
-            public void onError(QBResponseException e) {
-                QBChatService.getInstance().destroy();
-                clearLocalUserData(context, generalCallback);
-            }
-        });
-
     }
 
     private void clearLocalUserData(final Context context, final GeneralCallback generalCallback) {
@@ -340,27 +269,6 @@ public class UserManager {
                         generalCallback.success(null);
                     }
                 });
-    }
-
-    public void chat(){
-        if(QBChatService.getInstance().isLoggedIn()){
-
-        }else {
-            QBChatService.getInstance().login(new QBUser(UserManager.getInstance().getCurrentUser().getEmail(),
-                    UserManager.getInstance().getCurrentUser().getbackendlessUserId()), new QBEntityCallback() {
-                @Override
-                public void onSuccess(Object o, Bundle bundle) {
-
-                }
-
-                @Override
-                public void onError(QBResponseException e) {
-
-                }
-            });
-        }
-        QBPrivateChatManager privateChatManager = QBChatService.getInstance().getPrivateChatManager();
-//        privateChatManager.create
     }
 
     private void loginAppzolicUser(Context context, User user, final GeneralCallback callback){

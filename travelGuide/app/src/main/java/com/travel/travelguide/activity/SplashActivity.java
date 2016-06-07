@@ -3,11 +3,8 @@ package com.travel.travelguide.activity;
 import android.os.Handler;
 import android.widget.ImageView;
 
-import com.quickblox.auth.model.QBSession;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
-import com.travel.travelguide.Ulti.GeneralCallback;
-import com.travel.travelguide.manager.QBManager;
 import com.travel.travelguide.manager.TransactionManager;
 import com.travel.travelguide.manager.UserManager;
 
@@ -52,8 +49,6 @@ public class SplashActivity extends BaseActivity {
             }
         }, 2 * 1000);
 
-//        createQBSession();
-
 
 //        imageView.post(new Runnable() {
 //            @Override
@@ -95,22 +90,5 @@ public class SplashActivity extends BaseActivity {
         }else {
             TransactionManager.getInstance().gotoActivity(SplashActivity.this, LoginActivity.class, null, true, imageView, "TEST");
         }
-    }
-
-    private void createQBSession(){
-        QBManager.getInstance().createSession(new GeneralCallback<QBSession>(this){
-
-            @Override
-            public void success(QBSession o) {
-                gotoNextScreen();
-            }
-
-            @Override
-            public void error(String errorMessage) {
-                super.error(errorMessage);
-            }
-        });
-
-
     }
 }

@@ -15,9 +15,6 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
-import com.quickblox.chat.QBChatService;
-import com.quickblox.core.LogLevel;
-import com.quickblox.core.QBSettings;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -40,7 +37,6 @@ public class MyApp extends Application {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
         initBackendless();
-        initQB();
         initApplozic();
         initImageloader();
     }
@@ -105,14 +101,6 @@ public class MyApp extends Application {
     private void initBackendless() {
         Backendless.initApp(getApplicationContext(), backendlessAppId, backendlessSecretKey, backendlessVersion);
         //
-    }
-
-    private void initQB(){
-        QBSettings.getInstance().init(getApplicationContext(), APP_ID, AUTH_KEY, AUTH_SECRET);
-        QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
-        QBSettings.getInstance().setLogLevel(LogLevel.DEBUG);
-        QBChatService.setDebugEnabled(true);
-
     }
 
     @Override

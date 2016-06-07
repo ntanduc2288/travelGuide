@@ -69,6 +69,12 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
     @Bind(R.id.textview_profile_name)
     AppCompatTextView lblProfileName;
 
+    View.OnClickListener drawerClickedListener;
+
+    public void setDrawerClickedListener(View.OnClickListener drawerClickedListener){
+        this.drawerClickedListener = drawerClickedListener;
+    }
+
     public static MapGuideFragment newInstance() {
         return new MapGuideFragment();
     }
@@ -260,7 +266,10 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
                 break;
             case R.id.imageview_my_profile:
             case R.id.textview_profile_name:
-                gotoSettingsScreen(UserManager.getInstance().getCurrentUser());
+//                gotoSettingsScreen(UserManager.getInstance().getCurrentUser());
+                if(drawerClickedListener != null){
+                    drawerClickedListener.onClick(v);
+                }
                 break;
 
         }

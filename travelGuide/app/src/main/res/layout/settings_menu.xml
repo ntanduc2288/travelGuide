@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:background="@drawable/bg_item_setting"
+    android:clickable="true"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:splitMotionEvents="false">
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/button_edit_personal_info"
+        style="@style/buttonStyleSetting"
+        android:text="@string/edit_personal_info" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="@dimen/padding_content_item_settings"
+        android:background="@color/color_item_separate" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/button_message"
+        style="@style/buttonStyleSetting"
+        android:text="@string/messages" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="@dimen/padding_content_item_settings"
+        android:background="@color/color_item_separate" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/button_add_edit_travel_itinerary"
+        style="@style/buttonStyleSetting"
+        android:text="@string/add_edit_travel_itinerary" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="@dimen/padding_content_item_settings"
+        android:background="@color/color_item_separate" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/button_invite_friends"
+        style="@style/buttonStyleSetting"
+        android:text="@string/invite_friends" />
+
+</LinearLayout>

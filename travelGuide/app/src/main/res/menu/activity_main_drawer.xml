@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/edit_information"
+            android:title="@string/edit_personal_info" />
+        <item
+            android:id="@+id/messages"
+            android:title="@string/messages" />
+        <item
+            android:id="@+id/button_add_edit_travel_itinerary"
+            android:title="@string/add_edit_travel_itinerary" />
+        <item
+            android:id="@+id/invite_friends"
+            android:title="@string/invite_friends" />
+
+        <item
+            android:id="@+id/logout"
+            android:title="@string/log_out" />
+    </group>
+
+    <!--<item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/logout"
+                android:title="@string/log_out" />
+
+        </menu>
+    </item>-->
+
+</menu>

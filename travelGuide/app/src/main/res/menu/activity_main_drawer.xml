@@ -18,6 +18,10 @@
         <item
             android:id="@+id/logout"
             android:title="@string/log_out" />
+
+        <item
+            android:id="@+id/about_travetrot"
+            android:title="@string/about_traveltrot" />
     </group>
 
     <!--<item android:title="Communicate">

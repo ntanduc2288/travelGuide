@@ -12,11 +12,14 @@ public interface MainPresenter {
         public void showLoading();
         public void hideLoading();
         public void gotoLoginScreen();
+        public void gotoConversationList();
         public Context getContext();
     }
 
     public abstract class Presenter extends BasePresenters{
         public abstract void logout();
         public abstract void destroy();
+        public abstract void subscribeChat();
+        public abstract void unSubscribeChat();
     }
 }

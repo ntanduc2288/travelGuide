@@ -92,7 +92,7 @@ public class MobiComQuickConversationFragment extends Fragment {
         });
         thread.setPriority(Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(false);
     }
 
     @Override

@@ -106,7 +106,8 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
         imgProfile.setOnClickListener(this);
         lblProfileName.setOnClickListener(this);
         mapGuidePresenter.connect();
-        updateUserView(UserManager.getInstance().getCurrentUser());
+        EvenBusHelper.getInstance().notifyUserDataChanged(UserManager.getInstance().getCurrentUser());
+//        updateUserView(UserManager.getInstance().getCurrentUser());
     }
 
     @Override

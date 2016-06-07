@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.multidex.MultiDex;
 
+import com.applozic.mobicomkit.ApplozicClient;
 import com.applozic.mobicomkit.uiwidgets.ApplozicSetting;
 import com.backendless.Backendless;
 import com.crashlytics.android.Crashlytics;
@@ -62,6 +63,8 @@ public class MyApp extends Application {
 
 //        For Group Memebr Remove Option Hide
         ApplozicSetting.getInstance(getApplicationContext()).setHideGroupRemoveMemberOption(true);
+
+        ApplozicClient.getInstance(getApplicationContext()).hideChatListOnNotification();
 
     }
 

@@ -3,7 +3,9 @@ package com.travel.travelguide.manager;
 import android.content.Context;
 import android.util.Log;
 
+import com.applozic.mobicomkit.ApplozicClient;
 import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
+import com.applozic.mobicomkit.api.account.user.UserClientService;
 import com.applozic.mobicomkit.api.account.user.UserLoginTask;
 import com.applozic.mobicomkit.uiwidgets.ApplozicSetting;
 import com.backendless.Backendless;
@@ -16,6 +18,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.Ulti.DatabaseHelper;
+import com.travel.travelguide.Ulti.GCMRegistrationUtils;
 import com.travel.travelguide.Ulti.GeneralCallback;
 import com.travel.travelguide.Ulti.LogUtils;
 
@@ -225,7 +228,8 @@ public class UserManager {
                 User userTmp = new User(response);
                 UserManager.getInstance().setCurrentUser(userTmp);
                 UserManager.getInstance().saveUserToDatabase(context);
-                generalCallback.success(UserManager.getInstance().getCurrentUser());
+//                generalCallback.success(UserManager.getInstance().getCurrentUser());
+                loginAppzolicUser(context, UserManager.getInstance().getCurrentUser(), generalCallback);
             }
 
             @Override
@@ -261,6 +265,7 @@ public class UserManager {
                 .subscribe(new Action1<Boolean>() {
                     @Override
                     public void call(Boolean o) {
+                        logoutApplozic(context);
                         generalCallback.success(o);
                     }
                 }, new Action1<Throwable>() {
@@ -275,9 +280,10 @@ public class UserManager {
         UserLoginTask.TaskListener listener = new UserLoginTask.TaskListener() {
             @Override
             public void onSuccess(RegistrationResponse registrationResponse, Context context) {
-                // After successful registration with Applozic server the callback will come here
-                ApplozicSetting.getInstance(context).showStartNewButton();//To show contact list.
-                ApplozicSetting.getInstance(context).enableRegisteredUsersContactCall();//To enable the applozic Registered Users Contact Note:for disable that you can comment this line of code
+
+                initApplozic(context);
+                GCMRegistrationUtils gcmRegistrationUtils = new GCMRegistrationUtils(context);
+                gcmRegistrationUtils.setUpGcmNotification();
                 callback.success(registrationResponse);
             }
 
@@ -294,6 +300,46 @@ public class UserManager {
         userAppzolic.setImageLink(user.getAvatar());
         userAppzolic.setDisplayName(user.getName());
         new UserLoginTask(userAppzolic, listener, context).execute((Void) null);
+    }
+
+    private void logoutApplozic(Context context){
+        new UserClientService(context).logout();
+    }
+
+    private void initApplozic(Context context) {
+//        Show/Hide Green Dot for Online
+        ApplozicSetting.getInstance(context.getApplicationContext()).hideOnlineStatusInMasterList();
+
+//        Show/hide 'Start New Conversation' Plus (+) Button
+        ApplozicSetting.getInstance(context.getApplicationContext()).hideStartNewButton();
+
+//        Show/hide 'Start New' FloatingActionButton
+        ApplozicSetting.getInstance(context.getApplicationContext()).hideStartNewFloatingActionButton();
+
+//        For Group Add Member Button Hide
+        ApplozicSetting.getInstance(context.getApplicationContext()).setHideGroupAddButton(true);
+
+//        For Group Exit Button Hide
+        ApplozicSetting.getInstance(context.getApplicationContext()).setHideGroupExitButton(true);
+
+//        For Group Name Change Button Hide
+        ApplozicSetting.getInstance(context.getApplicationContext()).setHideGroupNameEditButton(true);
+
+//        For Group Memebr Remove Option Hide
+        ApplozicSetting.getInstance(context.getApplicationContext()).setHideGroupRemoveMemberOption(true);
+
+        //Do not show chat list when click on notification
+        ApplozicClient.getInstance(context.getApplicationContext()).hideChatListOnNotification();
+
+        // After successful registration with Applozic server the callback will come here
+        ApplozicSetting.getInstance(context).showStartNewButton();//To show contact list.
+        ApplozicSetting.getInstance(context).enableRegisteredUsersContactCall();//To enable the applozic Registered Users Contact Note:for disable that you can comment this line of code
+
+        //Received Message Chat Bubble Color
+//        ApplozicSetting.getInstance(context).setReceivedMessageBackgroundColor(R.color.colorAccent);
+
+        //Hide floating button in chat list
+        ApplozicSetting.getInstance(context).hideStartNewFloatingActionButton();
     }
 
 }

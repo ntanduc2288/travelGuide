@@ -149,24 +149,6 @@ public class UserProfileFragment extends BaseFragment implements IUserProfileVie
                 getActivity().onBackPressed();
                 break;
             case R.id.fab:
-//                TransactionManager.getInstance().addFragment(getFragmentManager(), ChatFragment.newInstance(user));
-
-
-//                Contact contact = new Contact();
-//                contact.setUserId(user.getbackendlessUserId());
-//                contact.setFullName(user.getName());
-//                ConversationFragment conversationFragment = new ConversationFragment(contact, null, null);
-
-//                Intent intent = new Intent(getActivity(), ConversationActivity.class);
-//                if(ApplozicClient.getInstance(getActivity()).isContextBasedChat()){
-//                    intent.putExtra(ConversationUIService.CONTEXT_BASED_CHAT,true);
-//                }
-//                startActivity(intent);
-
-//                Intent intent = new Intent(getActivity(), ChatActivity.class);
-//                intent.putExtra("USER_ID", user.getbackendlessUserId());
-//                intent.putExtra("USERNAME", user.getName());
-//                startActivity(intent);
                 Intent intent = new Intent(getActivity(), ConversationActivity.class);
                 intent.putExtra(ConversationUIService.USER_ID, user.getbackendlessUserId());
                 intent.putExtra(ConversationUIService.DISPLAY_NAME, user.getName()); //put it for displaying the title.

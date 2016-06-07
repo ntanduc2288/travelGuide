@@ -122,7 +122,7 @@ public class ConversationUIService {
 
         ConversationFragment conversationFragment = (ConversationFragment) UIService.getFragmentByTag(fragmentActivity, CONVERSATION_FRAGMENT);
 
-        if (conversationFragment == null) {
+        if (conversationFragment == null && fragmentActivity instanceof ConversationActivity) {
             Contact contact = ((ConversationActivity) fragmentActivity).getContact();
             Channel channel = ((ConversationActivity) fragmentActivity).getChannel();
             Integer conversationId = ((ConversationActivity) fragmentActivity).getConversationId();

@@ -88,6 +88,8 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
     AppCompatImageView imgCoverPicture;
     @Bind(R.id.phone)
     AppCompatEditText txtPhone;
+    @Bind(R.id.phone_container)
+    LinearLayout lnPhoneContainer;
     @Bind(R.id.language)
     MultiSelectionSpinner spnLanguage;
     @Bind(R.id.textview_from)
@@ -255,6 +257,7 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
         btnEdit.setBackgroundResource(R.drawable.save_icon);
         txtPhone.setEnabled(true);
         txtPhone.setVisibility(View.VISIBLE);
+        lnPhoneContainer.setVisibility(View.VISIBLE);
         txtAboutMe.setEnabled(true);
         txtAboutMe.setVisibility(View.VISIBLE);
         spnLanguage.setEnabled(true);
@@ -275,6 +278,7 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
         txtPhone.setEnabled(false);
         txtAboutMe.setEnabled(false);
         txtPhone.setVisibility(View.VISIBLE);
+        lnPhoneContainer.setVisibility(View.VISIBLE);
         spnLanguage.setEnabled(false);
         btnAddTravelDate.setEnabled(false);
     }

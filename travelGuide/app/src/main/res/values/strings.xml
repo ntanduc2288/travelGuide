@@ -13,7 +13,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="name">name</string>
+    <string name="name">Name</string>
     <string name="prompt_confirm_password">Confirm password</string>
     <string name="facebook_link">Facebook link</string>
     <string name="register">Register</string>
@@ -425,4 +425,10 @@
 
     <string name="default_media_location_folder">Applozic</string>
     <string name="application_applozic_key">2ce40e24b9dc9de3bb65d3755a1f91020</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_pass">Confirm pass</string>
+    <string name="phone">Phone</string>
+    <string name="languages">Languages</string>
+    <string name="about_traveltrot">About Traveltrot</string>
 </resources>

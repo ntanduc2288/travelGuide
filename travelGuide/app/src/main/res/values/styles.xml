@@ -11,7 +11,7 @@
         <item name="colorControlActivated">@color/colorAccent</item>
         <item name="colorControlHighlight">@color/colorAccent</item>
 
-
+        <item name="android:statusBarColor">@android:color/transparent</item>
 
     </style>
 

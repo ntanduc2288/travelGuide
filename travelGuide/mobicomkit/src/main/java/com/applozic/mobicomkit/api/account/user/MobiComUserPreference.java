@@ -2,15 +2,9 @@ package com.applozic.mobicomkit.api.account.user;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
 import com.applozic.mobicomkit.api.MobiComKitClientService;
-
-import com.applozic.mobicommons.commons.core.utils.ContactNumberUtils;
-
-
-import java.util.Date;
 
 
 public class MobiComUserPreference {

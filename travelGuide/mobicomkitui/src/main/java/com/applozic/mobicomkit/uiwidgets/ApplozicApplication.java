@@ -8,7 +8,7 @@ import android.content.Context;
  */
 public class ApplozicApplication extends Application {
 
-    public static final String TITLE = "Chats";
+    public static final String TITLE = "Messages";
 
     @Override
     public void onCreate() {

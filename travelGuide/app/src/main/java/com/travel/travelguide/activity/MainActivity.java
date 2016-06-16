@@ -147,7 +147,9 @@ public class MainActivity extends BaseActivity implements MessageCommunicator, V
 
                 break;
             case R.id.invite_friends:
-
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                startActivity(Intent.createChooser(sharingIntent, "Invite via:"));
                 break;
             case R.id.logout:
                 presenter.logout();

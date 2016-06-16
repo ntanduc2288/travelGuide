@@ -111,6 +111,10 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
     @Bind(R.id.interest) AppCompatEditText txtInterest;
     @Bind(R.id.btnLogout)
     ActionProcessButton btnLogout;
+    @Bind(R.id.password_container)
+    LinearLayout lnPasswordContainer;
+    @Bind(R.id.confirm_password_container)
+    LinearLayout lnConfirmPassworContainer;
 
     private SocialPickerView socialPickerView;
     private EasyDialog easyDialog;
@@ -224,8 +228,8 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
 
     @Override
     public void showMyProfileViews() {
-        txtPassword.setVisibility(View.GONE);
-        txtConfirmPassword.setVisibility(View.GONE);
+        lnPasswordContainer.setVisibility(View.GONE);
+        lnConfirmPassworContainer.setVisibility(View.GONE);
         btnEdit.setVisibility(View.VISIBLE);
         btnChat.setVisibility(View.GONE);
         rlTravelDateContainer.setVisibility(View.GONE);
@@ -234,12 +238,13 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
         }else {
             btnAddTravelDate.setText(R.string.add_travel_date);
         }
+
     }
 
     @Override
     public void showUserProfileViews() {
-        txtPassword.setVisibility(View.GONE);
-        txtConfirmPassword.setVisibility(View.GONE);
+        lnPasswordContainer.setVisibility(View.GONE);
+        lnConfirmPassworContainer.setVisibility(View.GONE);
         btnEdit.setVisibility(View.GONE);
         btnChat.setVisibility(View.VISIBLE);
         rlTravelDateContainer.setVisibility(View.GONE);

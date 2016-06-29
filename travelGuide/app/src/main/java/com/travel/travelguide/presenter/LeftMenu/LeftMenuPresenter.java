@@ -20,6 +20,6 @@ public interface LeftMenuPresenter {
     }
 
     public interface Presenter{
-        public void updateItineraryData(List<CalendarDay> calendarDays);
+        public void updateItineraryData(List<CalendarDay> calendarDays, String numberOfPeople);
     }
 }

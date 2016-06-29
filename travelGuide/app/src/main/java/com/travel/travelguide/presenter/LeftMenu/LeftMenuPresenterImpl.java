@@ -26,7 +26,7 @@ public class LeftMenuPresenterImpl implements LeftMenuPresenter.Presenter {
     }
 
     @Override
-    public void updateItineraryData(List<CalendarDay> calendarDays) {
+    public void updateItineraryData(List<CalendarDay> calendarDays, String numberOfPeople) {
         leftMenuView.showLoading();
         long startDate = 0;
         long endDate = 0;
@@ -46,6 +46,11 @@ public class LeftMenuPresenterImpl implements LeftMenuPresenter.Presenter {
         User user = new User(UserManager.getInstance().getCurrentUser());
         user.setTravelDateFrom(startDate);
         user.setTravelDateTo(endDate);
+        try{
+            user.setNumberOfPeople(Integer.valueOf(numberOfPeople));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         Backendless.UserService.update(user, new AsyncCallback<BackendlessUser>() {
             @Override

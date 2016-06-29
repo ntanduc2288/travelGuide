@@ -217,7 +217,7 @@ public class MainActivity extends BaseActivity implements MessageCommunicator, V
                 showHideCalendar(false);
                 break;
             case R.id.save_calendar:
-                leftMenuPresenter.updateItineraryData(materialCalendarView.getSelectedDates());
+                leftMenuPresenter.updateItineraryData(materialCalendarView.getSelectedDates(), txtNumberOfPeople.getText().toString());
                 break;
         }
 
@@ -329,7 +329,7 @@ public class MainActivity extends BaseActivity implements MessageCommunicator, V
             }
 
 
-            txtNumberOfPeople.setText(UserManager.getInstance().getCurrentUser().getNumberOfPeople());
+            txtNumberOfPeople.setText(String.valueOf(UserManager.getInstance().getCurrentUser().getNumberOfPeople()));
         } else {
             lnCalendarContainer.setVisibility(View.GONE);
             leftMenuContainer.setVisibility(View.VISIBLE);

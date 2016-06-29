@@ -54,19 +54,19 @@ public class SocialItemEditText extends LinearLayout implements View.OnClickList
     }
 
     private void mappingSocialType() {
-        Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.facebook, null);
+        Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.facebook_icon, null);
         String hint = Constants.EMPTY_STRING;
         switch (socialObject.getId()){
             case SocialObject.FACEBOOK_TYPE:
-                drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.facebook, null);
+                drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.facebook_icon, null);
                 hint = getContext().getString(R.string.input_facebook_link);
                 break;
             case SocialObject.TWITTER_TYPE:
-                drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.twitter, null);
+                drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.twitter_icon, null);
                 hint = getContext().getString(R.string.input_twitter_link);
                 break;
             case SocialObject.INSTAGRAM_TYPE:
-                drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.instagram, null);
+                drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.instagram_icon, null);
                 hint = getContext().getString(R.string.input_instagram_link);
                 break;
         }

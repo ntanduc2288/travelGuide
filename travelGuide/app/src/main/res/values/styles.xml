@@ -58,6 +58,12 @@
         <item name="android:textSize">@dimen/general_text_size</item>
     </style>
 
+    <style name="button_left_menu" parent="buttonStyle">
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:background">@color/transparent</item>
+    </style>
+
     <style name="buttonStyleSetting" parent="buttonStyle">
         <item name="android:textColor">@color/DarkGray</item>
         <item name="android:paddingLeft">@dimen/padding_content_item_settings</item>

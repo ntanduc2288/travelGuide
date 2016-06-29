@@ -7,9 +7,14 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.AppCompatButton;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.applozic.mobicomkit.api.conversation.Message;
@@ -17,6 +22,8 @@ import com.applozic.mobicomkit.uiwidgets.conversation.ConversationUIService;
 import com.applozic.mobicomkit.uiwidgets.conversation.MessageCommunicator;
 import com.applozic.mobicomkit.uiwidgets.conversation.activity.ConversationActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.squareup.otto.Subscribe;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
@@ -26,9 +33,13 @@ import com.travel.travelguide.fragment.EditProfileFragment;
 import com.travel.travelguide.fragment.MapGuideFragment;
 import com.travel.travelguide.manager.TransactionManager;
 import com.travel.travelguide.manager.UserManager;
+import com.travel.travelguide.presenter.LeftMenu.LeftMenuPresenter;
+import com.travel.travelguide.presenter.LeftMenu.LeftMenuPresenterImpl;
 import com.travel.travelguide.presenter.main.MainPresenter;
 import com.travel.travelguide.presenter.main.MainPresenterImpl;
 import com.yalantis.ucrop.UCrop;
+
+import java.util.Calendar;
 
 import butterknife.Bind;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -37,16 +48,44 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by user on 4/23/16.
  */
 public class MainActivity extends BaseActivity implements MessageCommunicator, View.OnClickListener, NavigationView.OnNavigationItemSelectedListener,
-        MainPresenter.MainView {
+        MainPresenter.MainView, LeftMenuPresenter.ILeftMenuView {
     @Bind(R.id.drawer_layout)
     DrawerLayout drawerLayout;
     @Bind(R.id.nav_view)
     NavigationView navigationView;
+    @Bind(R.id.avatar_left_menu)
     CircleImageView imgAvatar;
+    @Bind(R.id.username_left_menu)
     TextView lblUsername;
+    @Bind(R.id.calendarView)
+    MaterialCalendarView materialCalendarView;
     MapGuideFragment mapGuideFragment;
     MaterialDialog dialog;
     MainPresenter.Presenter presenter;
+    @Bind(R.id.edit_information)
+    AppCompatButton btnEditInformation;
+    @Bind(R.id.messages)
+    AppCompatButton btnMessages;
+    @Bind(R.id.button_add_edit_travel_itinerary)
+    AppCompatButton btnAddEditTravelItinerary;
+    @Bind(R.id.invite_friends)
+    AppCompatButton btnInviteFriends;
+    @Bind(R.id.logout)
+    AppCompatButton btnLogout;
+    @Bind(R.id.about_travetrot)
+    AppCompatButton btnAboutTravetrot;
+    @Bind(R.id.calendar_container)
+    LinearLayout lnCalendarContainer;
+    @Bind(R.id.scrollview_left_menu_container)
+    NestedScrollView leftMenuContainer;
+    @Bind(R.id.back_calendar)
+    AppCompatButton btnBackCalendar;
+    @Bind(R.id.save_calendar)
+    AppCompatButton btnSaveItinerary;
+    @Bind(R.id.number_of_people_test)
+    EditText txtNumberOfPeople;
+
+    LeftMenuPresenter.Presenter leftMenuPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,17 +114,38 @@ public class MainActivity extends BaseActivity implements MessageCommunicator, V
     protected void setupViews() {
         EvenBusHelper.getInstance().registerEventBus(this);
         presenter = new MainPresenterImpl(this);
+        leftMenuPresenter = new LeftMenuPresenterImpl(this);
         mapGuideFragment = MapGuideFragment.newInstance();
         mapGuideFragment.setDrawerClickedListener(this);
         TransactionManager.getInstance().replaceFragment(getSupportFragmentManager(), mapGuideFragment, R.id.container);
         navigationView.setNavigationItemSelectedListener(this);
 
-        imgAvatar = (CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.avatar_left_menu);
-        lblUsername = (TextView) navigationView.getHeaderView(0).findViewById(R.id.username_left_menu);
+        btnAboutTravetrot.setOnClickListener(this);
+        btnAddEditTravelItinerary.setOnClickListener(this);
+        btnEditInformation.setOnClickListener(this);
+        btnInviteFriends.setOnClickListener(this);
+        btnLogout.setOnClickListener(this);
+        btnMessages.setOnClickListener(this);
+        btnBackCalendar.setOnClickListener(this);
+        btnSaveItinerary.setOnClickListener(this);
 
+        setupCalendarView();
         GCMRegistrationUtils gcmRegistrationUtils = new GCMRegistrationUtils(this);
         gcmRegistrationUtils.setUpGcmNotification();
 
+    }
+
+    private void setupCalendarView() {
+        lnCalendarContainer.setVisibility(View.GONE);
+        materialCalendarView.setSelectionMode(MaterialCalendarView.SELECTION_MODE_RANGE);
+
+//        materialCalendarView.setOnRangeSelectedListener(new OnRangeSelectedListener() {
+//            @Override
+//            public void onRangeSelected(@NonNull MaterialCalendarView widget, @NonNull List<CalendarDay> dates) {
+//
+//            }
+//        });
+//        txtNumberOfPeople.setText(UserManager.getInstance().getCurrentUser().getNumberOfPeople());
     }
 
     @Override
@@ -131,7 +191,37 @@ public class MainActivity extends BaseActivity implements MessageCommunicator, V
             case R.id.textview_profile_name:
                 drawerLayout.openDrawer(GravityCompat.START);
                 break;
+            case R.id.edit_information:
+                TransactionManager.getInstance().addFragment(getSupportFragmentManager(), EditProfileFragment.newInstance(UserManager.getInstance().getCurrentUser()));
+                drawerLayout.closeDrawer(GravityCompat.START);
+                break;
+            case R.id.messages:
+                gotoConversationList();
+                drawerLayout.closeDrawer(GravityCompat.START);
+                break;
+            case R.id.button_add_edit_travel_itinerary:
+                showHideCalendar(true);
+                break;
+            case R.id.invite_friends:
+                drawerLayout.closeDrawer(GravityCompat.START);
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                startActivity(Intent.createChooser(sharingIntent, "Invite via:"));
+
+                break;
+            case R.id.logout:
+                presenter.logout();
+
+                break;
+            case R.id.back_calendar:
+                showHideCalendar(false);
+                break;
+            case R.id.save_calendar:
+                leftMenuPresenter.updateItineraryData(materialCalendarView.getSelectedDates());
+                break;
         }
+
+
     }
 
     @Override
@@ -192,6 +282,11 @@ public class MainActivity extends BaseActivity implements MessageCommunicator, V
     }
 
     @Override
+    public void showMessage(String message) {
+        Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void gotoLoginScreen() {
         TransactionManager.getInstance().gotoActivity(this, LoginActivity.class, null, true);
     }
@@ -212,6 +307,32 @@ public class MainActivity extends BaseActivity implements MessageCommunicator, V
         if (user != null && user.getbackendlessUserId().equalsIgnoreCase(UserManager.getInstance().getCurrentUser().getUserId())) {
             lblUsername.setText(user.getName());
             ImageLoader.getInstance().displayImage(user.getAvatar(), imgAvatar);
+        }
+    }
+
+    private void showHideCalendar(boolean show) {
+        if (show) {
+            lnCalendarContainer.setVisibility(View.VISIBLE);
+            leftMenuContainer.setVisibility(View.GONE);
+            long travelFrom = UserManager.getInstance().getCurrentUser().getTravelDateFrom();
+            long travelTo = UserManager.getInstance().getCurrentUser().getTravelDateTo();
+
+            if(travelFrom != 0 && travelTo != 0){
+                Calendar calendarStart = Calendar.getInstance();
+                calendarStart.setTimeInMillis(travelFrom);
+                Calendar calendarEnd = Calendar.getInstance();
+                calendarEnd.setTimeInMillis(travelTo);
+                materialCalendarView.selectRange(CalendarDay.from(calendarStart), CalendarDay.from(calendarEnd));
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(travelFrom);
+                materialCalendarView.setCurrentDate(calendar);
+            }
+
+
+            txtNumberOfPeople.setText(UserManager.getInstance().getCurrentUser().getNumberOfPeople());
+        } else {
+            lnCalendarContainer.setVisibility(View.GONE);
+            leftMenuContainer.setVisibility(View.VISIBLE);
         }
     }
 }

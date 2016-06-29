@@ -242,8 +242,15 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
 
     @Override
     public void onPlaceSelected(Place place) {
-        Log.i(TAG, "Place: " + place.getName());
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(place.getLatLng(), Constants.DEFAULT_ZOOM_LEVEL);
+        Log.i(TAG, "Place name: " + place.getName());
+        Log.i(TAG, "Place Address: " + place.getAddress());
+        float zoomLevel = Constants.DEFAULT_ZOOM_LEVEL;
+        String[] address = place.getAddress().toString().split(",");
+        if(address != null && address.length == 1){
+            zoomLevel = Constants.COUNTRY_ZOOM_LEVEL;
+        }
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(place.getLatLng(), zoomLevel);
         zoomToLevel(cameraUpdate);
     }
 

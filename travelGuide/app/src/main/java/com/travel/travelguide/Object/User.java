@@ -8,6 +8,9 @@ import com.travel.travelguide.Ulti.Constants;
 import com.travel.travelguide.Ulti.LogUtils;
 import com.travel.travelguide.Ulti.Ulti;
 
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * Created by user on 4/23/16.
  */
@@ -56,6 +59,9 @@ public class User extends BackendlessUser {
     @DatabaseField
     int qbUserId = 0;
 
+    @DatabaseField
+    int numberOfPeople = 0;
+
 
     public User(){
 
@@ -79,13 +85,25 @@ public class User extends BackendlessUser {
         setAboutMe((String) backendlessUser.getProperty(Constants.KEY_ABOUT_ME));
         setInterest((String) backendlessUser.getProperty(Constants.KEY_INTEREST));
         try {
-            setTravelDateFrom((long) backendlessUser.getProperty(Constants.KEY_TRAVEL_DATE_FROM));
-            setTravelDateTo((long) backendlessUser.getProperty(Constants.KEY_TRAVEL_DATE_TO));
+            Date startDate = (Date) backendlessUser.getProperty(Constants.KEY_TRAVEL_DATE_FROM);
+            Date endDate = (Date) backendlessUser.getProperty(Constants.KEY_TRAVEL_DATE_TO);
+            setTravelDateFrom(startDate.getTime());
+            setTravelDateTo(endDate.getTime());
         }catch (Exception e){
             e.printStackTrace();
             LogUtils.logE(User.class.getSimpleName(), e.toString());
         }
         setQbUserId((Integer) backendlessUser.getProperty(Constants.KEY_QBLOX_USER_ID));
+        setNumberOfPeople((Integer) backendlessUser.getProperty(Constants.KEY_NUMBER_OF_PEOPLE));
+    }
+
+    public int getNumberOfPeople() {
+        return numberOfPeople;
+    }
+
+    public void setNumberOfPeople(int numberOfPeople) {
+        this.numberOfPeople = numberOfPeople;
+        setProperty(Constants.KEY_NUMBER_OF_PEOPLE, numberOfPeople);
     }
 
     public int getQbUserId() {
@@ -157,7 +175,9 @@ public class User extends BackendlessUser {
 
     public void setTravelDateFrom(long travelDateFrom) {
         this.travelDateFrom = travelDateFrom;
-        setProperty(Constants.KEY_TRAVEL_DATE_FROM, travelDateFrom );
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(travelDateFrom);
+        setProperty(Constants.KEY_TRAVEL_DATE_FROM, calendar.getTime() );
     }
 
     public long getTravelDateTo() {
@@ -166,7 +186,9 @@ public class User extends BackendlessUser {
 
     public void setTravelDateTo(long travelDateTo) {
         this.travelDateTo = travelDateTo;
-        setProperty(Constants.KEY_TRAVEL_DATE_TO, travelDateTo);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(travelDateTo);
+        setProperty(Constants.KEY_TRAVEL_DATE_TO, calendar.getTime());
     }
 
     public String getAvatar() {
@@ -281,5 +303,25 @@ public class User extends BackendlessUser {
         return backendlessUser;
     }
 
-
+    public User(User other) {
+        setbackendlessUserId(other.backendlessUserId);
+        setName(other.name);
+        setFacebookLink(other.facebookLink);
+        setEmail(other.email);
+        setLocationName(other.locationName);
+        setLatitude(other.latitude);
+        setLongitude(other.longitude);
+        setAvatar(other.avatar);
+        setCoverPicture(other.coverPicture);
+        setPhoneNumber(other.phoneNumber);
+        setTwitterLink(other.twitterLink);
+        setInstagramLink(other.instagramLink);
+        setLanguage(other.language);
+        setTravelDateFrom(other.travelDateFrom);
+        setTravelDateTo(other.travelDateTo);
+        setAboutMe(other.aboutMe);
+        setInterest(other.interest);
+        setQbUserId(other.qbUserId);
+        setNumberOfPeople(other.numberOfPeople);
+    }
 }

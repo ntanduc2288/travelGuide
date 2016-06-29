@@ -66,6 +66,8 @@ public class MyApp extends Application {
 
         ApplozicClient.getInstance(getApplicationContext()).hideChatListOnNotification();
 
+        ApplozicSetting.getInstance(getApplicationContext()).hideStartNewButton();
+
     }
 
     private void initImageloader() {

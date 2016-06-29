@@ -20,14 +20,16 @@ public class Constants {
     public static final String KEY_TWITTER_LINK = "twitterLink";
     public static final String KEY_INSTAGRAM_LINK = "instagramLink";
     public static final String KEY_LANGUAGE = "language";
-    public static final String KEY_TRAVEL_DATE_FROM = "travelDateFrom";
-    public static final String KEY_TRAVEL_DATE_TO = "travelDateTo";
+    public static final String KEY_TRAVEL_DATE_FROM = "startItiniraryDate";
+    public static final String KEY_TRAVEL_DATE_TO = "endItineraryDate";
     public static final String KEY_ABOUT_ME = "aboutMe";
     public static final String KEY_INTEREST = "interest";
     public static final String KEY_QBLOX_USER_ID = "QBloxUserId";
+    public static final String KEY_NUMBER_OF_PEOPLE = "numberOfPeople";
 
     public static final float DEFAULT_RADIUS = 20; //mile
     public static final float DEFAULT_ZOOM_LEVEL = 14;
+    public static final float COUNTRY_ZOOM_LEVEL = 5;
     public static final String EMPTY_STRING = "";
     public static final String RETURN_DATA = "return-data";
 

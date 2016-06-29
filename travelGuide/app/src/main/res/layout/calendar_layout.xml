@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/calendar_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <android.support.v7.widget.AppCompatButton
+            style="@style/button_left_menu"
+            android:id="@+id/back_calendar"
+            android:layout_width="wrap_content"
+            android:text="@string/back" />
+
+        <android.support.v7.widget.AppCompatButton
+            style="@style/button_left_menu"
+            android:maxLines="2"
+            android:layout_toRightOf="@+id/back_calendar"
+            android:layout_toLeftOf="@+id/save_calendar"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:text="@string/travel_itinerary" />
+
+        <android.support.v7.widget.AppCompatButton
+            style="@style/button_left_menu"
+            android:id="@+id/save_calendar"
+            android:gravity="right|center_vertical"
+            android:layout_alignParentRight="true"
+            android:layout_width="50dp"
+            android:text="@string/save" />
+    </RelativeLayout>
+
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:mcv_selectionColor="@color/colorPrimary"
+        app:mcv_showOtherDates="all" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:layout_height="50dp">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/number_of_people"
+            android:layout_alignParentBottom="true"/>
+
+
+
+        <EditText
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/number_of_people_test"
+            android:layout_width="100dp"
+            android:gravity="center"
+            android:inputType="numberDecimal"
+            />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/scrollview_left_menu_container"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/edit_information"
+            style="@style/button_left_menu"
+            android:layout_width="match_parent"
+            android:text="@string/edit_personal_info" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/messages"
+            style="@style/button_left_menu"
+            android:layout_width="match_parent"
+            android:text="@string/messages" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/button_add_edit_travel_itinerary"
+            style="@style/button_left_menu"
+            android:layout_width="match_parent"
+            android:text="@string/add_edit_travel_itinerary" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/invite_friends"
+            style="@style/button_left_menu"
+            android:layout_width="match_parent"
+            android:text="@string/invite_friends" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/logout"
+            style="@style/button_left_menu"
+            android:layout_width="match_parent"
+            android:text="@string/log_out" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/about_travetrot"
+            style="@style/button_left_menu"
+            android:layout_width="match_parent"
+            android:text="@string/about_traveltrot" />
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

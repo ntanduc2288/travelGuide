@@ -65,6 +65,7 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
     LinearLayout lnSocialContainer;
     @Bind(R.id.button_add_social) AppCompatButton btnAddSocialLink;
     @Bind(R.id.interest) AppCompatEditText txtInterest;
+    @Bind(R.id.separate_add_view) View separateAddView;
 
     GoogleApiClient googleApiClient;
     RegisterPresenter registerPresenter;
@@ -201,6 +202,7 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
             initSocialPicker();
             int[] attachedViewLocation = new int[2];
             btnAddSocialLink.getLocationInWindow(attachedViewLocation);
+            attachedViewLocation[0] = attachedViewLocation[0] - 50;
             easyDialog = new EasyDialog(getActivity()).setLayout(socialPickerView)
                     .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.transparent))
                     .setGravity(EasyDialog.GRAVITY_TOP)
@@ -309,10 +311,12 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
     @Override
     public void showAddSocialButton() {
         btnAddSocialLink.setVisibility(View.VISIBLE);
+        separateAddView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideAddSocialButton() {
+        separateAddView.setVisibility(View.GONE);
         btnAddSocialLink.setVisibility(View.GONE);
     }
 }

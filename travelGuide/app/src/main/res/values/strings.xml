@@ -415,7 +415,7 @@
     <string name="aboutme_colon">About Me:</string>
     <string name="tell_something_about_yourself">Tell something about yourself</string>
     <string name="social_media">Social media</string>
-    <string name="edit_personal_info">Edit personal information</string>
+    <string name="edit_personal_info">Edit profile</string>
     <string name="add_edit_travel_itinerary">Add / Edit travel itinerary</string>
     <string name="invite_friends">Invite friends</string>
     <string name="search_your_destination">Search your destination</string>
@@ -432,4 +432,9 @@
     <string name="languages">Languages</string>
     <string name="about_traveltrot">About Traveltrot</string>
     <string name="add_a_comment">Add a comment</string>
+    <string name="back"><![CDATA[< Back]]></string>
+    <string name="number_of_people">Number of people</string>
+    <string name="travel_itinerary">Travel itinerary</string>
+    <string name="save">Save</string>
+
 </resources>

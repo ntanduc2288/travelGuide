@@ -1,5 +1,31 @@
 package com.travel.travelguide.fragment;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.backendless.geo.GeoPoint;
+import com.dd.processbutton.iml.ActionProcessButton;
+import com.michael.easydialog.EasyDialog;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.travel.travelguide.Object.SocialObject;
+import com.travel.travelguide.Object.User;
+import com.travel.travelguide.R;
+import com.travel.travelguide.Ulti.Constants;
+import com.travel.travelguide.Ulti.CropImageUlti;
+import com.travel.travelguide.Ulti.Ulti;
+import com.travel.travelguide.View.MultiSelectionSpinner;
+import com.travel.travelguide.View.SocialPickerView;
+import com.travel.travelguide.activity.LoginActivity;
+import com.travel.travelguide.manager.TransactionManager;
+import com.travel.travelguide.manager.UserManager;
+import com.travel.travelguide.presenter.editProfile.IEditProfileView;
+import com.travel.travelguide.presenter.editProfile.ProfilePresenter;
+import com.travel.travelguide.presenter.editProfile.ProfilePresenterImpl;
+import com.yalantis.ucrop.UCrop;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -25,31 +51,6 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.backendless.geo.GeoPoint;
-import com.dd.processbutton.iml.ActionProcessButton;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
-import com.michael.easydialog.EasyDialog;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.travel.travelguide.Object.SocialObject;
-import com.travel.travelguide.Object.User;
-import com.travel.travelguide.R;
-import com.travel.travelguide.Ulti.Constants;
-import com.travel.travelguide.Ulti.CropImageUlti;
-import com.travel.travelguide.Ulti.Ulti;
-import com.travel.travelguide.View.MultiSelectionSpinner;
-import com.travel.travelguide.View.SocialPickerView;
-import com.travel.travelguide.activity.LoginActivity;
-import com.travel.travelguide.manager.TransactionManager;
-import com.travel.travelguide.manager.UserManager;
-import com.travel.travelguide.presenter.editProfile.IEditProfileView;
-import com.travel.travelguide.presenter.editProfile.ProfilePresenter;
-import com.travel.travelguide.presenter.editProfile.ProfilePresenterImpl;
-import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
 import java.util.List;
@@ -104,7 +105,7 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
     LinearLayout lnTravelDateTo;
     @Bind(R.id.button_add_travel_date)
     AppCompatButton btnAddTravelDate;
-    @Bind(R.id.linearlayout_social_container)
+    @Bind(R.id.lnSocialContainer)
     LinearLayout lnSocialContainer;
     @Bind(R.id.button_add_social) AppCompatButton btnAddSocialLink;
     @Bind(R.id.aboutme) AppCompatEditText txtAboutMe;
@@ -145,8 +146,8 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
 
     @Override
     protected void setupViews() {
-        toolbar.setBackgroundColor(getResources().getColor(R.color.black_transparent));
-        profilePresenter = new ProfilePresenterImpl(this, user);
+        toolbar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.black_transparent));
+        profilePresenter = new ProfilePresenterImpl(getFragmentManager(), this, this, user);
 
         btnBack.setOnClickListener(this);
         btnEdit.setOnClickListener(this);
@@ -213,15 +214,15 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
         }
 
         if(!TextUtils.isEmpty(user.getFacebookLink())){
-            profilePresenter.addMoreSocialView(lnSocialContainer, new SocialObject(SocialObject.FACEBOOK_TYPE, user.getFacebookLink()));
+            profilePresenter.addMoreSocialView(new SocialObject(SocialObject.FACEBOOK_TYPE, user.getFacebookLink()));
         }
 
         if(!TextUtils.isEmpty(user.getInstagramLink())){
-            profilePresenter.addMoreSocialView(lnSocialContainer, new SocialObject(SocialObject.INSTAGRAM_TYPE, user.getInstagramLink()));
+            profilePresenter.addMoreSocialView(new SocialObject(SocialObject.INSTAGRAM_TYPE, user.getInstagramLink()));
         }
 
         if(!TextUtils.isEmpty(user.getTwitterLink())){
-            profilePresenter.addMoreSocialView(lnSocialContainer, new SocialObject(SocialObject.TWITTER_TYPE, user.getTwitterLink()));
+            profilePresenter.addMoreSocialView(new SocialObject(SocialObject.TWITTER_TYPE, user.getTwitterLink()));
         }
 
     }
@@ -349,7 +350,7 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
         socialPickerView = new SocialPickerView(getActivity(), profilePresenter.getListSocialsRemainingItems(), new SocialPickerView.SelectedSocialCallback() {
             @Override
             public void itemSelected(SocialObject socialObject) {
-                profilePresenter.addMoreSocialView(lnSocialContainer, socialObject);
+                profilePresenter.getSocialInfo(socialObject);
                 if(easyDialog != null){
                     easyDialog.dismiss();
                 }
@@ -560,5 +561,10 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
     @Override
     public void gotoLoginScreen() {
         TransactionManager.getInstance().gotoActivity(getActivity(), LoginActivity.class, null, true);
+    }
+
+    @Override
+    public LinearLayout getLayoutSocialContainer() {
+        return lnSocialContainer;
     }
 }

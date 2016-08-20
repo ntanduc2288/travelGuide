@@ -1,10 +1,12 @@
 package com.travel.travelguide.presenter.register;
 
-import android.widget.LinearLayout;
-
+import com.github.gorbin.asne.core.SocialNetworkManager;
+import com.github.gorbin.asne.core.persons.SocialPerson;
 import com.travel.travelguide.Object.SocialObject;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.presenter.IBasePresenter;
+
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
@@ -15,8 +17,10 @@ public interface RegisterPresenter extends IBasePresenter{
     void validateData(User user, String password, String confirmPassword);
     void register(User user);
     void error(Integer errorCode);
-    void addMoreSocialView(LinearLayout lnContainer, SocialObject socialObject);
     ArrayList<SocialObject> getListSocialsRemainingItems();
     ArrayList<SocialObject> getListSocialsSelectedItems(LinearLayout lnContainer);
+    public void setSocialNetworkManager(SocialNetworkManager socialNetworkManager);
+    void addMoreSocialView(int socialNetworkID, SocialPerson socialPerson);
+    public void getSocialInfo(SocialObject socialObject);
 
 }

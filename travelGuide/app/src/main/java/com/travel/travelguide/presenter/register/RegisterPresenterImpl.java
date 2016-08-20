@@ -1,9 +1,7 @@
 package com.travel.travelguide.presenter.register;
 
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.LinearLayout;
-
+import com.github.gorbin.asne.core.SocialNetworkManager;
+import com.github.gorbin.asne.core.persons.SocialPerson;
 import com.travel.travelguide.Object.SocialObject;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.Ulti.Constants;
@@ -11,26 +9,41 @@ import com.travel.travelguide.Ulti.GeneralCallback;
 import com.travel.travelguide.Ulti.Ulti;
 import com.travel.travelguide.View.SocialItemEditText;
 import com.travel.travelguide.manager.UserManager;
+import com.travel.travelguide.presenter.BaseSocialPresenterImpl;
+
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
 /**
  * Created by user on 4/23/16.
  */
-public class RegisterPresenterImpl implements RegisterPresenter {
+public class RegisterPresenterImpl extends BaseSocialPresenterImpl implements RegisterPresenter {
 
     IRegisterView registerView;
     private final String TAG = RegisterPresenterImpl.class.getSimpleName();
     ArrayList<SocialObject> socialObjectsOriginal;
     ArrayList<SocialObject> socialObjectsSelected;
 
-    public RegisterPresenterImpl(IRegisterView registerView) {
+    SocialNetworkManager mSocialNetworkManager;
+
+    public RegisterPresenterImpl(FragmentManager fragmentManager, Fragment fragment, IRegisterView registerView) {
+        super(fragmentManager, fragment);
         this.registerView = registerView;
         socialObjectsOriginal = new ArrayList<>();
         socialObjectsOriginal.add(new SocialObject(SocialObject.FACEBOOK_TYPE, Constants.EMPTY_STRING));
         socialObjectsOriginal.add(new SocialObject(SocialObject.TWITTER_TYPE, Constants.EMPTY_STRING));
         socialObjectsOriginal.add(new SocialObject(SocialObject.INSTAGRAM_TYPE, Constants.EMPTY_STRING));
         socialObjectsSelected = new ArrayList<>();
+    }
+
+    @Override
+    public void setSocialNetworkManager(SocialNetworkManager socialNetworkManager) {
+        this.mSocialNetworkManager = socialNetworkManager;
     }
 
     @Override
@@ -105,7 +118,8 @@ public class RegisterPresenterImpl implements RegisterPresenter {
     }
 
     @Override
-    public void addMoreSocialView(LinearLayout lnContainer, final SocialObject socialObject) {
+    public void addMoreSocialView(int socialNetworkID, SocialPerson socialPerson) {
+        SocialObject socialObject = new SocialObject(socialNetworkID, Ulti.getSocialLink(socialPerson));
         SocialItemEditText socialItemView = new SocialItemEditText(registerView.getContext(), socialObject, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,9 +127,15 @@ public class RegisterPresenterImpl implements RegisterPresenter {
                 checkShowHideAddSocialButton();
             }
         });
-        lnContainer.addView(socialItemView);
+        registerView.getLayoutSocialContainer().addView(socialItemView);
         socialObjectsSelected.add(socialObject);
         checkShowHideAddSocialButton();
+
+    }
+
+    @Override
+    public void getSocialInfo(SocialObject socialObject){
+        requestDetailInfo(socialObject.getId());
     }
 
     private void checkShowHideAddSocialButton(){
@@ -146,5 +166,25 @@ public class RegisterPresenterImpl implements RegisterPresenter {
     }
 
 
+    @Override
+    public void onRequestDetailedSocialPersonSuccess(int socialNetworkID, SocialPerson socialPerson) {
+        super.onRequestDetailedSocialPersonSuccess(socialNetworkID, socialPerson);
+        int id = 0;
+        addMoreSocialView(socialNetworkID, socialPerson);
+        registerView.hideLoading();
+    }
 
+
+    @Override
+    public void onError(int socialNetworkID, String requestID, String errorMessage, Object data) {
+        super.onError(socialNetworkID, requestID, errorMessage, data);
+        int id = 0;
+        registerView.hideLoading();
+        registerView.showError(errorMessage);
+    }
+
+    @Override
+    public void startGetSocialInfo() {
+        registerView.showLoading();
+    }
 }

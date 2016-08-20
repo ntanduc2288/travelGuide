@@ -71,6 +71,11 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <!-- Account ntanduc -->
+        <meta-data
+                android:name="com.facebook.sdk.ApplicationId"
+                android:value="@string/facebook_app_id"
+        />
         <activity
             android:name=".activity.SplashActivity"
             android:screenOrientation="portrait">

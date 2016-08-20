@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Travel Guide</string>
+    <string name="app_name">Globetrot</string>
     <string name="title_activity_maps">Map</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -13,6 +13,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="facebook_app_id">167699543660781</string>
     <string name="name">Name</string>
     <string name="prompt_confirm_password">Confirm password</string>
     <string name="facebook_link">Facebook link</string>
@@ -430,11 +431,16 @@
     <string name="confirm_pass">Confirm pass</string>
     <string name="phone">Phone</string>
     <string name="languages">Languages</string>
-    <string name="about_traveltrot">About Traveltrot</string>
+    <string name="about_traveltrot">About Globetrot</string>
     <string name="add_a_comment">Add a comment</string>
     <string name="back"><![CDATA[< Back]]></string>
     <string name="number_of_people">Number of people</string>
     <string name="travel_itinerary">Travel itinerary</string>
     <string name="save">Save</string>
+    <string name="submit">Submit</string>
+    <string name="please_select_depart_and_return_date">Please select depart and return date
+    </string>
+    <string name="destination">Destination:</string>
+    <string name="us_uk">US, UK,...</string>
 
 </resources>

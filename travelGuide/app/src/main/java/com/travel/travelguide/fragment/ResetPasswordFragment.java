@@ -1,17 +1,17 @@
 package com.travel.travelguide.fragment;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.travel.travelguide.R;
+import com.travel.travelguide.presenter.resetPassword.IResetPasswordView;
+import com.travel.travelguide.presenter.resetPassword.ResetPasswordPresenter;
+import com.travel.travelguide.presenter.resetPassword.ResetPasswordPresenterImpl;
+
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.dd.processbutton.iml.ActionProcessButton;
-import com.travel.travelguide.R;
-import com.travel.travelguide.presenter.resetPassword.IResetPasswordView;
-import com.travel.travelguide.presenter.resetPassword.ResetPasswordPresenter;
-import com.travel.travelguide.presenter.resetPassword.ResetPasswordPresenterImpl;
 
 import butterknife.Bind;
 
@@ -22,7 +22,7 @@ public class ResetPasswordFragment extends BaseFragment implements IResetPasswor
     @Bind(R.id.email)
     AppCompatEditText txtEmail;
     @Bind(R.id.btnResetPassword)
-    ActionProcessButton btnResetPassword;
+    AppCompatButton btnResetPassword;
     @Bind(R.id.title)
     TextView lblTitle;
     @Bind(R.id.back_button)
@@ -44,7 +44,6 @@ public class ResetPasswordFragment extends BaseFragment implements IResetPasswor
     protected void setupViews() {
         lblTitle.setText(getString(R.string.forgot_password));
         resetPasswordPresenter = new ResetPasswordPresenterImpl(this);
-        btnResetPassword.setMode(ActionProcessButton.Mode.ENDLESS);
         btnResetPassword.setOnClickListener(this);
         btnBack.setOnClickListener(this);
     }
@@ -59,8 +58,6 @@ public class ResetPasswordFragment extends BaseFragment implements IResetPasswor
 
     @Override
     public void showLoading() {
-        btnResetPassword.setProgress(50);
-        btnResetPassword.setEnabled(false);
         if(dialog == null){
             dialog = new MaterialDialog.Builder(getActivity())
                     .content(R.string.loading_three_dot)
@@ -81,14 +78,10 @@ public class ResetPasswordFragment extends BaseFragment implements IResetPasswor
     @Override
     public void invalidEmail() {
         txtEmail.setError(getString(R.string.invalid_email));
-        btnResetPassword.setProgress(0);
-        btnResetPassword.setEnabled(true);
     }
 
     @Override
     public void showMessage(String message) {
-        btnResetPassword.setProgress(0);
-        btnResetPassword.setEnabled(true);
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 

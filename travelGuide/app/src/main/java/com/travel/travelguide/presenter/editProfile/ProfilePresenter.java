@@ -1,9 +1,10 @@
 package com.travel.travelguide.presenter.editProfile;
 
-import android.widget.LinearLayout;
-
+import com.github.gorbin.asne.core.persons.SocialPerson;
 import com.travel.travelguide.Object.SocialObject;
 import com.travel.travelguide.presenter.IBasePresenter;
+
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
@@ -18,8 +19,10 @@ public interface ProfilePresenter extends IBasePresenter{
     String getImageLocalPath();
     void switchMode();
     void error(Integer errorCode);
-    void addMoreSocialView(LinearLayout lnContainer, SocialObject socialObject);
     ArrayList<SocialObject> getListSocialsRemainingItems();
     ArrayList<SocialObject> getListSocialsSelectedItems(LinearLayout lnContainer);
+    void addMoreSocialView(int socialNetworkID, SocialPerson socialPerson);
+    void addMoreSocialView(SocialObject socialObject);
+    public void getSocialInfo(SocialObject socialObject);
 
 }

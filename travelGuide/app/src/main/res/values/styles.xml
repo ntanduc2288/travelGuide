@@ -40,6 +40,7 @@
     <style name="TextviewStyle" parent="Base.Widget.AppCompat.TextView.SpinnerItem">
         <item name="android:textColorHint">@color/colorPrimary</item>
         <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColorLink">@color/colorPrimary</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">@dimen/general_text_size</item>
     </style>
@@ -48,6 +49,7 @@
         <item name="android:textColorHint">@color/colorPrimary</item>
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textAllCaps">false</item>
+        <item name="android:textColorLink">@color/colorPrimary</item>
         <item name="android:gravity">left|center_vertical</item>
         <item name="android:layout_marginRight">0dp</item>
     </style>
@@ -56,6 +58,15 @@
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">@dimen/general_text_size</item>
+    </style>
+
+    <style name="general_button_style" parent="Base.Widget.AppCompat.Button">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">@dimen/general_text_size</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:background">@drawable/xml_bg_general_button</item>
     </style>
 
     <style name="button_left_menu" parent="buttonStyle">
@@ -88,6 +99,7 @@
     <style name="TextviewStyle_profile" parent="Base.Widget.AppCompat.TextView.SpinnerItem">
         <item name="android:textColor">@color/Gray</item>
         <item name="android:textAllCaps">false</item>
+        <item name="android:textColorLink">@color/colorPrimary</item>
         <item name="android:textSize">@dimen/general_text_size</item>
     </style>
 

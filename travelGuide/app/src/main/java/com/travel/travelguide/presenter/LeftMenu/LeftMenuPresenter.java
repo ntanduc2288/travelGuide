@@ -1,8 +1,8 @@
 package com.travel.travelguide.presenter.LeftMenu;
 
-import android.content.Context;
-
 import com.prolificinteractive.materialcalendarview.CalendarDay;
+
+import android.content.Context;
 
 import java.util.List;
 
@@ -16,10 +16,12 @@ public interface LeftMenuPresenter {
         void showLoading();
         void hideLoading();
         void showMessage(String message);
+        void showHideCalendar(boolean show);
+        void bindDestination(String destination);
         Context getContext();
     }
 
     public interface Presenter{
-        public void updateItineraryData(List<CalendarDay> calendarDays, String numberOfPeople);
+        public void updateItineraryData(List<CalendarDay> calendarDays, String numberOfPeople, String destination);
     }
 }

@@ -1,21 +1,5 @@
 package com.travel.travelguide.activity;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.AppCompatButton;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.applozic.mobicomkit.api.conversation.Message;
 import com.applozic.mobicomkit.uiwidgets.conversation.ConversationUIService;
@@ -39,10 +23,29 @@ import com.travel.travelguide.presenter.main.MainPresenter;
 import com.travel.travelguide.presenter.main.MainPresenterImpl;
 import com.yalantis.ucrop.UCrop;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatEditText;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.Calendar;
 
 import butterknife.Bind;
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.travel.travelguide.Ulti.Constants.SOCIAL_NETWORK_TAG;
 
 /**
  * Created by user on 4/23/16.
@@ -83,7 +86,9 @@ public class MainActivity extends BaseActivity implements MessageCommunicator, V
     @Bind(R.id.save_calendar)
     AppCompatButton btnSaveItinerary;
     @Bind(R.id.number_of_people_test)
-    EditText txtNumberOfPeople;
+    AppCompatEditText txtNumberOfPeople;
+    @Bind(R.id.destination)
+    AppCompatEditText txtDestination;
 
     LeftMenuPresenter.Presenter leftMenuPresenter;
 
@@ -154,7 +159,7 @@ public class MainActivity extends BaseActivity implements MessageCommunicator, V
         if (requestCode == UCrop.REQUEST_CROP) {
             for (int i = 0; i < getSupportFragmentManager().getFragments().size(); i++) {
                 try {
-                    android.support.v4.app.Fragment fragment = getSupportFragmentManager().getFragments().get(i);
+                    Fragment fragment = getSupportFragmentManager().getFragments().get(i);
                     if (fragment != null) {
                         fragment.onActivityResult(requestCode, resultCode, data);
                     }
@@ -162,6 +167,11 @@ public class MainActivity extends BaseActivity implements MessageCommunicator, V
                     e.printStackTrace();
                 }
             }
+        }
+
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(SOCIAL_NETWORK_TAG);
+        if (fragment != null) {
+            fragment.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -201,10 +211,11 @@ public class MainActivity extends BaseActivity implements MessageCommunicator, V
                 break;
             case R.id.button_add_edit_travel_itinerary:
                 showHideCalendar(true);
+                bindDestination(UserManager.getInstance().getCurrentUser().getDestination());
                 break;
             case R.id.invite_friends:
                 drawerLayout.closeDrawer(GravityCompat.START);
-                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
                 startActivity(Intent.createChooser(sharingIntent, "Invite via:"));
 
@@ -217,7 +228,7 @@ public class MainActivity extends BaseActivity implements MessageCommunicator, V
                 showHideCalendar(false);
                 break;
             case R.id.save_calendar:
-                leftMenuPresenter.updateItineraryData(materialCalendarView.getSelectedDates(), txtNumberOfPeople.getText().toString());
+                leftMenuPresenter.updateItineraryData(materialCalendarView.getSelectedDates(), txtNumberOfPeople.getText().toString().trim(), txtDestination.getText().toString().trim());
                 break;
         }
 
@@ -237,7 +248,7 @@ public class MainActivity extends BaseActivity implements MessageCommunicator, V
 
                 break;
             case R.id.invite_friends:
-                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
                 startActivity(Intent.createChooser(sharingIntent, "Invite via:"));
                 break;
@@ -310,14 +321,15 @@ public class MainActivity extends BaseActivity implements MessageCommunicator, V
         }
     }
 
-    private void showHideCalendar(boolean show) {
+    @Override
+    public void showHideCalendar(boolean show) {
         if (show) {
             lnCalendarContainer.setVisibility(View.VISIBLE);
             leftMenuContainer.setVisibility(View.GONE);
             long travelFrom = UserManager.getInstance().getCurrentUser().getTravelDateFrom();
             long travelTo = UserManager.getInstance().getCurrentUser().getTravelDateTo();
 
-            if(travelFrom != 0 && travelTo != 0){
+            if (travelFrom != 0 && travelTo != 0) {
                 Calendar calendarStart = Calendar.getInstance();
                 calendarStart.setTimeInMillis(travelFrom);
                 Calendar calendarEnd = Calendar.getInstance();
@@ -334,5 +346,10 @@ public class MainActivity extends BaseActivity implements MessageCommunicator, V
             lnCalendarContainer.setVisibility(View.GONE);
             leftMenuContainer.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void bindDestination(String destination) {
+        txtDestination.setText(destination);
     }
 }

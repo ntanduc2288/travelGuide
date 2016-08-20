@@ -1,8 +1,9 @@
 package com.travel.travelguide.presenter.editProfile;
 
-import android.content.Context;
-
 import com.travel.travelguide.Object.User;
+
+import android.content.Context;
+import android.widget.LinearLayout;
 
 /**
  * Created by user on 4/29/16.
@@ -21,4 +22,5 @@ public interface IEditProfileView {
     void hideAddSocialButton();
     void updateUserInfoSuccessfull(User user);
     void gotoLoginScreen();
+    LinearLayout getLayoutSocialContainer();
 }

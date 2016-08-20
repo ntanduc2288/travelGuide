@@ -66,45 +66,22 @@
 
 
 
-                <com.dd.processbutton.iml.ActionProcessButton
+                <android.support.v7.widget.AppCompatButton
                     android:id="@+id/btnSignIn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/general_button_style"
                     android:text="@string/log_in"
                     android:layout_weight="1"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    android:layout_marginRight="5dp"
-                    custom:pb_colorComplete="@color/colorPrimary"
-                    custom:pb_colorError="@color/red_error"
-                    custom:pb_colorNormal="@color/colorPrimary"
-                    custom:pb_colorPressed="@color/colorPrimaryDark"
-                    custom:pb_colorProgress="@color/purple_progress"
-                    custom:pb_textComplete="@string/success"
-                    custom:pb_textError="@string/error"
-                    custom:pb_textProgress="@string/loading_dot" />
+                     />
 
 
 
-                <com.dd.processbutton.iml.ActionProcessButton
+                <android.support.v7.widget.AppCompatButton
                     android:id="@+id/btnRegister"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/general_button_style"
                     android:layout_weight="1"
                     android:layout_marginLeft="5dp"
                     android:text="@string/create_account"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    custom:pb_colorComplete="@color/green_complete"
-                    custom:pb_colorError="@color/red_error"
-                    custom:pb_colorNormal="@color/blue_normal"
-                    custom:pb_colorPressed="@color/blue_pressed"
-                    custom:pb_colorProgress="@color/purple_progress"
-                    custom:pb_textComplete="Success"
-                    custom:pb_textError="Error"
-                    custom:pb_textProgress="Loading" />
+                     />
 
 
         </LinearLayout>

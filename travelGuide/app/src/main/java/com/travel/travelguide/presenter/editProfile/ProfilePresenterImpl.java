@@ -1,16 +1,11 @@
 package com.travel.travelguide.presenter.editProfile;
 
-import android.graphics.Bitmap;
-import android.os.Environment;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.LinearLayout;
-
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.files.BackendlessFile;
+import com.github.gorbin.asne.core.persons.SocialPerson;
 import com.travel.travelguide.Object.SocialObject;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
@@ -18,8 +13,18 @@ import com.travel.travelguide.Ulti.Constants;
 import com.travel.travelguide.Ulti.CropImageUlti;
 import com.travel.travelguide.Ulti.EvenBusHelper;
 import com.travel.travelguide.Ulti.LogUtils;
+import com.travel.travelguide.Ulti.Ulti;
 import com.travel.travelguide.View.SocialItemEditText;
 import com.travel.travelguide.manager.UserManager;
+import com.travel.travelguide.presenter.BaseSocialPresenterImpl;
+
+import android.graphics.Bitmap;
+import android.os.Environment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,7 +40,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by user on 4/29/16.
  */
-public class ProfilePresenterImpl implements ProfilePresenter {
+public class ProfilePresenterImpl extends BaseSocialPresenterImpl implements ProfilePresenter {
     private final String TAG = ProfilePresenterImpl.class.getSimpleName();
     IEditProfileView profileView;
     User user;
@@ -47,7 +52,8 @@ public class ProfilePresenterImpl implements ProfilePresenter {
     ArrayList<SocialObject> socialObjectsSelected;
     String avatarLocalFile = "";
 
-    public ProfilePresenterImpl(IEditProfileView profileView, User user) {
+    public ProfilePresenterImpl(FragmentManager fragmentManager, Fragment fragment, IEditProfileView profileView, User user) {
+        super(fragmentManager, fragment);
         this.profileView = profileView;
         this.user = user;
         isMyProfileView = user.getbackendlessUserId().equalsIgnoreCase(UserManager.getInstance().getCurrentUser().getbackendlessUserId());
@@ -240,7 +246,13 @@ public class ProfilePresenterImpl implements ProfilePresenter {
     }
 
     @Override
-    public void addMoreSocialView(LinearLayout lnContainer, final SocialObject socialObject) {
+    public void addMoreSocialView(int socialNetworkID, SocialPerson socialPerson) {
+        SocialObject socialObject = new SocialObject(socialNetworkID, Ulti.getSocialLink(socialPerson));
+       addMoreSocialView(socialObject);
+    }
+
+    @Override
+    public void addMoreSocialView(SocialObject socialObject) {
         SocialItemEditText socialItemView = new SocialItemEditText(profileView.getContext(), socialObject, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -248,10 +260,16 @@ public class ProfilePresenterImpl implements ProfilePresenter {
                 checkShowHideAddSocialButton();
             }
         });
-        lnContainer.addView(socialItemView);
+        profileView.getLayoutSocialContainer().addView(socialItemView);
         socialObjectsSelected.add(socialObject);
         checkShowHideAddSocialButton();
     }
+
+    @Override
+    public void getSocialInfo(SocialObject socialObject) {
+        requestDetailInfo(socialObject.getId());
+    }
+
 
     private void checkShowHideAddSocialButton(){
         if(socialObjectsSelected.size() == socialObjectsOriginal.size()){
@@ -262,4 +280,25 @@ public class ProfilePresenterImpl implements ProfilePresenter {
     }
 
 
+    @Override
+    public void startGetSocialInfo() {
+        profileView.showLoading();
+    }
+
+    @Override
+    public void onRequestDetailedSocialPersonSuccess(int socialNetworkID, SocialPerson socialPerson) {
+        super.onRequestDetailedSocialPersonSuccess(socialNetworkID, socialPerson);
+        int id = 0;
+        addMoreSocialView(socialNetworkID, socialPerson);
+        profileView.hideLoading();
+    }
+
+
+    @Override
+    public void onError(int socialNetworkID, String requestID, String errorMessage, Object data) {
+        super.onError(socialNetworkID, requestID, errorMessage, data);
+        int id = 0;
+        profileView.hideLoading();
+        profileView.showMessage(errorMessage);
+    }
 }

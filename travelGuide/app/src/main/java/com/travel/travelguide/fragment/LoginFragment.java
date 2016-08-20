@@ -1,18 +1,18 @@
 package com.travel.travelguide.fragment;
 
-import android.support.v7.widget.AppCompatEditText;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
-
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.dd.processbutton.iml.ActionProcessButton;
 import com.travel.travelguide.R;
 import com.travel.travelguide.activity.MainActivity;
 import com.travel.travelguide.manager.TransactionManager;
 import com.travel.travelguide.presenter.Login.ILoginView;
 import com.travel.travelguide.presenter.Login.LoginPresenter;
 import com.travel.travelguide.presenter.Login.LoginPresenterImpl;
+
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatEditText;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import butterknife.Bind;
 
@@ -25,9 +25,9 @@ public class LoginFragment extends BaseFragment implements ILoginView, View.OnCl
     @Bind(R.id.password)
     AppCompatEditText txtPassword;
     @Bind(R.id.btnSignIn)
-    ActionProcessButton btnActionSignIn;
+    AppCompatButton btnActionSignIn;
     @Bind(R.id.btnRegister)
-    ActionProcessButton btnActionRegister;
+    AppCompatButton btnActionRegister;
     @Bind(R.id.forgot_password)
     Button btnForgotPassword;
     MaterialDialog dialog;
@@ -49,15 +49,12 @@ public class LoginFragment extends BaseFragment implements ILoginView, View.OnCl
     protected void setupViews() {
         loginPresenter = new LoginPresenterImpl(getActivity().getApplicationContext(),this);
         btnActionSignIn.setOnClickListener(this);
-        btnActionSignIn.setMode(ActionProcessButton.Mode.ENDLESS);
         btnActionRegister.setOnClickListener(this);
         btnForgotPassword.setOnClickListener(this);
     }
 
     @Override
     public void showLoading() {
-        btnActionSignIn.setProgress(50);
-        shouldEnableButtons(false);
         if(dialog == null){
             dialog = new MaterialDialog.Builder(getActivity())
                     .content(R.string.waiting_dot)
@@ -71,7 +68,6 @@ public class LoginFragment extends BaseFragment implements ILoginView, View.OnCl
 
     @Override
     public void hideLoading() {
-        shouldEnableButtons(true);
         if(dialog != null){
             dialog.dismiss();
         }
@@ -80,19 +76,16 @@ public class LoginFragment extends BaseFragment implements ILoginView, View.OnCl
     @Override
     public void invalidEmail() {
         txtEmail.setError(getString(R.string.invalid_email));
-        btnActionSignIn.setProgress(0);
 
     }
 
     @Override
     public void invalidPassword() {
         txtPassword.setError(getString(R.string.invalid_password));
-        btnActionSignIn.setProgress(0);
     }
 
     @Override
     public void showError(Integer errorCode) {
-        btnActionSignIn.setProgress(0);
         Toast.makeText(getActivity(), "Error code: " + errorCode, Toast.LENGTH_SHORT).show();
     }
 
@@ -104,7 +97,6 @@ public class LoginFragment extends BaseFragment implements ILoginView, View.OnCl
 
     @Override
     public void gotoMapScreen() {
-        btnActionSignIn.setProgress(100);
         TransactionManager.getInstance().gotoActivity(getActivity(), MainActivity.class, null, true);
     }
 

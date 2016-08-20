@@ -10,6 +10,8 @@ import com.travel.travelguide.R;
 import com.travel.travelguide.Ulti.LogUtils;
 import com.travel.travelguide.manager.UserManager;
 
+import android.text.TextUtils;
+
 import java.util.List;
 
 /**
@@ -26,7 +28,7 @@ public class LeftMenuPresenterImpl implements LeftMenuPresenter.Presenter {
     }
 
     @Override
-    public void updateItineraryData(List<CalendarDay> calendarDays, String numberOfPeople) {
+    public void updateItineraryData(List<CalendarDay> calendarDays, String numberOfPeople, String destination) {
         leftMenuView.showLoading();
         long startDate = 0;
         long endDate = 0;
@@ -43,6 +45,12 @@ public class LeftMenuPresenterImpl implements LeftMenuPresenter.Presenter {
             return;
         }
 
+        if(TextUtils.isEmpty(destination)){
+            leftMenuView.hideLoading();
+            leftMenuView.showMessage("Please input your destination");
+            return;
+        }
+
         User user = new User(UserManager.getInstance().getCurrentUser());
         user.setTravelDateFrom(startDate);
         user.setTravelDateTo(endDate);
@@ -51,6 +59,8 @@ public class LeftMenuPresenterImpl implements LeftMenuPresenter.Presenter {
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        user.setDestination(destination);
 
         Backendless.UserService.update(user, new AsyncCallback<BackendlessUser>() {
             @Override

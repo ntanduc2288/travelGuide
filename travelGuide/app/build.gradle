@@ -1,17 +1,21 @@
 buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
+        mavenCentral()
     }
 
     dependencies {
         classpath 'io.fabric.tools:gradle:1.+'
+        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
     }
 }
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
+apply plugin: 'me.tatarka.retrolambda'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    mavenCentral()
 }
 
 
@@ -27,7 +31,7 @@ android {
     compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion rootProject.buildToolsVersion
     defaultConfig {
-        applicationId "com.travel.travelguide"
+        applicationId "com.travel.globetrot"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
@@ -38,7 +42,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.Release_config
         }
@@ -69,11 +73,12 @@ android {
         exclude 'META-INF/ECLIPSE_.SF'
         exclude 'META-INF/ECLIPSE_.RSA'
     }
-    buildTypes {
-        release {
-            signingConfig signingConfigs.Release_config
-        }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
+
 }
 
 dependencies {
@@ -125,4 +130,10 @@ dependencies {
     compile project(':mobicomkitui')
 
     compile 'com.prolificinteractive:material-calendarview:1.4.0'
+
+
+    //Social network library
+    compile 'com.github.asne:asne-twitter:0.3.3'
+    compile 'com.github.asne:asne-instagram:0.3.3'
+    compile project(':asnefacebook')
 }

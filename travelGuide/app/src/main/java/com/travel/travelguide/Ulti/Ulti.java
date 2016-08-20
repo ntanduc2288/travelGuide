@@ -1,16 +1,21 @@
 package com.travel.travelguide.Ulti;
 
-import android.content.Context;
-import android.text.TextUtils;
-
 import com.backendless.BackendlessUser;
 import com.backendless.geo.GeoPoint;
+import com.github.gorbin.asne.core.persons.SocialPerson;
+import com.github.gorbin.asne.instagram.InstagramPerson;
+import com.github.gorbin.asne.twitter.TwitterPerson;
 import com.travel.travelguide.Object.Languages;
 
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
+import android.content.Context;
+import android.text.TextUtils;
+
 import java.util.Map;
+
+import vinasource.com.asnefacebook.FacebookPerson;
 
 /**
  * Created by user on 4/22/16.
@@ -56,6 +61,22 @@ public class Ulti {
         }
 
         return languages;
+    }
+
+    public static String getSocialLink(SocialPerson socialPerson){
+        String result;
+
+        if(socialPerson instanceof FacebookPerson){
+            result = "https://www.facebook.com/" + socialPerson.id;
+        }else if (socialPerson instanceof TwitterPerson){
+            result = "https://twitter.com/" + ((TwitterPerson) socialPerson).screenName;
+        }else if (socialPerson instanceof InstagramPerson){
+            result = socialPerson.profileURL;
+        }else {
+            result = socialPerson.name;
+        }
+
+        return result;
     }
 
 

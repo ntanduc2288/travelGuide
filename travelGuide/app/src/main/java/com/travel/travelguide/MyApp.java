@@ -1,10 +1,5 @@
 package com.travel.travelguide;
 
-import android.app.Application;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.support.multidex.MultiDex;
-
 import com.applozic.mobicomkit.ApplozicClient;
 import com.applozic.mobicomkit.uiwidgets.ApplozicSetting;
 import com.backendless.Backendless;
@@ -16,6 +11,11 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+
+import android.app.Application;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.support.multidex.MultiDex;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -41,6 +41,7 @@ public class MyApp extends Application {
         initApplozic();
         initImageloader();
     }
+
 
     private void initApplozic() {
 //        Show/Hide Green Dot for Online

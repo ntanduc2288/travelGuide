@@ -62,6 +62,9 @@ public class User extends BackendlessUser {
     @DatabaseField
     int numberOfPeople = 0;
 
+    @DatabaseField
+    String destination = Constants.EMPTY_STRING;
+
 
     public User(){
 
@@ -95,6 +98,7 @@ public class User extends BackendlessUser {
         }
         setQbUserId((Integer) backendlessUser.getProperty(Constants.KEY_QBLOX_USER_ID));
         setNumberOfPeople((Integer) backendlessUser.getProperty(Constants.KEY_NUMBER_OF_PEOPLE));
+        setDestination((String) backendlessUser.getProperty(Constants.KEY_DESTINATION));
     }
 
     public int getNumberOfPeople() {
@@ -104,6 +108,15 @@ public class User extends BackendlessUser {
     public void setNumberOfPeople(int numberOfPeople) {
         this.numberOfPeople = numberOfPeople;
         setProperty(Constants.KEY_NUMBER_OF_PEOPLE, numberOfPeople);
+    }
+
+    public String getDestination(){
+        return destination;
+    }
+
+    public void setDestination(String destination){
+        this.destination = destination;
+        setProperty(Constants.KEY_DESTINATION, destination);
     }
 
     public int getQbUserId() {
@@ -323,5 +336,6 @@ public class User extends BackendlessUser {
         setInterest(other.interest);
         setQbUserId(other.qbUserId);
         setNumberOfPeople(other.numberOfPeople);
+        setDestination(other.destination);
     }
 }

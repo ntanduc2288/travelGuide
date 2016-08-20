@@ -1,12 +1,11 @@
 package com.travel.travelguide.View;
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.LinearLayout;
-
 import com.travel.travelguide.Object.SocialObject;
 import com.travel.travelguide.R;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
@@ -43,12 +42,7 @@ public class SocialPickerView extends LinearLayout {
         lnContainer.removeAllViews();
         for (final SocialObject socialObject : socialObjects) {
             SocialPickerItem socialPickerItem = new SocialPickerItem(getContext(), socialObject);
-            socialPickerItem.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    selectedSocialCallback.itemSelected(socialObject);
-                }
-            });
+            socialPickerItem.setOnClickListener(v -> selectedSocialCallback.itemSelected(socialObject));
             lnContainer.addView(socialPickerItem);
         }
     }

@@ -1,17 +1,5 @@
 package com.travel.travelguide.fragment;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.widget.AppCompatTextView;
-import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.Toast;
-
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
@@ -22,15 +10,16 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.otto.Subscribe;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
-import com.travel.travelguide.Ulti.Constants;
 import com.travel.travelguide.Ulti.EvenBusHelper;
 import com.travel.travelguide.Ulti.LogUtils;
 import com.travel.travelguide.activity.LoginActivity;
@@ -40,6 +29,17 @@ import com.travel.travelguide.manager.UserManager;
 import com.travel.travelguide.presenter.MapGuide.IMapGuideView;
 import com.travel.travelguide.presenter.MapGuide.MapGuidePresenter;
 import com.travel.travelguide.presenter.MapGuide.MapGuidePresneterImpl;
+
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.AppCompatTextView;
+import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -122,29 +122,18 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
 //        mMap.getUiSettings().setZoomControlsEnabled(true);
 
-        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-            @Override
-            public void onCameraChange(CameraPosition cameraPosition) {
-                mMap.getProjection().getVisibleRegion();
-                LogUtils.logD(TAG, "Zoom level: " + cameraPosition.zoom);
-                mapGuidePresenter.cameraChanged(mMap);
-            }
+        mMap.setOnCameraChangeListener(cameraPosition -> {
+            mMap.getProjection().getVisibleRegion();
+            LogUtils.logD(TAG, "Zoom level: " + cameraPosition.zoom);
+            mapGuidePresenter.cameraChanged(mMap);
         });
 
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                marker.showInfoWindow();
-                return true;
-            }
+        mMap.setOnMarkerClickListener(marker -> {
+            marker.showInfoWindow();
+            return true;
         });
 
-        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker marker) {
-                mapGuidePresenter.getProfileUserInfoFromUser(marker);
-            }
-        });
+        mMap.setOnInfoWindowClickListener(marker -> mapGuidePresenter.getProfileUserInfoFromUser(marker));
 
     }
 
@@ -244,14 +233,10 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
     public void onPlaceSelected(Place place) {
         Log.i(TAG, "Place name: " + place.getName());
         Log.i(TAG, "Place Address: " + place.getAddress());
-        float zoomLevel = Constants.DEFAULT_ZOOM_LEVEL;
-        String[] address = place.getAddress().toString().split(",");
-        if(address != null && address.length == 1){
-            zoomLevel = Constants.COUNTRY_ZOOM_LEVEL;
-        }
 
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(place.getLatLng(), zoomLevel);
-        zoomToLevel(cameraUpdate);
+        LatLngBounds latLngBounds = place.getViewport();
+        zoomToLevel(CameraUpdateFactory.newLatLngBounds(latLngBounds, 3));
+
     }
 
     @Override

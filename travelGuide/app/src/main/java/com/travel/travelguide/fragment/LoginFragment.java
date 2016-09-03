@@ -1,5 +1,11 @@
 package com.travel.travelguide.fragment;
 
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatEditText;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
+
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.travel.travelguide.R;
 import com.travel.travelguide.activity.MainActivity;
@@ -7,12 +13,6 @@ import com.travel.travelguide.manager.TransactionManager;
 import com.travel.travelguide.presenter.Login.ILoginView;
 import com.travel.travelguide.presenter.Login.LoginPresenter;
 import com.travel.travelguide.presenter.Login.LoginPresenterImpl;
-
-import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatEditText;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import butterknife.Bind;
 
@@ -42,7 +42,7 @@ public class LoginFragment extends BaseFragment implements ILoginView, View.OnCl
 
     @Override
     protected int getLayoutId() {
-        return R.layout.login_fragment;
+        return R.layout.login_fragment2;
     }
 
     @Override

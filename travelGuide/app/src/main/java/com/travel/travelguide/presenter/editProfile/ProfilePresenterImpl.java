@@ -1,5 +1,13 @@
 package com.travel.travelguide.presenter.editProfile;
 
+import android.graphics.Bitmap;
+import android.os.Environment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.LinearLayout;
+
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
@@ -17,14 +25,6 @@ import com.travel.travelguide.Ulti.Ulti;
 import com.travel.travelguide.View.SocialItemEditText;
 import com.travel.travelguide.manager.UserManager;
 import com.travel.travelguide.presenter.BaseSocialPresenterImpl;
-
-import android.graphics.Bitmap;
-import android.os.Environment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.LinearLayout;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -258,11 +258,13 @@ public class ProfilePresenterImpl extends BaseSocialPresenterImpl implements Pro
             public void onClick(View v) {
                 socialObjectsSelected.remove(socialObject);
                 checkShowHideAddSocialButton();
+                profileView.initSocialPicker();
             }
         });
         profileView.getLayoutSocialContainer().addView(socialItemView);
         socialObjectsSelected.add(socialObject);
         checkShowHideAddSocialButton();
+        profileView.initSocialPicker();
     }
 
     @Override
@@ -273,9 +275,9 @@ public class ProfilePresenterImpl extends BaseSocialPresenterImpl implements Pro
 
     private void checkShowHideAddSocialButton(){
         if(socialObjectsSelected.size() == socialObjectsOriginal.size()){
-            profileView.hideAddSocialButton();
+            profileView.hideAddSocialIconView();
         }else {
-            profileView.showAddSocialButton();
+            profileView.showAddSocialIconView();
         }
     }
 

@@ -18,4 +18,5 @@
     <dimen name="regist_width">120dp</dimen>
     <dimen name="regist_height">40dp</dimen>
     <dimen name="corner_radius">3dp</dimen>
+    <dimen name="social_icon">40dp</dimen>
 </resources>

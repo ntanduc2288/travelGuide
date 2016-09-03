@@ -1,5 +1,11 @@
 package com.travel.travelguide.presenter.register;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.LinearLayout;
+
 import com.github.gorbin.asne.core.SocialNetworkManager;
 import com.github.gorbin.asne.core.persons.SocialPerson;
 import com.travel.travelguide.Object.SocialObject;
@@ -10,12 +16,6 @@ import com.travel.travelguide.Ulti.Ulti;
 import com.travel.travelguide.View.SocialItemEditText;
 import com.travel.travelguide.manager.UserManager;
 import com.travel.travelguide.presenter.BaseSocialPresenterImpl;
-
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
@@ -124,12 +124,14 @@ public class RegisterPresenterImpl extends BaseSocialPresenterImpl implements Re
             @Override
             public void onClick(View v) {
                 socialObjectsSelected.remove(socialObject);
+                registerView.initSocialPicker();
                 checkShowHideAddSocialButton();
             }
         });
         registerView.getLayoutSocialContainer().addView(socialItemView);
         socialObjectsSelected.add(socialObject);
         checkShowHideAddSocialButton();
+        registerView.initSocialPicker();
 
     }
 
@@ -140,9 +142,9 @@ public class RegisterPresenterImpl extends BaseSocialPresenterImpl implements Re
 
     private void checkShowHideAddSocialButton(){
         if(socialObjectsSelected.size() == socialObjectsOriginal.size()){
-            registerView.hideAddSocialButton();
+            registerView.hideAddSocialIconView();
         }else {
-            registerView.showAddSocialButton();
+            registerView.showAddSocialIconView();
         }
     }
 

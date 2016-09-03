@@ -1,31 +1,5 @@
 package com.travel.travelguide.fragment;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
-
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.backendless.geo.GeoPoint;
-import com.dd.processbutton.iml.ActionProcessButton;
-import com.michael.easydialog.EasyDialog;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.travel.travelguide.Object.SocialObject;
-import com.travel.travelguide.Object.User;
-import com.travel.travelguide.R;
-import com.travel.travelguide.Ulti.Constants;
-import com.travel.travelguide.Ulti.CropImageUlti;
-import com.travel.travelguide.Ulti.Ulti;
-import com.travel.travelguide.View.MultiSelectionSpinner;
-import com.travel.travelguide.View.SocialPickerView;
-import com.travel.travelguide.activity.LoginActivity;
-import com.travel.travelguide.manager.TransactionManager;
-import com.travel.travelguide.manager.UserManager;
-import com.travel.travelguide.presenter.editProfile.IEditProfileView;
-import com.travel.travelguide.presenter.editProfile.ProfilePresenter;
-import com.travel.travelguide.presenter.editProfile.ProfilePresenterImpl;
-import com.yalantis.ucrop.UCrop;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -51,6 +25,31 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.backendless.geo.GeoPoint;
+import com.dd.processbutton.iml.ActionProcessButton;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.michael.easydialog.EasyDialog;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.travel.travelguide.Object.SocialObject;
+import com.travel.travelguide.Object.User;
+import com.travel.travelguide.R;
+import com.travel.travelguide.Ulti.Constants;
+import com.travel.travelguide.Ulti.CropImageUlti;
+import com.travel.travelguide.Ulti.Ulti;
+import com.travel.travelguide.View.MultiSelectionSpinner;
+import com.travel.travelguide.View.SocialPickerView;
+import com.travel.travelguide.activity.LoginActivity;
+import com.travel.travelguide.manager.TransactionManager;
+import com.travel.travelguide.manager.UserManager;
+import com.travel.travelguide.presenter.editProfile.IEditProfileView;
+import com.travel.travelguide.presenter.editProfile.ProfilePresenter;
+import com.travel.travelguide.presenter.editProfile.ProfilePresenterImpl;
+import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
 import java.util.List;
@@ -116,6 +115,10 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
     LinearLayout lnPasswordContainer;
     @Bind(R.id.confirm_password_container)
     LinearLayout lnConfirmPassworContainer;
+    @Bind(R.id.linearlayout_social_icon_container)
+    LinearLayout lnSocialIconContainer;
+    @Bind(R.id.separate_add_view)
+    View separateAddView;
 
     private SocialPickerView socialPickerView;
     private EasyDialog easyDialog;
@@ -224,6 +227,8 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
         if(!TextUtils.isEmpty(user.getTwitterLink())){
             profilePresenter.addMoreSocialView(new SocialObject(SocialObject.TWITTER_TYPE, user.getTwitterLink()));
         }
+
+        initSocialPicker();
 
     }
 
@@ -346,7 +351,8 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
 
     }
 
-    private void initSocialPicker() {
+    @Override
+    public void initSocialPicker() {
         socialPickerView = new SocialPickerView(getActivity(), profilePresenter.getListSocialsRemainingItems(), new SocialPickerView.SelectedSocialCallback() {
             @Override
             public void itemSelected(SocialObject socialObject) {
@@ -356,6 +362,9 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
                 }
             }
         });
+
+        lnSocialIconContainer.removeAllViews();
+        lnSocialIconContainer.addView(socialPickerView);
     }
 
     private void editButtonCLicked() {
@@ -533,13 +542,17 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
     }
 
     @Override
-    public void showAddSocialButton() {
-        btnAddSocialLink.setVisibility(View.VISIBLE);
+    public void showAddSocialIconView() {
+        lnSocialIconContainer.setVisibility(View.VISIBLE);
+        btnAddSocialLink.setVisibility(View.GONE);
+        separateAddView.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void hideAddSocialButton() {
+    public void hideAddSocialIconView() {
+        lnSocialIconContainer.setVisibility(View.GONE);
         btnAddSocialLink.setVisibility(View.GONE);
+        separateAddView.setVisibility(View.GONE);
     }
 
     @Override

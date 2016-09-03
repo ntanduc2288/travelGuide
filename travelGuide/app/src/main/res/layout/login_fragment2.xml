@@ -1,5 +1,4 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_white"
@@ -7,18 +6,18 @@
 
 
     <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/headerfs"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/bg_map" />
+        android:id="@+id/headerfs"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_map" />
 
     <LinearLayout
-            android:layout_centerInParent="true"
         android:id="@+id/email_login_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/header"
+        android:layout_centerInParent="true"
         android:layout_margin="10dp"
         android:background="@drawable/xml_bg_white_rounded_no_border"
         android:orientation="vertical"
@@ -68,23 +67,19 @@
             android:orientation="horizontal">
 
 
-
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/btnSignIn"
-                    style="@style/general_button_style"
-                    android:text="@string/log_in"
-                    android:layout_weight="1"
-                     />
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btnSignIn"
+                style="@style/general_button_style"
+                android:layout_weight="1"
+                android:text="@string/log_in" />
 
 
-
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/btnRegister"
-                    style="@style/general_button_style"
-                    android:layout_weight="1"
-                    android:layout_marginLeft="5dp"
-                    android:text="@string/create_account"
-                     />
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btnRegister"
+                style="@style/general_button_style"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:text="@string/create_account" />
 
 
         </LinearLayout>

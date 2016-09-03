@@ -1,5 +1,22 @@
 package com.travel.travelguide.fragment;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatEditText;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.backendless.geo.GeoPoint;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -7,9 +24,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
-
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.backendless.geo.GeoPoint;
 import com.michael.easydialog.EasyDialog;
 import com.travel.travelguide.Object.SocialObject;
 import com.travel.travelguide.Object.User;
@@ -24,49 +38,45 @@ import com.travel.travelguide.presenter.register.IRegisterView;
 import com.travel.travelguide.presenter.register.RegisterPresenter;
 import com.travel.travelguide.presenter.register.RegisterPresenterImpl;
 
-import android.content.Context;
-import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatEditText;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by user on 4/23/16.
  */
-public class RegisterFragment extends BaseFragment implements IRegisterView, View.OnClickListener, MultiSelectionSpinner.OnMultipleItemsSelectedListener{
+public class RegisterFragment extends BaseFragment implements IRegisterView, View.OnClickListener, MultiSelectionSpinner.OnMultipleItemsSelectedListener {
     @Bind(R.id.email)
     AppCompatEditText txtEmail;
     @Bind(R.id.password)
     AppCompatEditText txtPassword;
     @Bind(R.id.btnRegister)
     AppCompatButton btnActionRegister;
-    @Bind(R.id.name) AppCompatEditText txtName;
-    @Bind(R.id.confirm_password) AppCompatEditText txtConfirmPassword;
+    @Bind(R.id.name)
+    AppCompatEditText txtName;
+    @Bind(R.id.confirm_password)
+    AppCompatEditText txtConfirmPassword;
     @Bind(R.id.location)
     AppCompatButton lblLocation;
     @Bind(R.id.title)
     TextView lblTitle;
     @Bind(R.id.back_button)
     AppCompatButton btnBack;
-    @Bind(R.id.phone) AppCompatEditText txtPhone;
+    @Bind(R.id.phone)
+    AppCompatEditText txtPhone;
     @Bind(R.id.language)
     MultiSelectionSpinner spnLanguage;
     @Bind(R.id.lnSocialContainer)
     LinearLayout lnSocialContainer;
-    @Bind(R.id.button_add_social) AppCompatButton btnAddSocialLink;
-    @Bind(R.id.interest) AppCompatEditText txtInterest;
-    @Bind(R.id.separate_add_view) View separateAddView;
-
+    @Bind(R.id.button_add_social)
+    AppCompatButton btnAddSocialLink;
+    @Bind(R.id.interest)
+    AppCompatEditText txtInterest;
+    @Bind(R.id.separate_add_view)
+    View separateAddView;
+    @Bind(R.id.linearlayout_social_icon_container)
+    LinearLayout lnSocialIconContainer;
     GoogleApiClient googleApiClient;
     RegisterPresenter registerPresenter;
     private Place place;
@@ -75,7 +85,7 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
     private EasyDialog easyDialog;
 
 
-    public static RegisterFragment newInstance(){
+    public static RegisterFragment newInstance() {
         return new RegisterFragment();
     }
 
@@ -112,11 +122,13 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
 //        spnLanguage.setSelection(28);
         spnLanguage.setSelection(new String[]{Constants.DEFAULT_LANGUAGE});
         spnLanguage.setListener(this);
+
+        initSocialPicker();
     }
 
     @Override
     public void showLoading() {
-        if(dialog == null){
+        if (dialog == null) {
             dialog = new MaterialDialog.Builder(getActivity())
                     .content(R.string.loading_three_dot)
                     .progress(true, 0)
@@ -129,7 +141,7 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
 
     @Override
     public void hideLoading() {
-        if(dialog != null){
+        if (dialog != null) {
             dialog.dismiss();
         }
     }
@@ -154,7 +166,7 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
 
     @Override
     public void showError(String error) {
-        if(!getActivity().isFinishing()){
+        if (!getActivity().isFinishing()) {
             Toast.makeText(getActivity().getApplicationContext(), error, Toast.LENGTH_LONG).show();
         }
     }
@@ -177,7 +189,7 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btnRegister:
                 registerClicked();
                 break;
@@ -194,7 +206,7 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
     }
 
     private void btnSocialLinkClicked() {
-        if(registerPresenter.getListSocialsRemainingItems().size() > 0){
+        if (registerPresenter.getListSocialsRemainingItems().size() > 0) {
             initSocialPicker();
             int[] attachedViewLocation = new int[2];
             btnAddSocialLink.getLocationInWindow(attachedViewLocation);
@@ -210,13 +222,16 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
 
     }
 
-    private void initSocialPicker() {
+    public void initSocialPicker() {
         socialPickerView = new SocialPickerView(getActivity(), registerPresenter.getListSocialsRemainingItems(), socialObject -> {
             registerPresenter.getSocialInfo(socialObject);
-            if(easyDialog != null){
+            if (easyDialog != null) {
                 easyDialog.dismiss();
             }
         });
+
+        lnSocialIconContainer.removeAllViews();
+        lnSocialIconContainer.addView(socialPickerView);
     }
 
     private void locationClicked() {
@@ -230,16 +245,16 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
         }
     }
 
-    private void registerClicked(){
+    private void registerClicked() {
         User user = getDataFromViewsToUser();
         registerPresenter.validateData(user, txtPassword.getText().toString().trim(), txtConfirmPassword.getText().toString().trim());
     }
 
-    private User getDataFromViewsToUser(){
+    private User getDataFromViewsToUser() {
         User user = new User();
         user.setEmail(txtEmail.getText().toString().trim());
         user.setName(txtName.getText().toString().trim());
-        if(place != null){
+        if (place != null) {
             user.setLocationName(lblLocation.getText().toString().trim());
             GeoPoint geoPoint = new GeoPoint(place.getLatLng().latitude, place.getLatLng().longitude);
             user.setlocation(geoPoint);
@@ -249,9 +264,9 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
         user.setInterest(txtInterest.getText().toString().trim());
 
 
-        for(SocialObject socialObject : registerPresenter.getListSocialsSelectedItems(lnSocialContainer)){
+        for (SocialObject socialObject : registerPresenter.getListSocialsSelectedItems(lnSocialContainer)) {
             String socialLink = socialObject.getName();
-            switch (socialObject.getId()){
+            switch (socialObject.getId()) {
                 case SocialObject.FACEBOOK_TYPE:
                     user.setFacebookLink(socialLink);
                     break;
@@ -283,13 +298,14 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
 
     @Override
     public void onDestroyView() {
-        if(googleApiClient != null && googleApiClient.isConnected()){
+        if (googleApiClient != null && googleApiClient.isConnected()) {
             googleApiClient.stopAutoManage((FragmentActivity) getActivity());
             googleApiClient.disconnect();
             googleApiClient = null;
         }
         registerPresenter.releaseResources();
         super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     @Override
@@ -303,13 +319,15 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
     }
 
     @Override
-    public void showAddSocialButton() {
-        btnAddSocialLink.setVisibility(View.VISIBLE);
+    public void showAddSocialIconView() {
+        lnSocialIconContainer.setVisibility(View.VISIBLE);
+        btnAddSocialLink.setVisibility(View.GONE);
         separateAddView.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void hideAddSocialButton() {
+    public void hideAddSocialIconView() {
+        lnSocialIconContainer.setVisibility(View.GONE);
         separateAddView.setVisibility(View.GONE);
         btnAddSocialLink.setVisibility(View.GONE);
     }
@@ -317,5 +335,13 @@ public class RegisterFragment extends BaseFragment implements IRegisterView, Vie
     @Override
     public LinearLayout getLayoutSocialContainer() {
         return lnSocialContainer;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // TODO: inflate a fragment view
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        ButterKnife.bind(this, rootView);
+        return rootView;
     }
 }

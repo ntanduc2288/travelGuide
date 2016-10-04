@@ -16,9 +16,11 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.applozic.mobicomkit.uiwidgets.conversation.ConversationUIService;
 import com.applozic.mobicomkit.uiwidgets.conversation.activity.ConversationActivity;
+import com.applozic.mobicomkit.uiwidgets.conversation.fragment.MobiComConversationFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
+import com.travel.travelguide.Ulti.Ulti;
 import com.travel.travelguide.adapter.UserProfileAdapter;
 import com.travel.travelguide.presenter.userProfile.IUserProfileView;
 
@@ -149,11 +151,7 @@ public class UserProfileFragment extends BaseFragment implements IUserProfileVie
                 getActivity().onBackPressed();
                 break;
             case R.id.fab:
-                Intent intent = new Intent(getActivity(), ConversationActivity.class);
-                intent.putExtra(ConversationUIService.USER_ID, user.getbackendlessUserId());
-                intent.putExtra(ConversationUIService.DISPLAY_NAME, user.getName()); //put it for displaying the title.
-                intent.putExtra(ConversationActivity.TAKE_ORDER, true);
-                startActivity(intent);
+                gotoConversationActivity();
                 break;
             case R.id.btn_about:
                 selectAboutTab();
@@ -164,6 +162,17 @@ public class UserProfileFragment extends BaseFragment implements IUserProfileVie
 
 
         }
+    }
+
+    @Override
+    public void gotoConversationActivity(){
+        Intent intent = new Intent(getActivity(), ConversationActivity.class);
+        intent.putExtra(ConversationUIService.USER_ID, user.getbackendlessUserId());
+        intent.putExtra(ConversationUIService.DISPLAY_NAME, user.getName()); //put it for displaying the title.
+
+        intent.putExtra(MobiComConversationFragment.DEFAULT_CONTENT, Ulti.getDefaultMessageContent());
+        intent.putExtra(ConversationActivity.TAKE_ORDER, true);
+        startActivity(intent);
     }
 
     private void selectReviewsTab() {

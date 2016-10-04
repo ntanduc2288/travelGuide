@@ -42,8 +42,12 @@ public class EvenBusHelper {
         }
     }
 
-    public void notifyUserDataChanged(User user){
-        bus.post(user);
+    public void notifyUserDataChanged(User user) throws Exception{
+        if(user != null){
+            bus.post(user);
+        }else {
+            new Throwable("Current user data is null.");
+        }
     }
 
 

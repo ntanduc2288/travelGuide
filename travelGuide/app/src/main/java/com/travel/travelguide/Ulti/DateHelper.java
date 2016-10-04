@@ -32,7 +32,7 @@ public class DateHelper {
 																	// 2012
 																	// 17:40
 	public static final String RFC_USA_6 = "yyyy-MM-dd";
-	public static final String RFC_USA_7 = "MMM dd, yyyy - hh:mm a";
+	public static final String RFC_USA_7 = "MMM dd, yyyy"; // Feb 02, 1988
 
 	public static final String RFC_USA_8 = "yyyy-MM-dd hh:mm";// 2012-06-13
 																// 20:35

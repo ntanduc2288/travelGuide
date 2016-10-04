@@ -13,5 +13,6 @@ public interface IUserProfileView {
     void bindData(User user);
     void showMessage(String message);
     void updateCurrentTab(int currentTab);
+    void gotoConversationActivity();
     Context getContext();
 }

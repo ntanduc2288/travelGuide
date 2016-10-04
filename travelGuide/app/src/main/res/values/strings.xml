@@ -442,5 +442,10 @@
     </string>
     <string name="destination">Destination:</string>
     <string name="us_uk">US, UK,...</string>
+    <string name="please_rate_your_host">Please rate your host</string>
+    <string name="add_comment">Add comment</string>
+    <string name="close_window">Close Window</string>
+    <string name="thank_you_for_taking_your_time_to_let_us_know_how_we_are_doing_and_how_we_can_improve_the_service_nwe_appriciate_your_time">Thank you for taking your time to let us know how we are doing and how we can improve the service.\nWe appriciate your time.</string>
+    <string name="close">Close</string>
 
 </resources>

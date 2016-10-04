@@ -174,6 +174,8 @@ abstract public class MobiComConversationFragment extends Fragment implements Vi
     protected ApplozicContextSpinnerAdapter applozicContextSpinnerAdapter;
     private boolean onSelected;
     AdapterView.OnItemSelectedListener adapterView;
+    private String defaultMessageContent = "";
+    public static final String DEFAULT_CONTENT = "DEFAULT_CONTENT";
 
     public void setEmojiIconHandler(EmojiconHandler emojiIconHandler) {
         this.emojiIconHandler = emojiIconHandler;
@@ -185,6 +187,16 @@ abstract public class MobiComConversationFragment extends Fragment implements Vi
         syncCallService = SyncCallService.getInstance(getActivity());
         applozicSetting = ApplozicSetting.getInstance(getActivity());
         setHasOptionsMenu(false);
+
+        getDefaulMessageContent();
+    }
+
+    private void getDefaulMessageContent(){
+        Bundle bundle = getActivity().getIntent().getExtras();
+        if(bundle != null){
+            defaultMessageContent = bundle.getString(DEFAULT_CONTENT);
+            defaultMessageContent = String.format(defaultMessageContent, contact.getFullName());
+        }
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -1759,7 +1771,13 @@ abstract public class MobiComConversationFragment extends Fragment implements Vi
                             listView.setSelection(messageList.size() - 1);
                         }
                     });
+                }else {
+                    messageEditText.setText(defaultMessageContent);
                 }
+
+
+                messageEditText.setText(defaultMessageContent);
+
             } else if (!nextMessageList.isEmpty()) {
                 listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_DISABLED);
                 messageList.addAll(0, nextMessageList);

@@ -156,10 +156,17 @@ public class ProfilePresenterImpl extends BaseSocialPresenterImpl implements Pro
                     profileView.hideLoading();
 //                    profileView.switchToViewerMode();
                     profileView.showMessage(profileView.getContext().getString(R.string.your_account_has_been_updated));
-                    UserManager.getInstance().setCurrentUser(new User(response));
-                    UserManager.getInstance().updateUserToDatabase(profileView.getContext());
-                    EvenBusHelper.getInstance().notifyUserDataChanged(user);
-                    profileView.updateUserInfoSuccessfull(user);
+
+                    try {
+                        UserManager.getInstance().setCurrentUser(new User(response));
+                        UserManager.getInstance().updateUserToDatabase(profileView.getContext());
+                        EvenBusHelper.getInstance().notifyUserDataChanged(user);
+                        profileView.updateUserInfoSuccessfull(user);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        profileView.showMessage(e.getMessage());
+                    }
+
                 }
                 LogUtils.logD(TAG, "update profile: " + response.toString());
 

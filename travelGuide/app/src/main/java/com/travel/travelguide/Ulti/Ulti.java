@@ -1,17 +1,19 @@
 package com.travel.travelguide.Ulti;
 
+import android.content.Context;
+import android.text.TextUtils;
+
 import com.backendless.BackendlessUser;
 import com.backendless.geo.GeoPoint;
 import com.github.gorbin.asne.core.persons.SocialPerson;
 import com.github.gorbin.asne.instagram.InstagramPerson;
 import com.github.gorbin.asne.twitter.TwitterPerson;
 import com.travel.travelguide.Object.Languages;
+import com.travel.travelguide.Object.User;
+import com.travel.travelguide.manager.UserManager;
 
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
-
-import android.content.Context;
-import android.text.TextUtils;
 
 import java.util.Map;
 
@@ -77,6 +79,17 @@ public class Ulti {
         }
 
         return result;
+    }
+
+    public static String getDefaultMessageContent(){
+        User user = UserManager.getInstance().getCurrentUser();
+        String travelFrom = DateHelper.convertLongMilisecondsToDateString(user.getTravelDateFrom(), DateHelper.RFC_USA_7);
+        String travelTo = DateHelper.convertLongMilisecondsToDateString(user.getTravelDateTo(), DateHelper.RFC_USA_7);
+        String defaultMessage = "Hi %s, my name is " + user.getName() + ", i am plainning " +
+                "to visit " + user.getDestination() + " from " + travelFrom + " to " + travelTo + "."
+                + "Would you be interested to be my host?";
+
+        return defaultMessage;
     }
 
 

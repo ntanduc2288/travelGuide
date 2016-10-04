@@ -8,6 +8,7 @@
     <color name="black">#000000</color>
     <color name="gray">#c5c5c5</color>
     <color name="Gray">#9B9B9B</color>
+    <color name="colorPrimary_transparent">#cc33b5e5</color>
     <color name="black_transparent">#50000000</color>
     <color name="bottom_color">@color/color_white</color>
     <color name="anomo_gray_color">#F0EFF4</color>

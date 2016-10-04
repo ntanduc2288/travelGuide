@@ -1,5 +1,17 @@
 package com.travel.travelguide.fragment;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.AppCompatTextView;
+import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
@@ -14,32 +26,21 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.otto.Subscribe;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
+import com.travel.travelguide.Ulti.Constants;
 import com.travel.travelguide.Ulti.EvenBusHelper;
 import com.travel.travelguide.Ulti.LogUtils;
 import com.travel.travelguide.activity.LoginActivity;
 import com.travel.travelguide.adapter.UserInfoWindowAdapter;
+import com.travel.travelguide.fragment.dialog.RatingDialogFragment;
 import com.travel.travelguide.manager.TransactionManager;
 import com.travel.travelguide.manager.UserManager;
 import com.travel.travelguide.presenter.MapGuide.IMapGuideView;
 import com.travel.travelguide.presenter.MapGuide.MapGuidePresenter;
 import com.travel.travelguide.presenter.MapGuide.MapGuidePresneterImpl;
-
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.widget.AppCompatTextView;
-import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -106,7 +107,12 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
         imgProfile.setOnClickListener(this);
         lblProfileName.setOnClickListener(this);
         mapGuidePresenter.connect();
-        EvenBusHelper.getInstance().notifyUserDataChanged(UserManager.getInstance().getCurrentUser());
+        try {
+            EvenBusHelper.getInstance().notifyUserDataChanged(UserManager.getInstance().getCurrentUser());
+        } catch (Exception e) {
+            e.printStackTrace();
+            showMessage(e.getMessage());
+        }
 //        updateUserView(UserManager.getInstance().getCurrentUser());
     }
 
@@ -235,7 +241,14 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
         Log.i(TAG, "Place Address: " + place.getAddress());
 
         LatLngBounds latLngBounds = place.getViewport();
-        zoomToLevel(CameraUpdateFactory.newLatLngBounds(latLngBounds, 3));
+        CameraUpdate cameraUpdate = null;
+        if (latLngBounds != null){
+            cameraUpdate = CameraUpdateFactory.newLatLngBounds(latLngBounds, 3);
+        }else {
+            cameraUpdate = CameraUpdateFactory.newLatLngZoom(place.getLatLng(), Constants.DEFAULT_ZOOM_LEVEL);
+
+        }
+        zoomToLevel(cameraUpdate);
 
     }
 
@@ -259,10 +272,12 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
                 break;
             case R.id.imageview_my_profile:
             case R.id.textview_profile_name:
-//                gotoSettingsScreen(UserManager.getInstance().getCurrentUser());
-                if(drawerClickedListener != null){
-                    drawerClickedListener.onClick(v);
-                }
+//                if(drawerClickedListener != null){
+//                    drawerClickedListener.onClick(v);
+//                }
+
+                RatingDialogFragment ratingDialogFragment = RatingDialogFragment.newInstance(null);
+                ratingDialogFragment.show(getChildFragmentManager(), ratingDialogFragment.getTag());
                 break;
 
         }

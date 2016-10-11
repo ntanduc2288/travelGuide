@@ -2,6 +2,7 @@ package com.travel.travelguide.presenter.userProfile;
 
 import android.content.Context;
 
+import com.travel.travelguide.Object.RatingEntityObject;
 import com.travel.travelguide.Object.User;
 
 /**
@@ -16,4 +17,5 @@ public interface IUserProfileView {
     void gotoConversationActivity();
     void openRatingDialog();
     Context getContext();
+    void receivedRatingChangedSignal(RatingEntityObject ratingEntityObject);
 }

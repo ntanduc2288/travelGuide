@@ -1,5 +1,10 @@
 package com.travel.travelguide;
 
+import android.app.Application;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.support.multidex.MultiDex;
+
 import com.applozic.mobicomkit.ApplozicClient;
 import com.applozic.mobicomkit.uiwidgets.ApplozicSetting;
 import com.backendless.Backendless;
@@ -11,13 +16,11 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
-
-import android.app.Application;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.support.multidex.MultiDex;
+import com.travel.travelguide.Object.RatingEntityObject;
 
 import io.fabric.sdk.android.Fabric;
+
+import static com.travel.travelguide.Ulti.Constants.RATING_TABLE;
 
 /**
  * Created by user on 4/22/16.
@@ -106,6 +109,7 @@ public class MyApp extends Application {
 
     private void initBackendless() {
         Backendless.initApp(getApplicationContext(), backendlessAppId, backendlessSecretKey, backendlessVersion);
+        Backendless.Data.mapTableToClass(RATING_TABLE, RatingEntityObject.class);
         //
     }
 

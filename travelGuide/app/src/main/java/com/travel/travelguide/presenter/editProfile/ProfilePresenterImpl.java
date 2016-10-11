@@ -19,7 +19,7 @@ import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
 import com.travel.travelguide.Ulti.Constants;
 import com.travel.travelguide.Ulti.CropImageUlti;
-import com.travel.travelguide.Ulti.EvenBusHelper;
+import com.travel.travelguide.Bus.EvenBusHelper;
 import com.travel.travelguide.Ulti.LogUtils;
 import com.travel.travelguide.Ulti.Ulti;
 import com.travel.travelguide.View.SocialItemEditText;

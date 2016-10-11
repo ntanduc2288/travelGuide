@@ -2,13 +2,18 @@ package com.travel.travelguide.fragment.dialog;
 
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.AppCompatTextView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
+import com.travel.travelguide.manager.UserManager;
 import com.travel.travelguide.presenter.rating.RatingPresenter;
+import com.travel.travelguide.presenter.rating.RatingPresenterImpl;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -38,7 +43,12 @@ public class RatingDialogFragment extends BaseDialogFragment implements RatingPr
     AppCompatButton btnSubmit;
     @Bind(R.id.lnRatingContainer)
     LinearLayout lnRatingContainer;
+    @Bind(R.id.rtbUser)
+    AppCompatRatingBar rtbUser;
+
     private User user;
+    private RatingPresenter.Presenter presenter;
+    private MaterialDialog dialog;
 
     public static RatingDialogFragment newInstance(Bundle bundle, User user) {
         RatingDialogFragment fragment = new RatingDialogFragment();
@@ -61,12 +71,53 @@ public class RatingDialogFragment extends BaseDialogFragment implements RatingPr
 
     @Override
     public void initViews(Bundle savedInstanceState) {
+        presenter = new RatingPresenterImpl(getActivity(), this);
+        disableSubmitButton();
+        rtbUser.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> presenter.sendRatingChangeSignal(rating));
         bindUserInfo(user);
+    }
+
+    @Override
+    public void enableSubmitButton() {
+        btnSubmit.setEnabled(true);
+    }
+
+    @Override
+    public void disableSubmitButton() {
+        btnSubmit.setEnabled(false);
     }
 
     @Override
     public boolean shouldHideDialogTitle() {
         return false;
+    }
+
+    @Override
+    public void showLoading() {
+        if (dialog == null) {
+            dialog = new MaterialDialog.Builder(getActivity())
+                    .content(R.string.loading_three_dot)
+                    .progress(true, 0)
+                    .build();
+        }
+
+        if (dialog.isShowing()) {
+            return;
+        }
+
+        dialog.show();
+    }
+
+    @Override
+    public void hideLoading() {
+        if (dialog != null) {
+            dialog.dismiss();
+        }
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -80,12 +131,26 @@ public class RatingDialogFragment extends BaseDialogFragment implements RatingPr
     @OnClick(R.id.btnAddComment)
     @Override
     public void clickedOnAddCommentButton() {
-        dismiss();
+        dismissDialog();
     }
 
     @OnClick(R.id.btnSubmit)
     @Override
     public void clickedOnSubmitButton() {
+        String fromUserId = UserManager.getInstance().getCurrentUser().getbackendlessUserId();
+        String toUserId = user.getbackendlessUserId();
+        float ratingNumber = rtbUser.getRating();
+        presenter.sendSubmitRatingSignal(fromUserId, toUserId, ratingNumber);
+    }
 
+    @Override
+    public void dismissDialog() {
+        dismiss();
+    }
+
+    @Override
+    public void onDestroyView() {
+        presenter.destroy();
+        super.onDestroyView();
     }
 }

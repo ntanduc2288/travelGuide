@@ -10,6 +10,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -20,6 +21,9 @@ import com.applozic.mobicomkit.uiwidgets.conversation.ConversationUIService;
 import com.applozic.mobicomkit.uiwidgets.conversation.activity.ConversationActivity;
 import com.applozic.mobicomkit.uiwidgets.conversation.fragment.MobiComConversationFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.otto.Subscribe;
+import com.travel.travelguide.Bus.EvenBusHelper;
+import com.travel.travelguide.Object.RatingEntityObject;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
 import com.travel.travelguide.Ulti.Ulti;
@@ -127,6 +131,7 @@ public class UserProfileFragment extends BaseFragment implements IUserProfileVie
             }
             return true;
         });
+
     }
 
     @Override
@@ -253,8 +258,15 @@ public class UserProfileFragment extends BaseFragment implements IUserProfileVie
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        EvenBusHelper.getInstance().registerEventBus(this);
+    }
+
+    @Override
     public void onDestroyView() {
         viewPagerProfile.removeAllViews();
+        EvenBusHelper.getInstance().unRegisterEventBus(this);
         super.onDestroyView();
     }
 
@@ -269,4 +281,9 @@ public class UserProfileFragment extends BaseFragment implements IUserProfileVie
         ratingDialogFragment.show(getChildFragmentManager(), ratingDialogFragment.getTag());
     }
 
+    @Subscribe
+    @Override
+    public void receivedRatingChangedSignal(RatingEntityObject ratingEntityObject) {
+        Log.d("UserProfileFragment", "ratingEntityObject.getRatingNumber():" + ratingEntityObject.getRatingNumber());
+    }
 }

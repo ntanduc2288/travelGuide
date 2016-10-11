@@ -1,6 +1,8 @@
-package com.travel.travelguide.Ulti;
+package com.travel.travelguide.Bus;
 
 import com.squareup.otto.Bus;
+import com.squareup.otto.ThreadEnforcer;
+import com.travel.travelguide.Bus.object.RatingChangedBusObject;
 import com.travel.travelguide.Object.User;
 
 /**
@@ -22,7 +24,7 @@ public class EvenBusHelper {
     }
 
     private EvenBusHelper() {
-        bus = new Bus();
+        bus = new Bus(ThreadEnforcer.ANY);
     }
 
     public void registerEventBus(Object object){
@@ -47,6 +49,14 @@ public class EvenBusHelper {
             bus.post(user);
         }else {
             new Throwable("Current user data is null.");
+        }
+    }
+
+    public void notifyRatingChanged(RatingChangedBusObject ratingChangedBusObject) throws Exception{
+        if(ratingChangedBusObject != null){
+            bus.post(ratingChangedBusObject);
+        }else {
+            new Throwable("Rating object can not be null.");
         }
     }
 

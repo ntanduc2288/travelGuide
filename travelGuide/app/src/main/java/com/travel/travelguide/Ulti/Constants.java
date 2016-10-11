@@ -64,4 +64,5 @@ public class Constants {
     public static final String INSTAGRAM_CALLBACK_URL = "oauth://ASNE";
 
     public static final String SOCIAL_NETWORK_TAG = "SocialIntegrationMain.SOCIAL_NETWORK_TAG";
+    public static final String RATING_TABLE = "Rating";
 }

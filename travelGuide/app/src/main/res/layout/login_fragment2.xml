@@ -38,7 +38,7 @@
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:text="user@gmail.com" />
+                 />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -55,7 +55,7 @@
                 android:hint="@string/prompt_password"
                 android:inputType="textPassword"
                 android:singleLine="true"
-                android:text="123" />
+                />
 
         </android.support.design.widget.TextInputLayout>
 

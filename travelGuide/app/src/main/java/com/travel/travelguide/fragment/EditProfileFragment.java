@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -46,9 +47,9 @@ import com.travel.travelguide.View.SocialPickerView;
 import com.travel.travelguide.activity.LoginActivity;
 import com.travel.travelguide.manager.TransactionManager;
 import com.travel.travelguide.manager.UserManager;
-import com.travel.travelguide.presenter.editProfile.IEditProfileView;
-import com.travel.travelguide.presenter.editProfile.ProfilePresenter;
-import com.travel.travelguide.presenter.editProfile.ProfilePresenterImpl;
+import com.travel.travelguide.presenter.editProfile.EditProfilePresenter;
+import com.travel.travelguide.presenter.editProfile.EditProfilePresenterImpl;
+import com.travel.travelguide.services.backendless.BackendlessController;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
@@ -60,7 +61,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Created by user on 4/29/16.
  */
-public class EditProfileFragment extends BaseFragment implements IEditProfileView, View.OnClickListener, AddPhotoSelectionDialogFrament.IAddPhotoSelelectionListener, MultiSelectionSpinner.OnMultipleItemsSelectedListener  {
+public class EditProfileFragment extends BaseFragment implements EditProfilePresenter.View, View.OnClickListener, AddPhotoSelectionDialogFrament.IAddPhotoSelelectionListener, MultiSelectionSpinner.OnMultipleItemsSelectedListener  {
 
     @Bind(R.id.title)
     AppCompatTextView lblTitle;
@@ -119,6 +120,8 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
     LinearLayout lnSocialIconContainer;
     @Bind(R.id.separate_add_view)
     View separateAddView;
+    @Bind(R.id.rtbUser)
+    AppCompatRatingBar rtbUser;
 
     private SocialPickerView socialPickerView;
     private EasyDialog easyDialog;
@@ -127,7 +130,7 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
 
     String imageLocalPath = Constants.EMPTY_STRING;
     User user;
-    ProfilePresenter profilePresenter;
+    EditProfilePresenter.Presenter profilePresenter;
     private Place place;
     private ArrayAdapter<String> languageAdapter;
 
@@ -150,7 +153,7 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
     @Override
     protected void setupViews() {
         toolbar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.black_transparent));
-        profilePresenter = new ProfilePresenterImpl(getFragmentManager(), this, this, user);
+        profilePresenter = new EditProfilePresenterImpl(getFragmentManager(), this, this, user, new BackendlessController());
 
         btnBack.setOnClickListener(this);
         btnEdit.setOnClickListener(this);
@@ -579,5 +582,10 @@ public class EditProfileFragment extends BaseFragment implements IEditProfileVie
     @Override
     public LinearLayout getLayoutSocialContainer() {
         return lnSocialContainer;
+    }
+
+    @Override
+    public void bindRatingNumber(float ratingNumber) {
+        rtbUser.setRating(ratingNumber);
     }
 }

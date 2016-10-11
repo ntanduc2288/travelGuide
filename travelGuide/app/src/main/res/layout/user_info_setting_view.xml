@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:hint="@string/name"
                 android:singleLine="true"
-                android:text="user" />
+                />
 
         </LinearLayout>
 
@@ -49,7 +49,7 @@
                 android:layout_width="match_parent"
                 android:hint="@string/prompt_email"
                 android:singleLine="true"
-                android:text="user@gmail.com" />
+                 />
 
         </LinearLayout>
 
@@ -72,7 +72,7 @@
                 android:layout_width="match_parent"
                 android:hint="@string/prompt_password"
                 android:inputType="textPassword"
-                android:text="123" />
+                 />
 
         </LinearLayout>
 
@@ -95,7 +95,7 @@
                 android:layout_width="match_parent"
                 android:hint="@string/prompt_confirm_password"
                 android:inputType="textPassword"
-                android:text="123" />
+                 />
 
         </LinearLayout>
 

@@ -1,9 +1,6 @@
 package com.travel.travelguide.presenter.rating;
 
-import com.travel.travelguide.Object.RatingEntityObject;
 import com.travel.travelguide.Object.User;
-
-import rx.Observable;
 
 /**
  * @author Duc Nguyen
@@ -18,16 +15,20 @@ public interface RatingPresenter {
         void bindUserInfo(User user);
         void clickedOnAddCommentButton();
         void clickedOnSubmitButton();
+        void clickedOnCloseButton();
         void dismissDialog();
         void enableSubmitButton();
         void disableSubmitButton();
+        void showSubmitMode();
+        void hideSubmitMode();
+        void showThankMode();
+        void hideThankMode();
     }
 
     interface Presenter{
         void sendRatingChangeSignal(float ratingNumber);
         void sendSubmitRatingSignal(String fromUserId, String toUserId, float ratingNumber);
-        Observable<RatingEntityObject> submitRating(String fromUserId, String toUserId, float ratingNumber);
-        void nofifyRatingChanged(RatingEntityObject ratingObject);
+        void nofifyRatingChanged(String fromUserId, String toUserId, float ratingNumber, float averageNumber);
         void initObservableSubmitButton();
         void destroy();
     }

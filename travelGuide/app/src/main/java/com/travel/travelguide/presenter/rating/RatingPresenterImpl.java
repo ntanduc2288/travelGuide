@@ -2,12 +2,10 @@ package com.travel.travelguide.presenter.rating;
 
 import android.content.Context;
 
-import com.backendless.Backendless;
-import com.backendless.async.callback.AsyncCallback;
-import com.backendless.exceptions.BackendlessFault;
 import com.travel.travelguide.Bus.EvenBusHelper;
 import com.travel.travelguide.Bus.object.RatingChangedBusObject;
-import com.travel.travelguide.Object.RatingEntityObject;
+import com.travel.travelguide.Object.entity.Rating;
+import com.travel.travelguide.services.backendless.BackendlessController;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -25,10 +23,12 @@ public class RatingPresenterImpl implements RatingPresenter.Presenter {
     private RatingPresenter.View view;
     private PublishSubject<Float> publishSubjectSubmitButton = PublishSubject.create();
     private Observable<Boolean> observableSubmitButton;
+    private BackendlessController backendlessController;
 
-    public RatingPresenterImpl(Context context, RatingPresenter.View view) {
+    public RatingPresenterImpl(Context context, RatingPresenter.View view, BackendlessController backendlessController) {
         this.context = context;
         this.view = view;
+        this.backendlessController = backendlessController;
         initObservableSubmitButton();
     }
 
@@ -54,14 +54,17 @@ public class RatingPresenterImpl implements RatingPresenter.Presenter {
     @Override
     public void sendSubmitRatingSignal(String fromUserId, String toUserId, float ratingNumber) {
         view.showLoading();
-        submitRating(fromUserId, toUserId, ratingNumber)
-                .doOnNext(ratingEntityObject -> nofifyRatingChanged(ratingEntityObject))
+        backendlessController.submitRating(fromUserId, toUserId, ratingNumber)
+                .flatMap(ratingEntityObject -> backendlessController.getRatingEntityObject(ratingEntityObject.getToUserId()))
+                .flatMap(ratingEntityObjects -> backendlessController.calculateAverageRatingNumber(ratingEntityObjects))
+                .doOnNext(averageNumber -> nofifyRatingChanged(fromUserId, toUserId, ratingNumber, averageNumber))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(ratingObject -> {
+                .subscribe(averageNumber -> {
                     if(view != null){
                         view.hideLoading();
-                        view.dismissDialog();
+                        view.hideSubmitMode();
+                        view.showThankMode();
                     }
                 }, throwable -> {
                     if(view != null){
@@ -71,36 +74,17 @@ public class RatingPresenterImpl implements RatingPresenter.Presenter {
                 });
     }
 
-    @Override
-    public Observable<RatingEntityObject> submitRating(String fromUserId, String toUserId, float ratingNumber) {
-        RatingEntityObject ratingObjectTmp = new RatingEntityObject(fromUserId, toUserId, ratingNumber);
-
-        return Observable.create(subscriber -> {
-            Backendless.Persistence.of(RatingEntityObject.class).save(ratingObjectTmp, new AsyncCallback<RatingEntityObject>() {
-                @Override
-                public void handleResponse(RatingEntityObject response) {
-                    subscriber.onNext(response);
-                    subscriber.onCompleted();
-                }
-
-                @Override
-                public void handleFault(BackendlessFault fault) {
-                    subscriber.onError(new Throwable(fault.getMessage()));
-                }
-            });
-
-
-        });
-    }
 
     @Override
-    public void nofifyRatingChanged(RatingEntityObject ratingObject) {
+    public void nofifyRatingChanged(String fromUserId, String toUserId, float ratingNumber, float averageNumber) {
         try {
-            EvenBusHelper.getInstance().notifyRatingChanged(new RatingChangedBusObject(ratingObject));
+            Rating ratingEntityObject = new Rating(fromUserId, toUserId, ratingNumber);
+            EvenBusHelper.getInstance().notifyRatingChanged(new RatingChangedBusObject(ratingEntityObject, averageNumber));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
     @Override
     public void destroy() {

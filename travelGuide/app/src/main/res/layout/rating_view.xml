@@ -81,7 +81,7 @@
                 android:visibility="gone"
                 android:text="@string/thank_you_for_taking_your_time_to_let_us_know_how_we_are_doing_and_how_we_can_improve_the_service_nwe_appriciate_your_time"
                 android:textColor="@color/color_white"
-                android:textSize="@dimen/title_size" />
+                android:textSize="@dimen/general_text_size" />
 
             <android.support.v7.widget.AppCompatRatingBar
                 android:layout_width="wrap_content"
@@ -132,7 +132,17 @@
                     android:layout_weight="1"
                     android:layout_height="30dp"
                     android:textSize="12sp"
+                    android:visibility="visible"
                     android:text="@string/submit" />
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/btnClose"
+                    android:layout_marginLeft="5dp"
+                    style="@style/general_button_style"
+                    android:layout_weight="1"
+                    android:layout_height="30dp"
+                    android:textSize="12sp"
+                    android:text="@string/close" />
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

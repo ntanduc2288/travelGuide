@@ -25,6 +25,7 @@ import com.travel.travelguide.Ulti.Ulti;
 import com.travel.travelguide.View.SocialItemEditText;
 import com.travel.travelguide.manager.UserManager;
 import com.travel.travelguide.presenter.BaseSocialPresenterImpl;
+import com.travel.travelguide.services.backendless.BackendlessController;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,9 +41,9 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by user on 4/29/16.
  */
-public class ProfilePresenterImpl extends BaseSocialPresenterImpl implements ProfilePresenter {
-    private final String TAG = ProfilePresenterImpl.class.getSimpleName();
-    IEditProfileView profileView;
+public class EditProfilePresenterImpl extends BaseSocialPresenterImpl implements EditProfilePresenter.Presenter {
+    private final String TAG = EditProfilePresenterImpl.class.getSimpleName();
+    EditProfilePresenter.View profileView;
     User user;
     boolean isMyProfileView;
     boolean isInEditMode;
@@ -51,11 +52,13 @@ public class ProfilePresenterImpl extends BaseSocialPresenterImpl implements Pro
     ArrayList<SocialObject> socialObjectsOriginal;
     ArrayList<SocialObject> socialObjectsSelected;
     String avatarLocalFile = "";
+    private BackendlessController backendlessController;
 
-    public ProfilePresenterImpl(FragmentManager fragmentManager, Fragment fragment, IEditProfileView profileView, User user) {
+    public EditProfilePresenterImpl(FragmentManager fragmentManager, Fragment fragment, EditProfilePresenter.View profileView, User user, BackendlessController backendlessController) {
         super(fragmentManager, fragment);
         this.profileView = profileView;
         this.user = user;
+        this.backendlessController = backendlessController;
         isMyProfileView = user.getbackendlessUserId().equalsIgnoreCase(UserManager.getInstance().getCurrentUser().getbackendlessUserId());
         socialObjectsOriginal = new ArrayList<>();
         socialObjectsOriginal.add(new SocialObject(SocialObject.FACEBOOK_TYPE, Constants.EMPTY_STRING));
@@ -67,7 +70,7 @@ public class ProfilePresenterImpl extends BaseSocialPresenterImpl implements Pro
 
     @Override
     public void getUserProfile() {
-        profileView.showLoading();
+//        profileView.showLoading();
         profileView.bindData(user);
         if (isMyProfileView) {
             profileView.showMyProfileViews();
@@ -75,7 +78,9 @@ public class ProfilePresenterImpl extends BaseSocialPresenterImpl implements Pro
             profileView.showUserProfileViews();
         }
         profileView.switchToEditMode();
-        profileView.hideLoading();
+//        profileView.hideLoading();
+
+        getAverageRatingNumber(user.getbackendlessUserId());
     }
 
     public void setImageLocalPath(String imageLocalPath) {
@@ -309,5 +314,26 @@ public class ProfilePresenterImpl extends BaseSocialPresenterImpl implements Pro
         int id = 0;
         profileView.hideLoading();
         profileView.showMessage(errorMessage);
+    }
+
+    @Override
+    public void getAverageRatingNumber(String userId) {
+        profileView.showLoading();
+        backendlessController.getRatingEntityObject(userId)
+                .flatMap(ratings -> backendlessController.calculateAverageRatingNumber(ratings))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aFloat -> {
+                    if(viewIsValid()){
+                        profileView.hideLoading();
+                        profileView.bindRatingNumber(aFloat);
+                    }
+
+                }, throwable -> {
+                    if(viewIsValid()){
+                        profileView.hideLoading();
+                        profileView.showMessage(throwable.getMessage());
+                    }
+                });
     }
 }

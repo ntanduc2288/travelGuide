@@ -1,6 +1,6 @@
 package com.travel.travelguide.Bus.object;
 
-import com.travel.travelguide.Object.RatingEntityObject;
+import com.travel.travelguide.Object.entity.Rating;
 
 /**
  * @author Duc Nguyen
@@ -8,17 +8,27 @@ import com.travel.travelguide.Object.RatingEntityObject;
  * @since 10/11/16
  */
 public class RatingChangedBusObject {
-    RatingEntityObject ratingObject;
+    Rating ratingObject;
+    float averageNumber = 0;
 
-    public RatingChangedBusObject(RatingEntityObject ratingObject) {
+    public RatingChangedBusObject(Rating ratingObject, float averageNumber) {
         this.ratingObject = ratingObject;
+        this.averageNumber = averageNumber;
     }
 
-    public RatingEntityObject getRatingObject() {
+    public Rating getRatingObject() {
         return ratingObject;
     }
 
-    public void setRatingObject(RatingEntityObject ratingObject) {
+    public void setRatingObject(Rating ratingObject) {
         this.ratingObject = ratingObject;
+    }
+
+    public float getAverageNumber() {
+        return averageNumber;
+    }
+
+    public void setAverageNumber(float averageNumber) {
+        this.averageNumber = averageNumber;
     }
 }

@@ -23,13 +23,15 @@ import com.applozic.mobicomkit.uiwidgets.conversation.fragment.MobiComConversati
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.otto.Subscribe;
 import com.travel.travelguide.Bus.EvenBusHelper;
-import com.travel.travelguide.Object.RatingEntityObject;
+import com.travel.travelguide.Bus.object.RatingChangedBusObject;
 import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
 import com.travel.travelguide.Ulti.Ulti;
 import com.travel.travelguide.adapter.UserProfileAdapter;
 import com.travel.travelguide.fragment.dialog.RatingDialogFragment;
-import com.travel.travelguide.presenter.userProfile.IUserProfileView;
+import com.travel.travelguide.presenter.userProfile.UserProfilePresenter;
+import com.travel.travelguide.presenter.userProfile.UserProfilePresenterImpl;
+import com.travel.travelguide.services.backendless.BackendlessController;
 
 import butterknife.Bind;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -37,7 +39,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Created by user on 5/18/16.
  */
-public class UserProfileFragment extends BaseFragment implements IUserProfileView, View.OnClickListener {
+public class UserProfileFragment extends BaseFragment implements UserProfilePresenter.View, View.OnClickListener {
     @Bind(R.id.title)
     AppCompatTextView lblTitle;
     @Bind(R.id.back_button)
@@ -64,6 +66,7 @@ public class UserProfileFragment extends BaseFragment implements IUserProfileVie
 
     MaterialDialog dialog;
     User user;
+    UserProfilePresenter.Presenter presenter;
     private final int TAB_ABOUT = 0;
     private final int TAB_REVIEW = 1;
 
@@ -87,6 +90,7 @@ public class UserProfileFragment extends BaseFragment implements IUserProfileVie
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        presenter = new UserProfilePresenterImpl(this, new BackendlessController());
         userProfileAdapter = new UserProfileAdapter(getChildFragmentManager());
         aboutFragment = AboutFragment.newInstance(user);
         reviewFragment = ReviewFragment.newInstance(user);
@@ -131,6 +135,8 @@ public class UserProfileFragment extends BaseFragment implements IUserProfileVie
             }
             return true;
         });
+
+        presenter.getAverageRatingNumber(user.getbackendlessUserId());
 
     }
 
@@ -267,6 +273,7 @@ public class UserProfileFragment extends BaseFragment implements IUserProfileVie
     public void onDestroyView() {
         viewPagerProfile.removeAllViews();
         EvenBusHelper.getInstance().unRegisterEventBus(this);
+        presenter.destroy();
         super.onDestroyView();
     }
 
@@ -277,13 +284,24 @@ public class UserProfileFragment extends BaseFragment implements IUserProfileVie
 
     @Override
     public void openRatingDialog() {
-        RatingDialogFragment ratingDialogFragment = RatingDialogFragment.newInstance(null, user);
+        RatingDialogFragment ratingDialogFragment = RatingDialogFragment.newInstance(null, user, new RatingDialogFragment.RatingListener() {
+            @Override
+            public void addCommentClicked() {
+                selectReviewsTab();
+            }
+        });
         ratingDialogFragment.show(getChildFragmentManager(), ratingDialogFragment.getTag());
+    }
+
+    @Override
+    public void bindRatingNumber(float ratingNumber) {
+        rtbUser.setRating(ratingNumber);
     }
 
     @Subscribe
     @Override
-    public void receivedRatingChangedSignal(RatingEntityObject ratingEntityObject) {
-        Log.d("UserProfileFragment", "ratingEntityObject.getRatingNumber():" + ratingEntityObject.getRatingNumber());
+    public void receivedRatingChangedSignal(RatingChangedBusObject ratingChangedBusObject) {
+        Log.d("UserProfileFragment", "ratingEntityObject.getRatingNumber():" + ratingChangedBusObject.getAverageNumber());
+        presenter.receivedRatingNumber(user, ratingChangedBusObject);
     }
 }

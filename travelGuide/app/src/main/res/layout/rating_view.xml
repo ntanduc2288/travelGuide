@@ -6,53 +6,94 @@
     android:gravity="center"
     >
 
-
-    <LinearLayout
-        android:id="@+id/lnRatingContainer"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/xml_bg_blue_rounded_no_border"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:padding="30dp"
-        >
-
+        android:layout_height="wrap_content">
         <LinearLayout
-            android:id="@+id/lnUserInfo"
-            android:layout_width="wrap_content"
+            android:id="@+id/lnRatingContainer"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
             android:layout_height="wrap_content"
+            android:background="@drawable/xml_bg_blue_rounded_no_border"
+            android:orientation="vertical"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:padding="30dp"
+            >
+
             <LinearLayout
+                android:id="@+id/lnUserInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/avatar"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_centerHorizontal="true"
-                    android:src="@drawable/anonymous_icon" />
-
-                <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/lblUserName"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/avatar"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/anonymous_icon" />
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/lblUserName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:text="Duc Nguyen"
+                        android:textColor="@color/color_white"
+                        android:textSize="@dimen/title_size" />
+
+                </LinearLayout>
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/lblUserLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:singleLine="true"
-                    android:text="Duc Nguyen"
+                    android:drawableLeft="@drawable/xml_bg_white_circle"
+                    android:drawablePadding="10dp"
+                    android:text="Seattle, WA"
                     android:textColor="@color/color_white"
-                    android:textSize="@dimen/title_size" />
-
+                    android:textSize="@dimen/general_text_size" />
             </LinearLayout>
 
             <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/lblUserLocation"
+                android:id="@+id/lblThankForRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:drawableLeft="@drawable/xml_bg_white_circle"
+                android:drawablePadding="10dp"
+                android:gravity="center"
+                android:visibility="gone"
+                android:text="@string/thank_you_for_taking_your_time_to_let_us_know_how_we_are_doing_and_how_we_can_improve_the_service_nwe_appriciate_your_time"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/title_size" />
+
+            <android.support.v7.widget.AppCompatRatingBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:layout_marginTop="30dp"
+                android:numStars="5"
+                android:stepSize="0.5" />
+
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/lblPleaseRateYourHost"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -61,77 +102,41 @@
                 android:drawableLeft="@drawable/xml_bg_white_circle"
                 android:drawablePadding="10dp"
                 android:singleLine="true"
-                android:text="Seattle, WA"
+                android:text="@string/please_rate_your_host"
                 android:textColor="@color/color_white"
-                android:textSize="@dimen/title_size" />
+                android:textSize="@dimen/general_text_size" />
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/btnAddComment"
+                    style="@style/general_button_style"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:textSize="12sp"
+                    android:layout_height="30dp"
+                    android:text="@string/add_comment" />
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/btnSubmit"
+                    android:layout_marginLeft="5dp"
+                    style="@style/general_button_style"
+                    android:layout_weight="1"
+                    android:layout_height="30dp"
+                    android:textSize="12sp"
+                    android:text="@string/submit" />
+            </LinearLayout>
         </LinearLayout>
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/lblThankForRating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:drawableLeft="@drawable/xml_bg_white_circle"
-            android:drawablePadding="10dp"
-            android:gravity="center"
-            android:visibility="gone"
-            android:text="@string/thank_you_for_taking_your_time_to_let_us_know_how_we_are_doing_and_how_we_can_improve_the_service_nwe_appriciate_your_time"
-            android:textColor="@color/color_white"
-            android:textSize="@dimen/title_size" />
-
-        <android.support.v7.widget.AppCompatRatingBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:layout_marginTop="30dp"
-            android:numStars="5"
-            android:stepSize="0.5" />
+    </android.support.v4.widget.NestedScrollView>
 
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/lblPleaseRateYourHost"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:drawableLeft="@drawable/xml_bg_white_circle"
-            android:drawablePadding="10dp"
-            android:singleLine="true"
-            android:text="@string/please_rate_your_host"
-            android:textColor="@color/color_white"
-            android:textSize="@dimen/general_text_size" />
-
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/btnAddComment"
-                style="@style/general_button_style"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1"
-                android:textSize="12sp"
-                android:layout_height="30dp"
-                android:text="@string/add_comment" />
-
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/btnSubmit"
-                android:layout_marginLeft="5dp"
-                style="@style/general_button_style"
-                android:layout_weight="1"
-                android:layout_height="30dp"
-                android:textSize="12sp"
-                android:text="@string/submit" />
-        </LinearLayout>
-    </LinearLayout>
 
 
 </RelativeLayout>

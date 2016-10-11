@@ -35,7 +35,6 @@ import com.travel.travelguide.Ulti.EvenBusHelper;
 import com.travel.travelguide.Ulti.LogUtils;
 import com.travel.travelguide.activity.LoginActivity;
 import com.travel.travelguide.adapter.UserInfoWindowAdapter;
-import com.travel.travelguide.fragment.dialog.RatingDialogFragment;
 import com.travel.travelguide.manager.TransactionManager;
 import com.travel.travelguide.manager.UserManager;
 import com.travel.travelguide.presenter.MapGuide.IMapGuideView;
@@ -272,12 +271,9 @@ public class MapGuideFragment extends BaseFragment implements OnMapReadyCallback
                 break;
             case R.id.imageview_my_profile:
             case R.id.textview_profile_name:
-//                if(drawerClickedListener != null){
-//                    drawerClickedListener.onClick(v);
-//                }
-
-                RatingDialogFragment ratingDialogFragment = RatingDialogFragment.newInstance(null);
-                ratingDialogFragment.show(getChildFragmentManager(), ratingDialogFragment.getTag());
+                if(drawerClickedListener != null){
+                    drawerClickedListener.onClick(v);
+                }
                 break;
 
         }

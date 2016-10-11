@@ -7,8 +7,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -22,6 +24,7 @@ import com.travel.travelguide.Object.User;
 import com.travel.travelguide.R;
 import com.travel.travelguide.Ulti.Ulti;
 import com.travel.travelguide.adapter.UserProfileAdapter;
+import com.travel.travelguide.fragment.dialog.RatingDialogFragment;
 import com.travel.travelguide.presenter.userProfile.IUserProfileView;
 
 import butterknife.Bind;
@@ -30,7 +33,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Created by user on 5/18/16.
  */
-public class UserProfileFragment extends BaseFragment implements IUserProfileView, View.OnClickListener{
+public class UserProfileFragment extends BaseFragment implements IUserProfileView, View.OnClickListener {
     @Bind(R.id.title)
     AppCompatTextView lblTitle;
     @Bind(R.id.back_button)
@@ -45,9 +48,12 @@ public class UserProfileFragment extends BaseFragment implements IUserProfileVie
     Toolbar toolbar;
     @Bind(R.id.fab)
     FloatingActionButton btnChat;
-    @Bind(R.id.layout_menu) LinearLayout lnTabBar;
+    @Bind(R.id.layout_menu)
+    LinearLayout lnTabBar;
     @Bind(R.id.viewpager)
     ViewPager viewPagerProfile;
+    @Bind(R.id.rtbUser)
+    AppCompatRatingBar rtbUser;
     UserProfileAdapter userProfileAdapter;
     AboutFragment aboutFragment;
     ReviewFragment reviewFragment;
@@ -56,6 +62,7 @@ public class UserProfileFragment extends BaseFragment implements IUserProfileVie
     User user;
     private final int TAB_ABOUT = 0;
     private final int TAB_REVIEW = 1;
+
     private int currentTab = TAB_ABOUT;
 
     public static UserProfileFragment newInstance(User user) {
@@ -90,6 +97,7 @@ public class UserProfileFragment extends BaseFragment implements IUserProfileVie
         btnChat.setOnClickListener(this);
         btnAbout.setOnClickListener(this);
         btnReviews.setOnClickListener(this);
+
         viewPagerProfile.setAdapter(userProfileAdapter);
         viewPagerProfile.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -100,7 +108,7 @@ public class UserProfileFragment extends BaseFragment implements IUserProfileVie
             @Override
             public void onPageSelected(int position) {
                 updateCurrentTab(position);
-                if(position == TAB_REVIEW){
+                if (position == TAB_REVIEW) {
                     reviewFragment.checkToLoadData();
                 }
             }
@@ -112,6 +120,13 @@ public class UserProfileFragment extends BaseFragment implements IUserProfileVie
         });
         selectAboutTab();
         bindData(user);
+
+        rtbUser.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                openRatingDialog();
+            }
+            return true;
+        });
     }
 
     @Override
@@ -159,13 +174,11 @@ public class UserProfileFragment extends BaseFragment implements IUserProfileVie
             case R.id.btn_reviews:
                 selectReviewsTab();
                 break;
-
-
         }
     }
 
     @Override
-    public void gotoConversationActivity(){
+    public void gotoConversationActivity() {
         Intent intent = new Intent(getActivity(), ConversationActivity.class);
         intent.putExtra(ConversationUIService.USER_ID, user.getbackendlessUserId());
         intent.putExtra(ConversationUIService.DISPLAY_NAME, user.getName()); //put it for displaying the title.
@@ -189,10 +202,10 @@ public class UserProfileFragment extends BaseFragment implements IUserProfileVie
         this.currentTab = currentTab;
         for (int i = 0; i < lnTabBar.getChildCount(); i++) {
             View childView = lnTabBar.getChildAt(i);
-            if(childView instanceof AppCompatButton){
+            if (childView instanceof AppCompatButton) {
                 childView.setSelected(false);
                 childView.setEnabled(true);
-                ((AppCompatButton)childView).setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
+                ((AppCompatButton) childView).setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
 
                 if (i == 0) {
                     childView.setBackgroundResource(R.drawable.xml_left_tab_find_people);
@@ -243,11 +256,17 @@ public class UserProfileFragment extends BaseFragment implements IUserProfileVie
     public void onDestroyView() {
         viewPagerProfile.removeAllViews();
         super.onDestroyView();
-
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
     }
+
+    @Override
+    public void openRatingDialog() {
+        RatingDialogFragment ratingDialogFragment = RatingDialogFragment.newInstance(null, user);
+        ratingDialogFragment.show(getChildFragmentManager(), ratingDialogFragment.getTag());
+    }
+
 }

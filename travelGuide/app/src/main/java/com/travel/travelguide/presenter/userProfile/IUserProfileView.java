@@ -14,5 +14,6 @@ public interface IUserProfileView {
     void showMessage(String message);
     void updateCurrentTab(int currentTab);
     void gotoConversationActivity();
+    void openRatingDialog();
     Context getContext();
 }

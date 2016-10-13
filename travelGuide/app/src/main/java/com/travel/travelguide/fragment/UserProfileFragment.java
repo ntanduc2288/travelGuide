@@ -11,9 +11,12 @@ import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -34,6 +37,7 @@ import com.travel.travelguide.presenter.userProfile.UserProfilePresenterImpl;
 import com.travel.travelguide.services.backendless.BackendlessController;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -69,6 +73,8 @@ public class UserProfileFragment extends BaseFragment implements UserProfilePres
     UserProfilePresenter.Presenter presenter;
     private final int TAB_ABOUT = 0;
     private final int TAB_REVIEW = 1;
+    @Bind(R.id.prbRating)
+    ProgressBar prbRating;
 
     private int currentTab = TAB_ABOUT;
 
@@ -157,6 +163,16 @@ public class UserProfileFragment extends BaseFragment implements UserProfilePres
     public void hideLoading() {
         if (dialog != null)
             dialog.dismiss();
+    }
+
+    @Override
+    public void showProgressbarRating() {
+        prbRating.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressbarRating() {
+        prbRating.setVisibility(View.GONE);
     }
 
     @Override
@@ -275,6 +291,7 @@ public class UserProfileFragment extends BaseFragment implements UserProfilePres
         EvenBusHelper.getInstance().unRegisterEventBus(this);
         presenter.destroy();
         super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     @Override
@@ -303,5 +320,13 @@ public class UserProfileFragment extends BaseFragment implements UserProfilePres
     public void receivedRatingChangedSignal(RatingChangedBusObject ratingChangedBusObject) {
         Log.d("UserProfileFragment", "ratingEntityObject.getRatingNumber():" + ratingChangedBusObject.getAverageNumber());
         presenter.receivedRatingNumber(user, ratingChangedBusObject);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // TODO: inflate a fragment view
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        ButterKnife.bind(this, rootView);
+        return rootView;
     }
 }

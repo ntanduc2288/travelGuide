@@ -318,20 +318,20 @@ public class EditProfilePresenterImpl extends BaseSocialPresenterImpl implements
 
     @Override
     public void getAverageRatingNumber(String userId) {
-        profileView.showLoading();
+        profileView.showProgressbarRating();
         backendlessController.getRatingEntityObject(userId)
                 .flatMap(ratings -> backendlessController.calculateAverageRatingNumber(ratings))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aFloat -> {
                     if(viewIsValid()){
-                        profileView.hideLoading();
+                        profileView.hideProgressbarRating();
                         profileView.bindRatingNumber(aFloat);
                     }
 
                 }, throwable -> {
                     if(viewIsValid()){
-                        profileView.hideLoading();
+                        profileView.hideProgressbarRating();
                         profileView.showMessage(throwable.getMessage());
                     }
                 });

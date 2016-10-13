@@ -23,19 +23,19 @@ public class UserProfilePresenterImpl implements UserProfilePresenter.Presenter{
 
     @Override
     public void getAverageRatingNumber(String userId) {
-        view.showLoading();
+        view.showProgressbarRating();
         backendlessController.getRatingEntityObject(userId)
                 .flatMap(ratings -> backendlessController.calculateAverageRatingNumber(ratings))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aFloat -> {
                     if(view != null){
-                        view.hideLoading();
+                        view.hideProgressbarRating();
                         view.bindRatingNumber(aFloat);
                     }
                 }, throwable -> {
                     if(view != null){
-                        view.hideLoading();
+                        view.hideProgressbarRating();
                         view.showMessage(throwable.getMessage());
                     }
                 });

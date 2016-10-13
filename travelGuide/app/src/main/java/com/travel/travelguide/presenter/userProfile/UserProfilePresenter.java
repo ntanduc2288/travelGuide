@@ -15,6 +15,8 @@ public interface UserProfilePresenter {
         void showLoading();
         void hideLoading();
         void bindData(User user);
+        void showProgressbarRating();
+        void hideProgressbarRating();
         void showMessage(String message);
         void updateCurrentTab(int currentTab);
         void gotoConversationActivity();

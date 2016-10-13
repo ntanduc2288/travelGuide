@@ -43,6 +43,7 @@ import com.yalantis.ucrop.UCrop;
 import java.util.Calendar;
 
 import butterknife.Bind;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -237,7 +238,7 @@ public class MainActivity extends BaseActivity implements MessageCommunicator, V
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_information:
-                TransactionManager.getInstance().addFragment(getSupportFragmentManager(), EditProfileFragment.newInstance(UserManager.getInstance().getCurrentUser()));
+                gotoEditProfileScreen();
                 break;
             case R.id.messages:
                 gotoConversationList();
@@ -255,8 +256,13 @@ public class MainActivity extends BaseActivity implements MessageCommunicator, V
                 break;
         }
 
-        drawerLayout.closeDrawer(GravityCompat.START);
+        closeLeftMenu();
         return true;
+    }
+
+    @Override
+    public void closeLeftMenu() {
+        drawerLayout.closeDrawer(GravityCompat.START);
     }
 
     @Override
@@ -349,5 +355,17 @@ public class MainActivity extends BaseActivity implements MessageCommunicator, V
     @Override
     public void bindDestination(String destination) {
         txtDestination.setText(destination);
+    }
+
+    @OnClick({R.id.username_left_menu, R.id.avatar_left_menu})
+    @Override
+    public void clickedOnUserName() {
+        closeLeftMenu();
+        gotoEditProfileScreen();
+    }
+
+    @Override
+    public void gotoEditProfileScreen() {
+        TransactionManager.getInstance().addFragment(getSupportFragmentManager(), EditProfileFragment.newInstance(UserManager.getInstance().getCurrentUser()));
     }
 }

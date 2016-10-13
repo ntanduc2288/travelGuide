@@ -18,10 +18,11 @@
             android:background="@drawable/xml_bg_blue_rounded_no_border"
             android:orientation="vertical"
             android:gravity="center_horizontal"
-            android:padding="30dp"
+
             >
 
             <LinearLayout
+                android:padding="20dp"
                 android:id="@+id/lnUserInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -70,6 +71,7 @@
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/lblThankForRating"
+                android:padding="30dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -87,8 +89,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/rtbUser"
-                android:layout_marginBottom="30dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
                 android:numStars="5"
                 android:stepSize="0.5" />
 
@@ -102,7 +104,6 @@
                 android:layout_marginRight="10dp"
                 android:drawableLeft="@drawable/xml_bg_white_circle"
                 android:drawablePadding="10dp"
-                android:singleLine="true"
                 android:text="@string/please_rate_your_host"
                 android:textColor="@color/color_white"
                 android:textSize="@dimen/general_text_size" />
@@ -110,9 +111,9 @@
 
 
             <LinearLayout
+                android:layout_margin="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
 

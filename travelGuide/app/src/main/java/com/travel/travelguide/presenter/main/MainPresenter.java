@@ -13,6 +13,9 @@ public interface MainPresenter {
         public void hideLoading();
         public void gotoLoginScreen();
         public void gotoConversationList();
+        void clickedOnUserName();
+        void gotoEditProfileScreen();
+        void closeLeftMenu();
         public Context getContext();
     }
 

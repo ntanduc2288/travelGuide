@@ -17,6 +17,8 @@ public interface EditProfilePresenter {
     interface View{
         void showLoading();
         void hideLoading();
+        void showProgressbarRating();
+        void hideProgressbarRating();
         void bindData(User user);
         void showMyProfileViews();
         void showUserProfileViews();

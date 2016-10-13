@@ -24,6 +24,7 @@ import android.view.Display;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -122,6 +123,8 @@ public class EditProfileFragment extends BaseFragment implements EditProfilePres
     View separateAddView;
     @Bind(R.id.rtbUser)
     AppCompatRatingBar rtbUser;
+    @Bind(R.id.prbRating)
+    ProgressBar prbRating;
 
     private SocialPickerView socialPickerView;
     private EasyDialog easyDialog;
@@ -193,6 +196,16 @@ public class EditProfileFragment extends BaseFragment implements EditProfilePres
     public void hideLoading() {
         if (dialog != null)
             dialog.dismiss();
+    }
+
+    @Override
+    public void showProgressbarRating() {
+        prbRating.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressbarRating() {
+        prbRating.setVisibility(View.GONE);
     }
 
     @Override
